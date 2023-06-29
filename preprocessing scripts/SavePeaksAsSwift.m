@@ -26,7 +26,7 @@ if mode == 1
     for i = 1: NOC
         data = Filename{i,1};
         newfile = [];
-        newfile(:,1:5) = data(:,1:5);
+        newfile(:,1:5) = data(:,[2:5,8]);
         table = array2table(newfile); %convert to table to carry header
         table.Properties.VariableNames(1:5) = {'t', 'x', 'y', 'z', 'intensity'};
         name = Filename{i,2};
