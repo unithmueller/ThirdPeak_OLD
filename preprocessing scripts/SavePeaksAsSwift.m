@@ -21,7 +21,7 @@ end
 %mode 1: locs are in the matlab workspace
 if mode == 1
     path = Infilepath;
-    resultpath = join([path '\csv']);
+    resultpath = join([path '\csv'],"");
     mkdir(resultpath);
     for i = 1: NOC
         data = Filename{i,1};
