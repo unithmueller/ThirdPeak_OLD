@@ -1,4 +1,4 @@
-function intensityLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFolderName, ImportSettingsStruct, FileLocations, options)
+function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFolderName, ImportSettingsStruct, FileLocations, BeadLocations, options)
     %Main function for the preprocessing of the localisation data.
    %Input: SaveFolderPath: Path on the Disk to save to
    %SaveFolderName: Name of the subfolder generated in the SaveFolderPath
@@ -31,7 +31,7 @@ function intensityLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     intensityLocs = {};
     %% perform filter in XYZ with either polymask or abs values
     %polymask
-    if options.UseManualPolymask
+    if options.XYZ.XY.UseManualPolymask
         %perform cellmask
         %make folder to save the mask
         mkdir Cellmask;
@@ -49,20 +49,20 @@ function intensityLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
         end
         cd ..;
         %absoltue values
-    elseif options.FilterActiveX || options.FilterActiveY
+    elseif options.XYZ.XY.X.Used || options.XYZ.XY.Y.Used
         %use the filter in XY
         for i = 1:size(LocalisationData,1)
             tmpdata = LocalisationData{i,1};
             if options.FilterActiveX
                 %filter by X value
-                usrminx = options.minXValue;
-                usrmaxx = options.maxXValue;
+                usrminx = options.XYZ.XY.X.Min;
+                usrmaxx = options.XYZ.XY.X.Max;
                 tmpdata = tmpdata(tmpdata(:,2)>= usrminx & tmpdata(:,2)<= usrmaxx,:);
             end
             if options.FilterActiveY
                 %filter by Y value
-                usrminy = options.minYValue;
-                usrmaxy = options.maxYValue;
+                usrminy = options.XYZ.XY.Y.Min;
+                usrmaxy = options.XYZ.XY.Y.Max;
                 tmpdata = tmpdata(tmpdata(:,3)>= usrminy & tmpdata(:,3)<= usrmaxy,:);
             end
             maskedLocs{i,1} = tmpdata;
@@ -73,25 +73,25 @@ function intensityLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
         maskedLocs = LocalisationData;
     end
     %then do the Z
-    if options.FilterActiveZ
-        for i = 1:size(LocalisationData,1)
+    if options.XYZ.Z.Used
+        for i = 1:size(maskedLocs,1)
             tmpdata = maskedLocs{i,1};
-            usrminz = options.minZValue;
-            usrmaxz = options.maxZValue;
+            usrminz = options.XYZ.Z.Min;
+            usrmaxz = options.XYZ.Z.Max;
             tmpdata = tmpdata(tmpdata(:,4)>= usrminz & tmpdata(:,4)<= usrmaxz,:);
             maskedLocs{i,1} = tmpdata;
         end
     end
     %% filter by precisions
     %XY precision
-    if options.FilterActivePrecisionXY
-        for i = 1:size(LocalisationData,1)
+    if options.precision.XY.Used
+        for i = 1:size(maskedLocs,1)
             try
                 tmpdata = maskedLocs{i,1};
-                usrsigma = options.sigmaXY;
+                usrsigma = options.precision.XY.sigma;
                 tmpdata = tmpdata(tmpdata(:,6)<= usrsigma & tmpdata(:,6)<= usrsigma,:);
                 precisionLocs{i,1} = tmpdata;
-                precisionLocs{i,2} = LocalisationData{i,2};
+                precisionLocs{i,2} = maskedLocs{i,2};
             catch
             end
         end
@@ -99,36 +99,49 @@ function intensityLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
         precisionLocs = maskedLocs;
     end
     %Z precision
-    if options.FilterActivePrecisionZ
-        for i = 1:size(LocalisationData,1)
+    if options.precision.Z.Used
+        for i = 1:size(precisionLocs,1)
             try
             tmpdata = precisionLocs{i,1};
-            usrsigma = options.sigmaZ;
+            usrsigma = options.precision.Z.sigma;
             tmpdata = tmpdata(tmpdata(:,7)<= usrsigma,:);
             precisionLocs{i,1} = tmpdata;
-            precisionLocs{i,2} = LocalisationData{i,2};
+            precisionLocs{i,2} = precisionLocs{i,2};
             catch
             end
         end
     end
-    if ~options.FilterActivePrecisionXY && ~options.FilterActivePrecisionZ
+    if ~options.precision.XY.Used && ~options.precision.Z.Used
         precisionLocs = maskedLocs;
     end
     %% filter by intensity
-    if options.FilterActiveIntensity
-        for i = 1:size(LocalisationData,1)
+    if options.intensity.Used
+        for i = 1:size(precisionLocs,1)
             try
             tmpdata = precisionLocs{i,1};
-            usrminInt = options.minIntValue;
-            usrmaxInt = options.maxIntValue; 
+            usrminInt = options.intensity.Min;
+            usrmaxInt = options.intensity.Max; 
             tmpdata = tmpdata(tmpdata(:,8)>= usrminInt & tmpdata(:,8)<= usrmaxInt,:);
             intensityLocs{i,1} = tmpdata;
-            intensityLocs{i,2} = LocalisationData{i,2};
+            intensityLocs{i,2} = precisionLocs{i,2};
             catch
             end
         end
     else
         intensityLocs = precisionLocs;
+    end
+    %% perform the drift correction
+    if options.drift.Performdrift == 1
+        %do drift correction
+        if options.drift.ReferenceAvailable == 1
+            %calculate by drift of a bead
+            driftCorrLocs = performPreprocessingDriftCorrectionWithBead(BeadLocations, intensityLocs);
+        else
+            %calculate by the data
+            driftCorrLocs = performPreprocessingDriftCorrectionwoBead(intensityLocs);
+        end
+    else
+        driftCorrLocs = intensityLocs;
     end
     %% save the data to disk
     clear tmpdata tmpmaskdat;
@@ -141,6 +154,8 @@ function intensityLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     save("precisionFilteredLocalisations.mat","datatosave");
     datatosave = intensityLocs;
     save("intensityFilteredLocalisations.mat","datatosave");
+    datatosave = driftCorrLocs;
+    save("driftCorrectedLocalisations.mat","datatosave");
     %save the filter settings
     setvalues = options;
     save("PropertiesUsed.mat","setvalues");

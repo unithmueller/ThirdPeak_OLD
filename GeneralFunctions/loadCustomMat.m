@@ -6,9 +6,9 @@ function tracks = loadCustomMat(file, ImportSettingsStruct)
     name = fieldnames(file);
     name = name{1,1};
     file = getfield(file,name);
-    type = ImportSettingsStruct.type;
+    type = ImportSettingsStruct.islocs;
     
-    if type == "Locs"
+    if type
     %newfile(:,1) = [];
     newfile(:,2) = file(:,ImportSettingsStruct.framenr); %t
     newfile(:,3) = file(:,ImportSettingsStruct.xpos); %x

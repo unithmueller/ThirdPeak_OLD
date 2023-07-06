@@ -1,9 +1,9 @@
-function [finalvoxelsize,error] = calculateFSC(app)
-    %Calculates the Fourier Shell Correlation from the track data present
-    %in the app. Grabs the image dimensions from the import settings
+function [finalvoxelsize,error] = calculateFSC(data, parameters)
+    %Calculates the Fourier Shell Correlation from the track data.
+    %Grabs the image dimensions from the import settings
     %dialogue to set the necessary parameters.
-    data = getTracks(app);
-    param = app.TrackSettingsStruct;
+    data = data;
+    param = parameters;
     finalvoxelsize = zeros(1,10);
     
     %need to convert data always into unit/frame

@@ -5,7 +5,7 @@ function processBeadsAndCellImage(fileToProcess, app)
 %bead. Then two separate tiffs will be saved, one for the bead, one for the
 %cell. These can be used seperately for localisation and then for drift
 %correction.
-
+    %% Loading and generating the MaxIntProjection
     %Load the tiff
     d = uiprogressdlg(app.PreprocessingWindowUIFigure, "Title", "Loading Tiff");
     drawnow
@@ -28,12 +28,14 @@ function processBeadsAndCellImage(fileToProcess, app)
     
     %make the intensity projection
     adjmaxIntProj = makeMaxIntensityProjection(multitiff, percen);
+    %% draw the mask
     try
         %make the mask on them
         BW = roipoly(adjmaxIntProj);
         close
     catch
     end
+    %% filter the data
     %if a mask was generated, filter the images
     if isa(BW, "logical")
         %generate filterted image
@@ -49,8 +51,7 @@ function processBeadsAndCellImage(fileToProcess, app)
             beadtiff(:,:,i) = tmpbead;
             celltiff(:,:,i) = tmpcell;
         end
-        %beadtiff(BW,:) = multitiff(BW,:);
-        %celltiff(~BW,:) = multitiff(~BW,:);
+        %% save the data
         %save the images
         [path, name, ext] = fileparts(fileToProcess);
         beadname = [name "_bead"];
@@ -61,15 +62,6 @@ function processBeadsAndCellImage(fileToProcess, app)
         saveastiff(beadtiff, join([path "/" beadname ext],""));
         saveastiff(celltiff, join([path "/" cellname ext],""));
 
-        %imwrite(beadtiff(:,:,1), join([path "/" beadname ext],""));
-        %for i = 2:framenum
-        %    imwrite(beadtiff(:,:,i), join([path "/" beadname ext],""), "WriteMode", "append");
-        %end
-
-        %imwrite(celltiff(:,:,1), join([path "/" cellname ext],""));
-        %for i = 2:framenum
-       %     imwrite(celltiff(:,:,i), join([path "/" cellname ext],""), "WriteMode", "append");
-        %end
         close(d)
     else
         %no filter mask, do nothing

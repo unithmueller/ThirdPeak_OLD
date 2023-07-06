@@ -5,9 +5,9 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     skip = 1 + ImportSettingsStruct.headlerlines;
     file = dlmread(file, del, skip);
     
-    type = ImportSettingsStruct.type;
+    type = ImportSettingsStruct.islocs;
 
-    if type == "Locs"
+    if type
     %newfile(:,1) = [];
     newfile(:,2) = file(:,ImportSettingsStruct.framenr); %t
     newfile(:,3) = file(:,ImportSettingsStruct.xpos); %x

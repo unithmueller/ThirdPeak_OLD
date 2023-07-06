@@ -20,7 +20,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 if size(locdata{1,1},2) < 5
                     error("Not a loc file!")
                 else
-                    LocalisationData = loadfile;
+                    LocalisationData = locdata;
                 end
            case "Custom Localisations csv"
                  % Display uigetfile dialog
@@ -34,7 +34,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 if size(locdata{1,1},2) < 5
                     error("Not a loc file!")
                 else
-                    LocalisationData = loadfile;
+                    LocalisationData = locdata;
                 end
         case "SMAP-Localisations"
                 loadfile = fileList;
@@ -47,7 +47,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 if size(locdata{1,1},2) < 5
                     error("Not a loc file!")
                 else
-                    LocalisationData = loadfile;
+                    LocalisationData = locdata;
                 end
         end
     end

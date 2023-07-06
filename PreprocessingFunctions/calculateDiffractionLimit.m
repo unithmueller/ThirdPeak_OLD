@@ -56,7 +56,7 @@ function diffractionLimitValueString = calculateDiffractionLimit(intensityFilter
     %now we plot the data and get the mean value
     %put them all together
     dataToPlot = zeros([1,2]);
-    for i = 1:size(intensityFilteredLocs.intensityLocs,1)
+    for i = 1:size(intensityFilteredLocs,1)
         nndist = nn_mindist{i,1}(:,2);
         nnumb = i*ones(size(nndist(:,1),1),1);
         dataPut = [nndist,nnumb];
@@ -64,7 +64,7 @@ function diffractionLimitValueString = calculateDiffractionLimit(intensityFilter
     end
     dataToPlot(1,:) =  [];
     filenames = {};
-    for i = 1:size(intensityFilteredLocs.intensityLocs,1)
+    for i = 1:size(intensityFilteredLocs,1)
         filenames{i} = nn_mindist{i,2};
     end
 
@@ -78,6 +78,7 @@ function diffractionLimitValueString = calculateDiffractionLimit(intensityFilter
     xlabel("Filename");
     xticks(1:1:size(intensityFilteredLocs,1));
     xticklabels(filenames);
+    set(gcf,'units','normalized','outerposition',[0 0 1 1]);
 
     savefig(gcf, "DiffractionLimit");
     saveas(gcf, "DiffractionLimit.svg");

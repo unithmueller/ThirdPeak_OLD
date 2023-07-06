@@ -3,6 +3,8 @@ function foldername = iterateSaveFoldername(foldername, counter)
     foldername = join([foldername, "_", counter],"");
     if exist(foldername, 'dir')
         counter = counter + 1;
+        tmp = split(foldername,"_");
+        foldername = tmp(1);
         foldername = iterateSaveFoldername(foldername, counter);
     else
         mkdir(foldername);

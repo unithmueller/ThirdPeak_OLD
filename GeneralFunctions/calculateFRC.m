@@ -1,7 +1,4 @@
-function frc = calculateFRC(app)
-    data = getTracks(app);
-    param = app.TrackSettingsStruct;
-    
+function frc = calculateFRC(data, param)
     %need to convert data always into unit/frame
     type = split(convertCharsToStrings(param.customUnits.DataType),"/");
     comparison = strcmp(type, ["Pixel"; "Frame"]);
@@ -23,43 +20,53 @@ function frc = calculateFRC(app)
         time = round(time/param.customUnits.Timestep,0);
         data(:,2) = time;
     end
-    NmbrTimeWins = 2;
-    TimeWinDur = ceil(max(data(:,2))/NmbrTimeWins);
-    %we need the data in two data sets, applied randomly to all data. will
-    %use the frame number to assign them randomly. need to alter the frame
-    %number
     
-    pixelsize = param.customUnits.Pixelsize;
-        
-    randValues = randi([1 max(data(:,2))],size(data(:,2),1),1);
-    data(:,2) = randValues;
-    %bins the data 
-    trajensemb = TrajectoryEnsemble(data(:,1:5), param.customUnits.Timestep, 1);
-    tws = TimeWindows.empty;
-    if NmbrTimeWins == 1
-        %single win
-        tmptws = TimeWindows.generateSingleWindow(trajensemb);
-        tws(end+1) = tmptws;
-    else
-        %many win
-        begin = min(data(:,2));
-        for i = 1:NmbrTimeWins
-            ending = begin+TimeWinDur;
-            tmpwin = TimeWindows(TimeWinDur, 0, begin, ending);
-            begin = ending+1;
-            tws(end+1) = tmpwin;
-        end
-    end
-    trajensembwins = TrajectoryEnsembleWindows(trajensemb, tws);
-    params = DensityParameters(pixelsize, "NPTS", 1, 1, pixelsize);
-    scalmapwins = ScalarMapWindows.gen_density_maps(trajensembwins, params);
+%     NmbrTimeWins = 2;
+%     TimeWinDur = ceil(max(data(:,2))/NmbrTimeWins);
+%     %we need the data in two data sets, applied randomly to all data. will
+%     %use the frame number to assign them randomly. need to alter the frame
+%     %number
+%     
+     pixelsize = param.customUnits.Pixelsize;
+%         
+     randValues = randi([1 max(data(:,2))],size(data(:,2),1),1);
+     data(:,2) = randValues;
+%     %bins the data 
+%     trajensemb = TrajectoryEnsemble(data(:,1:5), param.customUnits.Timestep, 1);
+%     tws = TimeWindows.empty;
+%     if NmbrTimeWins == 1
+%         %single win
+%         tmptws = TimeWindows.generateSingleWindow(trajensemb);
+%         tws(end+1) = tmptws;
+%     else
+%         %many win
+%         begin = min(data(:,2));
+%         for i = 1:NmbrTimeWins
+%             ending = begin+TimeWinDur;
+%             tmpwin = TimeWindows(TimeWinDur, 0, begin, ending);
+%             begin = ending+1;
+%             tws(end+1) = tmpwin;
+%         end
+%     end
+%     trajensembwins = TrajectoryEnsembleWindows(trajensemb, tws);
+%     params = DensityParameters(pixelsize, "NPTS", 1, 1, pixelsize);
+%     scalmapwins = ScalarMapWindows.gen_density_maps(trajensembwins, params);
 
-    localizations1 = cell2mat(scalmapwins.windows(1,1).data);
-    localizations2 = cell2mat(scalmapwins.windows(1,2).data);
+%    localizations1 = cell2mat(scalmapwins.windows(1,1).data);
+%    localizations2 = cell2mat(scalmapwins.windows(1,2).data);
 
-    voxelSize = pixelsize;
-    imageSize = 120;
-    cutoffFrequency = 1/7;
+    medval = median(data(:,2));
+    
+    localizations1 = data(data(:,2) < medval,3:5);
+    localizations2 = data(data(:,2) >= medval,3:5);
+    
+    voxelSize = pixelsize*1.5;
+    maxval = max([max(max(localizations1)), max(max(localizations2))]);
+    maxval = ceil(maxval/voxelSize);
+    maxval = maxval*2.5;
+    maxval = ceil(maxval);
+    imageSize = maxval;
+    cutoffFrequency = 10;
 
     % localizations1: Nx3 matrix representing the 3D coordinates of the first dataset
     % localizations2: Mx3 matrix representing the 3D coordinates of the second dataset
@@ -97,10 +104,17 @@ function frc = calculateFRC(app)
     frc = frc(1:cutoffIndex);
     frequencies = frequencies(1:cutoffIndex);
     
+    cutoff = ones(size(frequencies));
+    cutoff = cutoff*(1/7);
+    
     % Plot the FRC curve
     figure;
-    plot(frequencies, frc);
+    plot(frequencies, frc,frequencies, cutoff);
     xlabel('Spatial Frequency (1/nm)');
     ylabel('FRC');
     title('Fourier Ring Correlation');
+    
+    %save the figures
+    savefig(gcf, "Fourier Ring Correlation");
+    saveas(gcf, "Fourier Ring Correlation.svg");
 end
