@@ -14,6 +14,10 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     cd(foldername);
     %% grab file list and load files depending on settings
     LocalisationData = loadLocswithFileList(ImportSettingsStruct, FileLocations);
+    try %optional
+        BeadLocations = loadLocswithFileList(ImportSettingsStruct, BeadLocations);
+    catch
+    end
     %make sure there are no negative values for XY
     for i = 1:size(LocalisationData,1)
         tmpdata = LocalisationData{i,1};

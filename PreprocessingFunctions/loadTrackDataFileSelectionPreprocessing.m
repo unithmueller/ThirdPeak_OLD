@@ -123,12 +123,8 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                     loadfile{i,1} = load(fullfile(p,f{1,i}));
                     loadfile{i,2} = f{1,i};
                 end
-                %make sure that traces are actually loaded
-                if size(loadfile{1,1},2) < 5
-                    error("Not a trace file!")
-                else
-                    TrackData = loadfile;
-                end
+                loadfile = loadfile{1,1}.datatosave;
+                TrackData = loadfile;
         end
     end           
 end
