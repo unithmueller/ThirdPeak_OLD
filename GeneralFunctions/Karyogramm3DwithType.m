@@ -1,4 +1,4 @@
-function fig = Karyogramm3DwithType(Trackdata, amount, flag3d, typeselect, LocPrecXY, LocPrecZ, Unit)
+function fig = Karyogramm3DwithType(Trackdata, amount, flag3d, typeselect, LocPrecXY, LocPrecZ, Unit, TypeList)
 %Should Plot the tracks next to each other with the assigned diffusion type
 %next or beneath it. Can select the number of tracks to be plottet 
 
@@ -19,9 +19,12 @@ function fig = Karyogramm3DwithType(Trackdata, amount, flag3d, typeselect, LocPr
         LocPrecXY
         LocPrecZ
         Unit
+        TypeList
     end 
     
     fig = figure("Visible","off","Name","Karyogram Traces");
+    %filter the data to at least two data points per track
+    Trackdata = filterTracksinArrayByLength(Trackdata, 2);
     %get number of tracks
     tracknmbrs = unique(Trackdata(:,1));
     numbroftracks = size(tracknmbrs,1);
@@ -65,19 +68,16 @@ function fig = Karyogramm3DwithType(Trackdata, amount, flag3d, typeselect, LocPr
         j = j + numbrofFrames;
     end
     
-    %Filter the tracks depending on the selection of tracktype
-    switch typeselect
-        case "All"
-        case "Diffusion"
-            normalizedTracks = normalizedTracks(normalizedTracks(:,14) == 2,:);
-        case "Immobile"
-            normalizedTracks = normalizedTracks(normalizedTracks(:,14) == 1,:);
-        case "Directed"
-            normalizedTracks = normalizedTracks(normalizedTracks(:,14) == 3,:);
-        case "Directed_Diffusion"
-            normalizedTracks = normalizedTracks(normalizedTracks(:,14) == 4,:);
-        case "None"
-            normalizedTracks = normalizedTracks(normalizedTracks(:,14) == 0,:);
+    %Filter the tracks depending on the selection of tracktype. As it can
+    %vary depending on the import settings set, we will need to grab the
+    %names
+    possibleTypes = TypeList;
+    possibleTypes = string(split(possibleTypes, ", ").');
+    
+    correspondingNumbr = find(possibleTypes == typeselect);
+    if typeselect == "All"
+    else
+        normalizedTracks = normalizedTracks(normalizedTracks(:,14) == correspondingNumbr,:);
     end
             
     %plot depending on data type in 2d or 3d into the given axes. should
@@ -117,21 +117,8 @@ function fig = Karyogramm3DwithType(Trackdata, amount, flag3d, typeselect, LocPr
         dim = size(normalizedTracks);
         
         if (typeselect == "All") && (dim(2) > 5)
-            switch normalizedTracks(ind(end),14)
-                case 0
-                    txt = "none";
-                case 2
-                    txt = "diffusion";
-                case 1
-                    txt = "immobile";
-                case 3
-                    txt = "directed";
-                case 4
-                    txt = "directed_diffusion";
-                case 5
-                    txt = "diffusion";
-            end
-            text(spacerX, spacerY,txt);
+            txt = possibleTypes(normalizedTracks(ind(end),14));
+            text(spacerX, spacerY, txt);
         end
         counter = counter + 1;
         if numberOfTracks>5 && mod(counter,numbrColums) == 0

@@ -1,5 +1,5 @@
  function filteredTracks = filterTracksinCellbyLength(tracksInCell, mintracklength)
-%Filter the tracklength per cell
+    %Filter the tracklength per cell
     edges = unique(tracksInCell(:,1));
     counts = histc(tracksInCell(:,1),edges); 
     interest = find(counts >= mintracklength);

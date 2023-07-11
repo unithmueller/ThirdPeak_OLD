@@ -13,10 +13,22 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     newfile(:,3) = file(:,ImportSettingsStruct.xpos); %x
     newfile(:,4) = file(:,ImportSettingsStruct.ypos); %y
     newfile(:,5) = file(:,ImportSettingsStruct.zpos); %z
-    newfile(:,6) = file(:,ImportSettingsStruct.xyerr); %xyerr
-    newfile(:,7) = file(:,ImportSettingsStruct.zerr); %zerr
-    newfile(:,8) = file(:,ImportSettingsStruct.int); %photons
-    newfile(:,9) = file(:,ImportSettingsStruct.interr); %photon error
+    try
+        newfile(:,6) = file(:,ImportSettingsStruct.xyerr); %xyerr
+    catch
+    end
+    try
+        newfile(:,7) = file(:,ImportSettingsStruct.zerr); %zerr
+    catch
+    end
+    try
+        newfile(:,8) = file(:,ImportSettingsStruct.int); %photons
+    catch
+    end
+    try
+        newfile(:,9) = file(:,ImportSettingsStruct.interr); %photon error
+    catch
+    end
     tracks = newfile;
         return
     else
@@ -26,7 +38,7 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     newfile(:,4) = file(:,ImportSettingsStruct.ypos); %y
     newfile(:,5) = file(:,ImportSettingsStruct.zpos); %z
     try
-        newfile(:,6) = file(:,6); %jumpdist
+        newfile(:,6) = file(:,ImportSettingsStruct.jumpdist); %jumpdist
     catch
     end
     try
@@ -42,11 +54,11 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     catch
     end
     try
-        newfile(:,10) = file(:,15); %segmentmeanjumpdist
+        newfile(:,10) = file(:,ImportSettingsStruct.meanjumpdist); %segmentmeanjumpdist
     catch
     end
     try
-        newfile(:,11) = file(:,16); %segmeanjumpdisterr
+        newfile(:,11) = file(:,ImportSettingsStruct.meanjumpdisterr); %segmeanjumpdisterr
     catch
     end
     try
@@ -58,7 +70,14 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     catch
     end
     try
-        newfile(:,14) = file(:,ImportSettingsStruct.difftype); %motiontype
+        difftypedata = file(:,ImportSettingsStruct.difftype);
+        diffstates = file(:,ImportSettingsStruct.diffstates);
+        numbrOfStates = size(diffstates,2);
+        for i = 1:numbrOfStates
+            searchterm = diffstates(i);
+            difftypedata(difftypedata == searchterm) = i;
+        end
+        newfile(:,14) = difftypedata; %motiontype
     catch
     end
     try

@@ -1,7 +1,7 @@
-function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruct)
+function TrackData = loadTrackDataFileSelectionVisualisation(ImportSettingsStruct)
     %Function to grab a file depending on the settings set in the import
     %settings. Will allow for tracks of filtered localisation to be
-    %visualized in the preprocessing window and used for further
+    %visualized in the validation window and used for further
     %calculations
     %Check that we have settings set
     %tracklength = minTrackLength;
@@ -104,27 +104,16 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 else
                     TrackData = loadfile;
                 end
-            case "Filtered data .mat"
-                %% Filtered data mat
-                % Display uigetfile dialog
-                filterspec = {'*.mat'};
-                [f, p] = uigetfile(filterspec, 'MultiSelect','on');
-                % Make sure user didn't cancel uigetfile dialog
-                if ~ischar(p)
-                    error("No file selected")
-                end
-                if isa(f,"char") %only one file selected, convert to cell 
-                    b = f;
-                    f = cell(1,1);
-                    f{1,1} = b;
-                end
-                loadfile = cell(size(f,2),2);
-                for i = 1:size(f,2)
-                    loadfile{i,1} = load(fullfile(p,f{1,i}));
-                    loadfile{i,2} = f{1,i};
-                end
-                loadfile = loadfile{1,1}.datatosave;
-                TrackData = loadfile;
         end
-    end           
+        %% Filter the found data by minTrackLength of 2 to make sure that we have tracks
+        if isa(TrackData,"cell")
+            %multiple files selected. For every File:
+            for i = 1:size(TrackData,1)
+                filteredTracks = filterTracksinCellbyLength(TrackData{i,1}, 2);
+                TrackData{i,1} = filteredTracks;
+            end
+        else
+            error("Something went wrong")
+        end
+   end                  
 end

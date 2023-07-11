@@ -69,7 +69,7 @@ function TrackData = loadTrackDataFileSelection(app, minTrackLength, type)
                         end
                         loadfile = cell(size(f,2),2);
                         for i = 1:size(f,2)
-                            loadfile{i,1} = loadCustomCSV(app, fullfile(p,f{1,i}), "Tracks");
+                            loadfile{i,1} = loadCustomCSV(loadfile{i}, app.ImportSettingsStruct);
                             loadfile{i,2} = f{1,i};
                         end
     
@@ -94,7 +94,7 @@ function TrackData = loadTrackDataFileSelection(app, minTrackLength, type)
                         end
                         loadfile = cell(size(f,2),2);
                         for i = 1:size(f,2)
-                            loadfile{i,1} = loadCustomMat(app, fullfile(p,f{1,i}));
+                            loadfile{i,1} = loadCustomMat(loadfile{i}, ImportSettingsStruct);
                             loadfile{i,2} = f{1,i};
                         end
     

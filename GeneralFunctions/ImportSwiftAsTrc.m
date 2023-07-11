@@ -11,17 +11,17 @@ notrouble = zeros(size(trouble));
 for i = 1:size(trouble)
     switch string(trouble(i))
         case 'none'
-            notrouble(i) = 0;
-        case 'immobile'
             notrouble(i) = 1;
-        case 'diffusion'
+        case 'immobile'
             notrouble(i) = 2;
-        case "directed"
+        case 'diffusion'
             notrouble(i) = 3;
-        case "dir_diffusion"
+        case "directed"
             notrouble(i) = 4;
-        otherwise
+        case "dir_diffusion"
             notrouble(i) = 5;
+        otherwise
+            notrouble(i) = 6;
     end
 end
 

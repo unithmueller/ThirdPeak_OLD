@@ -49,6 +49,19 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 else
                     LocalisationData = locdata;
                 end
+        case "Picasso-Localisations"
+                loadfile = fileList;
+                locdata = {};
+                for i = 1:size(loadfile,1)
+                    locdata{i,1} = importPicassohdf5(loadfile{i}, ImportSettingsStruct.customUnits.Pixelsize);
+                    locdata{i,2} = loadfile{i};
+                end
+                %make sure that locs are actually loaded
+                if size(locdata{1,1},2) < 5
+                    error("Not a loc file!")
+                else
+                    LocalisationData = locdata;
+                end
         end
     end
 end

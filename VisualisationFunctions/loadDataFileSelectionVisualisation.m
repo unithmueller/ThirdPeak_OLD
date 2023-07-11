@@ -1,7 +1,7 @@
-function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruct)
+function TrackData = loadDataFileSelectionVisualisation(ImportSettingsStruct)
     %Function to grab a file depending on the settings set in the import
     %settings. Will allow for tracks of filtered localisation to be
-    %visualized in the preprocessing window and used for further
+    %visualized in the validation window and used for further
     %calculations
     %Check that we have settings set
     %tracklength = minTrackLength;
@@ -13,7 +13,7 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 %% SwiftAllData
                 % Display uigetfile dialog
                 filterspec = {'*.csv'};
-                [f, p] = uigetfile(filterspec, 'MultiSelect','on');
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
                 % Make sure user didn't cancel uigetfile dialog
                 if ~ischar(p)
                     error("No file selected")
@@ -38,7 +38,7 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 %% SwiftMinData
                 % Display uigetfile dialog
                 filterspec = {'*.csv'};
-                [f, p] = uigetfile(filterspec, 'MultiSelect','on');
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
                 % Make sure user didn't cancel uigetfile dialog
                 if ~ischar(p)
                     error("No file selected")
@@ -58,7 +58,7 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 %% Custom CSV
                 % Display uigetfile dialog
                 filterspec = {'*.csv'};
-                [f, p] = uigetfile(filterspec, 'MultiSelect','on');
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
                 % Make sure user didn't cancel uigetfile dialog
                 if ~ischar(p)
                     error("No file selected")
@@ -83,7 +83,7 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 %% Custom mat
                  % Display uigetfile dialog
                 filterspec = {'*.mat'};
-                [f, p] = uigetfile(filterspec, 'MultiSelect','on');
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
                 % Make sure user didn't cancel uigetfile dialog
                 if ~ischar(p)
                     error("No file selected")
@@ -104,11 +104,11 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 else
                     TrackData = loadfile;
                 end
-            case "Filtered data .mat"
-                %% Filtered data mat
+            case "SMAP-Localisations"
+                %% SMAP Localisations
                 % Display uigetfile dialog
                 filterspec = {'*.mat'};
-                [f, p] = uigetfile(filterspec, 'MultiSelect','on');
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
                 % Make sure user didn't cancel uigetfile dialog
                 if ~ischar(p)
                     error("No file selected")
@@ -120,10 +120,69 @@ function TrackData = loadTrackDataFileSelectionPreprocessing(ImportSettingsStruc
                 end
                 loadfile = cell(size(f,2),2);
                 for i = 1:size(f,2)
-                    loadfile{i,1} = load(fullfile(p,f{1,i}));
+                    loadfile{i,1} = loadSMAPLocalisations(fullfile(p,f{1,i}));
                     loadfile{i,2} = f{1,i};
                 end
-                loadfile = loadfile{1,1}.datatosave;
+                TrackData = loadfile;
+            case "Picasso-Localisations"
+                %% Picasso Localisations
+                % Display uigetfile dialog
+                filterspec = {'*.hdf5'};
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
+                % Make sure user didn't cancel uigetfile dialog
+                if ~ischar(p)
+                    error("No file selected")
+                end
+                if isa(f,"char") %only one file selected, convert to cell 
+                    b = f;
+                    f = cell(1,1);
+                    f{1,1} = b;
+                end
+                loadfile = cell(size(f,2),2);
+                for i = 1:size(f,2)
+                    loadfile{i,1} = importPicassohdf5(fullfile(p,f{1,i}), ImportSettingsStruct.customUnits.Pixelsize);
+                    loadfile{i,2} = f{1,i};
+                end
+                TrackData = loadfile;
+            case "Custom Localisations mat"
+                %% Custom Localisations mat
+                % Display uigetfile dialog
+                filterspec = {'*.mat'};
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
+                % Make sure user didn't cancel uigetfile dialog
+                if ~ischar(p)
+                    error("No file selected")
+                end
+                if isa(f,"char") %only one file selected, convert to cell 
+                    b = f;
+                    f = cell(1,1);
+                    f{1,1} = b;
+                end
+                loadfile = cell(size(f,2),2);
+                for i = 1:size(f,2)
+                    loadfile{i,1} = loadCustomMat(fullfile(p,f{1,i}), ImportSettingsStruct);
+                    loadfile{i,2} = f{1,i};
+                end
+                TrackData = loadfile;
+            case "Custom Localisations csv"
+                %% Filtered data mat
+                % Display uigetfile dialog
+                filterspec = {'*.csv'};
+                [f, p] = uigetfile(filterspec, 'MultiSelect','off');
+                % Make sure user didn't cancel uigetfile dialog
+                if ~ischar(p)
+                    error("No file selected")
+                end
+                if isa(f,"char") %only one file selected, convert to cell 
+                    b = f;
+                    f = cell(1,1);
+                    f{1,1} = b;
+                end
+                loadfile = cell(size(f,2),2);
+                for i = 1:size(f,2)
+                    loadfile{i,1} = loadCustomCSV(fullfile(p,f{1,i}), ImportSettingsStruct);
+                    loadfile{i,2} = f{1,i};
+                end
                 TrackData = loadfile;
         end
     end           
