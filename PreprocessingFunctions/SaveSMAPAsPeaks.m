@@ -10,6 +10,10 @@ newPeaks(:,2) = loc.xnm;
 newPeaks(:,3) = loc.ynm;
 try
     newPeaks(:,4) = loc.znm;
+catch
+end
+if size(newPeaks, 2) < 4
+    newPeaks(:,4) = 0;
 end
 newPeaks(:,5) = loc.locprecnm.^2;
 newPeaks(:,6) = loc.phot;

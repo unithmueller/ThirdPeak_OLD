@@ -7,7 +7,13 @@ function localisations = loadSMAPLocalisations(file)
     newfile(:,2) = locs.frame; %t
     newfile(:,3) = locs.xnm; %x
     newfile(:,4) = locs.ynm; %y
-    newfile(:,5) = locs.znm; %z
+    try
+        newfile(:,5) = locs.znm; %z
+    catch
+    end
+    if size(newfile,2)<5
+        newfile(:,5) = 0;
+    end
     newfile(:,6) = locs.locprecnm; %xyerr
     newfile(:,7) = locs.locprecznm; %zerr
     newfile(:,8) = locs.phot; %photons

@@ -17,15 +17,23 @@ locfile(:,3) = locfile(:,3)*pixelsize;
 locfile(:,4) = locs.y;
 %adust to metric unit
 locfile(:,4) = locfile(:,4)*pixelsize;
-locfile(:,5) = locs.z;
+try
+    locfile(:,5) = locs.z;
+catch
+end
+if size(locfile,2) < 5
+    locfile(:,5) = 0;
+end
 %localisation precision given for x and y separetly, need to fit in into
 %one value
 prec = [locs.lpx, locs.lpy];
 prec =  mean(prec,2);
 prec = prec*pixelsize;
 locfile(:,6) = prec;
-
-locfile(:,7) = locs.d_zcalib*pixelsize;
+try
+    locfile(:,7) = locs.d_zcalib*pixelsize;
+catch
+end
 locfile(:,8) = locs.photons;
 %photon error is not given by Picasso. Will assume an error of 10%
 locfile(:,9) = locs.photons*0.1;

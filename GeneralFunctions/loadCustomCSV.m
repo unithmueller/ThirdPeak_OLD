@@ -12,7 +12,13 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     newfile(:,2) = file(:,ImportSettingsStruct.framenr); %t
     newfile(:,3) = file(:,ImportSettingsStruct.xpos); %x
     newfile(:,4) = file(:,ImportSettingsStruct.ypos); %y
-    newfile(:,5) = file(:,ImportSettingsStruct.zpos); %z
+    try
+        newfile(:,5) = file(:,ImportSettingsStruct.zpos); %z
+    catch
+    end
+    if size(newfile,2) < 5
+        newfile(:,5) = 0;
+    end
     try
         newfile(:,6) = file(:,ImportSettingsStruct.xyerr); %xyerr
     catch
@@ -36,7 +42,13 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     newfile(:,2) = file(:,ImportSettingsStruct.framenr); %t
     newfile(:,3) = file(:,ImportSettingsStruct.xpos); %x
     newfile(:,4) = file(:,ImportSettingsStruct.ypos); %y
-    newfile(:,5) = file(:,ImportSettingsStruct.zpos); %z
+    try
+        newfile(:,5) = file(:,ImportSettingsStruct.zpos); %z
+    catch
+    end
+    if size(newfile,2) < 5
+        newfile(:,5) = 0;
+    end
     try
         newfile(:,6) = file(:,ImportSettingsStruct.jumpdist); %jumpdist
     catch
