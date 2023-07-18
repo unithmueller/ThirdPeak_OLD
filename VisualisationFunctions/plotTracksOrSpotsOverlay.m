@@ -58,23 +58,31 @@ function plotTracksOrSpotsOverlay(Axes, Tracks, is3d, isTracks, isAlltracks, sca
             
         case 1
             %tracks
+            %save the color choice
+            usedColor = {};
             for i = 1:size(trackIDs,1)
             %for every Track
             curTrack = currentTracks{i,1};
                 if is3d == 0
-                    plot(Axes, curTrack(:,3), curTrack(:,4), "Displayname",num2str(curTrack(1,1)));
+                    p = plot(Axes, curTrack(:,3), curTrack(:,4), "Displayname",num2str(curTrack(1,1)));
+                    color = p.Color;
+                    usedColor{i,1} = color;
                 elseif is3d == 1
-                    plot3(Axes, curTrack(:,3), curTrack(:,4), curTrack(:,5),"Displayname",num2str(curTrack(1,1)));
+                    p =plot3(Axes, curTrack(:,3), curTrack(:,4), curTrack(:,5),"Displayname",num2str(curTrack(1,1)));
+                    color = p.Color;
+                    usedColor{i,1} = color;
                 end
             end
             %plot the current spot in addition if we dont plot all tracks
             if ~isAlltracks
                  %spots
-                if is3d == 0
-                    scatter(Axes, currentSpots(:,3), currentSpots(:,4), spotSize, "filled");
-                elseif is3d == 1
-                    scatter3(Axes, currentSpots(:,3), currentSpots(:,4), currentSpots(:,5), spotSize, "filled");
+                for i = 1:size(trackIDs,1) 
+                    if is3d == 0
+                        scatter(Axes, currentSpots(i,3), currentSpots(i,4), spotSize, usedColor{i,1}, "filled");
+                    elseif is3d == 1
+                        scatter3(Axes, currentSpots(i,3), currentSpots(i,4), currentSpots(i,5), spotSize, usedColor{i,1}, "filled");
+                    end
                 end
-            end
+           end
     end
 end
