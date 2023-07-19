@@ -1,4 +1,4 @@
- function calculateJumpDistances(SingleTrackData, destinationStruc)
+ function destinationStruc = calculateJumpDistances(SingleTrackData, destinationStruc)
  %Calculates the jump distances in all dimensions for a single track and
  %saves it at the end of a given save structure.
  %Input: 
@@ -8,11 +8,11 @@
     %prepare the temporary arrays
     duration = size(SingleTrackData,1);
 
-    xdist = zeros(duration,2);
-    ydist = zeros(duration,2);
-    zdist = zeros(duration,2);
-    xydist = zeros(duration,2);
-    xyzdist = zeros(duration,2);
+    xdist = zeros(duration-1,2);
+    ydist = zeros(duration-1,2);
+    zdist = zeros(duration-1,2);
+    xydist = zeros(duration-1,2);
+    xyzdist = zeros(duration-1,2);
     % do the calculations
     for i = 1:duration-1
         xdist(i,:) = [i, (SingleTrackData(i,3) - SingleTrackData(i+1,3))];

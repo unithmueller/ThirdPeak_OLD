@@ -1,4 +1,4 @@
-function plotBackgroundImageVisualisation(axes, ImageData, offsetX, offsetY, offsetZ)
+function plotBackgroundImageVisualisation(axes, ImageData, offsetX, offsetY, offsetZ, scalexy)
     %Function to decide if a backgorund image will be plotted and what kind of
     %image will be plotted. 
     %Input: App to grab the axes from; ImageData to be used for the
@@ -11,21 +11,20 @@ function plotBackgroundImageVisualisation(axes, ImageData, offsetX, offsetY, off
     starty = 0+offsetY;
     x = startx:startx+size(ImageData,1)-1;
     y = starty:starty+size(ImageData,2)-1;
+    x = x*(scalexy);
+    y = y*(scalexy);
     z = offsetZ;
     [X,Y,Z] = meshgrid(x,y,z);
     %% Normalize the image to fit the color map
-    %get image data type
-    classname = string(class(ImageData));
-    %get the bit depth
-    dataRange = split(classname,"t");
-    dataRange = double(dataRange(2));
-    %calculate the nummber of different values
-    dataRange = (2^dataRange)-1;
+    %set image data type to dobule
+    ImageData = double(ImageData);
+    %set the data range to 8bit
+    dataRange = 255;
     %get the min and max values in the image
     minval = min(min(ImageData));
     maxval = max(max(ImageData));
     %normalize the image
-    normImage = ((I-minval)/(maxval-minval))*dataRange;
+    normImage = ((ImageData-minval)/(maxval-minval))*dataRange;
     %% add the image to the generated surface
     %generate a figur to work in and hide it
     h1 = figure();

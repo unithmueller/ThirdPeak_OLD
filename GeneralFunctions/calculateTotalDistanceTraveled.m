@@ -1,4 +1,4 @@
-function calculateTotalDistanceTraveled(destinationStruc)
+function destinationStruc = calculateTotalDistanceTraveled(destinationStruc)
 %Funtion to calculate the total distance a particle has travelled during
 %its lifetime
 %Input: destinationStruc already containing the calculated jump distances
@@ -24,6 +24,6 @@ function calculateTotalDistanceTraveled(destinationStruc)
     end
     
     %% save to destination
-    destinationStruc.TrackLength.AbsLength.XY = totdistXY;
-    destinationStruc.TrackLength.AbsLength.XYZ = totdistXYZ;
+    destinationStruc.TrackLength.AbsLength.XY(end+1,:) = {totalDistanceXY(1,1), totalDistanceXY(1,2)} ;
+    destinationStruc.TrackLength.AbsLength.XYZ(end+1,:) = {totalDistanceXYZ(1,1), totalDistanceXYZ(1,2)};
 end

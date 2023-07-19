@@ -1,4 +1,4 @@
-function calculateJumpAngles(SingleTrackData, destinationStruc)
+function destinationStruc = calculateJumpAngles(SingleTrackData, destinationStruc)
 %Function to calculate the jump angles between steps. Will save the
 %calculated data into the given destination structure.
 %Input: SingleTrackData - coordinates of a single track
@@ -10,7 +10,7 @@ function calculateJumpAngles(SingleTrackData, destinationStruc)
     anglesxyz = zeros(stepNumber,1);
     
     %% calculate the angles
-    for i = 1:number
+    for i = 1:stepNumber
         %Need 3 points to calculate an angle                
         p1xyz = SingleTrackData(i,3:5);
         p2xyz = SingleTrackData(i+1,3:5);

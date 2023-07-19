@@ -1,4 +1,4 @@
-function outputLabels = plotAllFiguresSingleTrackAnalysis(saveStruc, AxesJDX, AxesJDY, AxesJDZ, AxesJDXYZ, dimensions, isPixel, timeunit, lengthunit, PolarAxes, AxesInten, isMean, isUnit, timestepsize, pxsize)
+function outputLabels = plotAllFiguresSingleTrackAnalysis(saveStruc, AxesJDX, AxesJDY, AxesJDZ, AxesJDXYZ, dimensions, isPixel, timeunit, lengthunit, PolarAxes, AxesInten, isMean, isUnit, timestepsize, pxsize, MSDAxes, fitval)
 %Central function to call the plotting of the respective parts of the
 %SingleTrackAnalysisWindow.
 %Input:
@@ -7,16 +7,16 @@ function outputLabels = plotAllFiguresSingleTrackAnalysis(saveStruc, AxesJDX, Ax
 
 
     %% plot jump distances
-    plotJumpDistancesSingleTrackAnalysis(saveStruc, AxesJDX, AxesJDY, AxesJDZ, AxesJDXYZ, dimensions, isPixel, timeunit, lengthunit)
+    plotJumpDistancesSingleTrackAnalysis(saveStruc, AxesJDX, AxesJDY, AxesJDZ, AxesJDXYZ, dimensions, isPixel, timeunit, lengthunit, timestepsize);
     %% plot jump angles
-    if dimension == 2
-        polarhistogram(PolarAxes,saveStruc.JumpAngles.XY{1,1},12);
+    if dimensions == 2
+        polarhistogram(PolarAxes,saveStruc.JumpAngles.XY{1,2},12);
     else
-        polarhistogram(PolarAxes,saveStruc.JumpAngles.XYZ{1,1},12);
+        polarhistogram(PolarAxes,saveStruc.JumpAngles.XYZ{1,2},12);
     end
     %% plot Intensity
     plotIntensityofTrackoverTime(AxesInten, saveStruc, isMean, isUnit, timeunit, timestepsize);
     %% plot MSD
-    outputLabels = plotMSDClassic(Axes, saveStruc, dimension, fitval, isUnit, timeunit, lengthunit, timestep, pxsize);
+    outputLabels = plotMSDClassic(MSDAxes, saveStruc, dimensions, fitval, isUnit, timeunit, lengthunit, timestepsize, pxsize);
 
 end

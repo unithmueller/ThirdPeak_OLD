@@ -13,7 +13,7 @@ function Trackhandles = manageTrackOverlayVisualisation(Axes, Tracks, is3D, isTr
 
     %% Prepare the axes
     %Clear the axes
-    cla(Axes);
+    %cla(Axes);
     hold(Axes, "on");
     %% Decide if spots or tracks
     if isTracks

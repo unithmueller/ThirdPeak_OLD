@@ -11,7 +11,7 @@ function plotIntensityofTrackoverTime(Axes, saveStruc, isMean, isUnit, timeunit,
 %Output: -
 
     %% get the data
-    datY = saveStruc.Intensities{1,1};
+    datY = saveStruc.Intensities{1,2};
     datX = [1:1:size(datY,1)];
     
     %if we use true units
@@ -32,9 +32,9 @@ function plotIntensityofTrackoverTime(Axes, saveStruc, isMean, isUnit, timeunit,
     else
         %need to calculate first
         newint = zeros(size(datY,1),1);
-        newint(1) = datY(1,2);
+        newint(1) = datY(1);
         for i = 2:size(datY,1)
-            newint(i) = datY(i,2)+newint(i-1,1);
+            newint(i) = datY(i,1)+newint(i-1,1);
         end
         %plot
         plot(Axes, datX, newint);

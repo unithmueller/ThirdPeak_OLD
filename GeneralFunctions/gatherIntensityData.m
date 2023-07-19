@@ -1,4 +1,4 @@
-function gatherIntensityData(SingleTrackData, destinationStruc)
+function destinationStruc = gatherIntensityData(SingleTrackData, destinationStruc)
     %Grabs the intesity data from Single Tracks and saves it in the
     %structured array to be used later
 

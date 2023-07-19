@@ -47,6 +47,7 @@ function plotTracksOrSpotsOverlay(Axes, Tracks, is3d, isTracks, isAlltracks, sca
         currentTracks{i,1}(:,5) = currentTracks{i,1}(:,5)*scalez;
     end
     %% Plot the data
+    hold(Axes, "on");
     switch isTracks
         case 0
             %spots

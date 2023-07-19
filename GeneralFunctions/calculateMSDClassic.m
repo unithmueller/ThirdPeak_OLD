@@ -1,11 +1,11 @@
-function calculateMSDClassic(TrackData, dimension, fitValue, lengthCheck, destinationStruc)
+function destinationStruc = calculateMSDClassic(TrackData, dimension, fitValue, lengthCheck, destinationStruc)
 %Function to call the MSDAnalyzer to re-calculate the MSD. Works best on
 %longer tracks
 %Input: TrackData as an array
         %Dimension to define if 2d or 3d MSD should be calculated
         %fitValue defines the number of points to fit to
         %destinationStruc to set the save location
-%Output:
+%Output: destinationStruc
 
     %% Repack the data to be used for the MSD analysis
     %Need to put each track in a exclusive cell
@@ -23,7 +23,7 @@ function calculateMSDClassic(TrackData, dimension, fitValue, lengthCheck, destin
     end
     for i = 1:size(trackIDs)
         %get the first track
-        currentTrack = TrackData(TrackData(:,1) == trackIDs(i));
+        currentTrack = TrackData(TrackData(:,1) == trackIDs(i),:);
         %decide if the Track matches our anticipated length
         if size(currentTrack,1) >= tmpfitValue
             %save the Id of the track

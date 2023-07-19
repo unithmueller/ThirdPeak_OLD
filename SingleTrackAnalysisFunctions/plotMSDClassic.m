@@ -19,44 +19,50 @@ function outputLabels = plotMSDClassic(Axes, saveStruc, dimension, fitval, isUni
     
     %clear the axes
     cla(Axes);
-    plotMeanMSD(lyzer, Axes,1);
-    close
-    labelPlotMSD(lyzer, Axes);
-    
-    %% plot the fits
-    %genearte xdata
-    xData = [1:1:fitval];
-    %retrieve the a and b value
-    a = lyzer.lfit.a;
-    b = lyzer.lfit.b;
-    %retrieve uncertainty, alpha, diffusion coeffieicent
-    r2fit = lyzer.lfit.r2fit;
-    alpha = lyzer.loglogfit.alpha;
-    D = a*1/(2*dimension);
-    yData = xData*a;
- 
-    %plot
-    hold(Axes,"on");
-    plot(Axes, xData, yData);
-    
-    %adjust text labels if necessary
-    if isUnit
-        %adjustments text label
-        xdatalabel = sprintf("Delay [%s]", timeunit);
-        Axes.XLabel.String = {xdatalabel};
-        ydatalabel = sprintf("MSD [%s^2]", lengthunit);
-        Axes.YLabel.String = {ydatalabel};
-        %adjustments xticks delay
-        xdataticks = str2double(Axes.XTickLabel);
-        xdataticks = xdataticks*timestep;
-        app.UIAxes2_6.XTickLabel = cellstr(num2str(xdataticks));
-        %yticks MSD
-        ydataticks = str2double(Axes.YTickLabel);
-        ydataticks = ydataticks*(pxsize*pxsize);
-        Axes.YTickLabel = cellstr(num2str(ydataticks));
+    %if no msd could be done, do nothing
+    try
+        plotMeanMSD(lyzer, Axes,1);
+        close
+        labelPlotMSD(lyzer, Axes);
+
+        %adjust the label size
+
+        %% plot the fits
+        %genearte xdata
+        xData = [0:1:fitval];
+        %retrieve the a and b value
+        a = lyzer.lfit.a;
+        b = lyzer.lfit.b;
+        %retrieve uncertainty, alpha, diffusion coeffieicent
+        r2fit = lyzer.lfit.r2fit;
+        alpha = lyzer.loglogfit.alpha;
+        D = a*1/(2*dimension);
+        yData = (xData*a)+b;
+
+        %plot
+        hold(Axes,"on");
+        plot(Axes, xData, yData, 'r', "LineWidth", 3);
+
+        %adjust text labels if necessary
+        if isUnit
+            %adjustments text label
+            xdatalabel = sprintf("Delay [%s]", timeunit);
+            Axes.XLabel.String = {xdatalabel};
+            ydatalabel = sprintf("MSD [%s^2]", lengthunit);
+            Axes.YLabel.String = {ydatalabel};
+            %adjustments xticks delay
+            xdataticks = str2double(Axes.XTickLabel);
+            xdataticks = xdataticks*timestep;
+            app.UIAxes2_6.XTickLabel = cellstr(num2str(xdataticks));
+            %yticks MSD
+            ydataticks = str2double(Axes.YTickLabel);
+            ydataticks = ydataticks*(pxsize*pxsize);
+            Axes.YTickLabel = cellstr(num2str(ydataticks));
+        end
+
+        %% pack the data for the labels in the GUI
+        outputLabels = [num2str(D), num2str(alpha), num2str(r2fit)];
+    catch
     end
-    
-    %% pack the data for the labels in the GUI
-    outputLabels = [num2str(D), num2str(alpha), num2str(r2fit)];
 end
     

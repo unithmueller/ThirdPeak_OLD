@@ -1,4 +1,4 @@
-function calculateNumberOfStepsinTrack(SingleTrackData, destinationStruc)
+function destinationStruc = calculateNumberOfStepsinTrack(SingleTrackData, destinationStruc)
 %Calculates the number of steps = length of a track
 %Input: SingleTrackData - Localisation data of a single track
         %destinationStruc - structure to save to

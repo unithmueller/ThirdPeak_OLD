@@ -13,8 +13,8 @@ if nargin < 2
 end
 
 hl = NaN(2, 1);
-hl(1) = xlabel(ha, ['Delay (' obj.time_units ')']);
-hl(2) = ylabel(ha, ['MSD (' obj.space_units '^2)']);
+hl(1) = xlabel(ha, join(["Delay (" obj.time_units ")"],""));
+hl(2) = ylabel(ha, join(["MSD (" obj.space_units "^2)"],""));
 
 xl = xlim(ha);
 xlim(ha, [0 xl(2)]);
