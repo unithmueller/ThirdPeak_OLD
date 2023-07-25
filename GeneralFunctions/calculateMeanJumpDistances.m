@@ -1,4 +1,4 @@
- function calculateMeanJumpDistances(inputStruc, destinationStruc)
+ function destinationStruc = calculateMeanJumpDistances(inputStruc, destinationStruc)
     %calculates the mean jump distances from already calculated jump
     %distances.
     %Input: inputStruc: Structured array in which the jump distances are
