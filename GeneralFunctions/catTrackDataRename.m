@@ -12,7 +12,7 @@ function data = catTrackDataRename(TracksinCell)
         sz = sizes{i,1}(1,1);
         allentries = allentries+sz;
     end
-    data = zeros(allentries,sizes{1,1}(1,2));
+    data = zeros(allentries,sizes{1,1}(1,2)+1);
     
     count = 1;
     for i = 1:size(sizes,1)
@@ -21,6 +21,7 @@ function data = catTrackDataRename(TracksinCell)
             trackentries = sizes{i,1}(1,1)+count-1;
 
             putdata = TracksinCell{i,1};
+            putdata(:,end+1) = putdata(:,1);
             putdata(:,1) = maxID+1+putdata(:,1);
 
             data(count:trackentries,:) = putdata;

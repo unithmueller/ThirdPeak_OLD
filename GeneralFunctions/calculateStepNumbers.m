@@ -1,4 +1,4 @@
- function calculateStepNumbers(SingleTrackData, destinationStruc)
+ function destinationStruc = calculateStepNumbers(SingleTrackData, destinationStruc)
  %calculates the length of a given track and saves is in the structured
  %array of choice.
  %Input: SingleTrackData: x by 5 array of a single track

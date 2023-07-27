@@ -18,9 +18,9 @@ function Outputstructure = calculateCumulativeMeanJumpDistance(Inputstructure, O
     cmjdXYZ = calculateCumulativeSum(cell2mat(datXYZ));
     
     %% save the new data to the structured array
-    Outputstructure.CumMeanJumpDist.X = {cmjdX};
-    Outputstructure.CumMeanJumpDist.Y = {cmjdY};
-    Outputstructure.CumMeanJumpDist.Z = {cmjdZ};
-    Outputstructure.CumMeanJumpDist.XY = {cmjdXY};
-    Outputstructure.CumMeanJumpDist.XYZ = {cmjdXYZ};
+    Outputstructure.CumMeanJumpDist.X = {cmjdX(:,1)};
+    Outputstructure.CumMeanJumpDist.Y = {cmjdY(:,1)};
+    Outputstructure.CumMeanJumpDist.Z = {cmjdZ(:,1)};
+    Outputstructure.CumMeanJumpDist.XY = {cmjdXY(:,1)};
+    Outputstructure.CumMeanJumpDist.XYZ = {cmjdXYZ(:,1)};
 end

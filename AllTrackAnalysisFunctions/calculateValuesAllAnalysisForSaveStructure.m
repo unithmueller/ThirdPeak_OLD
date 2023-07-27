@@ -21,15 +21,15 @@ function SaveStructure = calculateValuesAllAnalysisForSaveStructure(TrackData, S
         %% calculate the netto distance
         SaveStructure = calculateNettoDistanceTravelled(singleTrackData, SaveStructure);
         %% calculate the step numbers
-        calculateStepNumbers(singleTrackData, SaveStructure);
+        SaveStructure = calculateStepNumbers(singleTrackData, SaveStructure);
         %% determine the number of segments per track
-        determineSegmentNumbers(singleTrackData, SaveStructure);
+        SaveStructure = determineSegmentNumbers(singleTrackData, SaveStructure);
     end
     %% Use the data from the structured array to calculate more properties
-    SaveStructure = calculateCumulativeJumpDistances(InputStructure, SaveStructure);
-    SaveStructure = calculateMeanJumpDistances(inputStruc, SaveStructure);
-    SaveStructure = calculateCumulativeMeanJumpDistance(Inputstructure, SaveStructure);
-    SaveStructure = calculateCumulativeTrackLength(Inputstructure, SaveStructure);
+    SaveStructure = calculateCumulativeJumpDistances(SaveStructure, SaveStructure);
+    SaveStructure = calculateMeanJumpDistances(SaveStructure, SaveStructure);
+    SaveStructure = calculateCumulativeMeanJumpDistance(SaveStructure, SaveStructure);
+    SaveStructure = calculateCumulativeTrackLength(SaveStructure, SaveStructure);
     SaveStructure = calculateTotalDistanceTraveled(SaveStructure);
     SaveStructure = calculateConfinementRatio(SaveStructure);
 end

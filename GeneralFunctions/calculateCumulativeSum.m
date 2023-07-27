@@ -8,7 +8,7 @@ function cumSum = calculateCumulativeSum(Inputarray)
     elseif sz(1) < sz(2)
         Inputarray = Inputarray.';
     end
-    cumSum = zeros(size(Inputarray,1));
+    cumSum = zeros(size(Inputarray,1),1);
     cumSum(1) = Inputarray(1);
     
     for i = 2:size(Inputarray,1)

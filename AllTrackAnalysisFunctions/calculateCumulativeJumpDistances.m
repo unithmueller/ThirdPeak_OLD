@@ -16,20 +16,20 @@ function OutputStructure = calculateCumulativeJumpDistances(InputStructure, Outp
     %% calculate the cumulative jump distances
     for i = 1:size(datX,1)
         tmpX = datX{i,2};
-        datX{i,2} = calculateCumulativeSum(tmpX);
+        datX{i,2} = calculateCumulativeSum(tmpX(:,2));
         tmpY = datY{i,2};
-        datY{i,2} = calculateCumulativeSum(tmpY);
+        datY{i,2} = calculateCumulativeSum(tmpY(:,2));
         tmpZ = datZ{i,2};
-        datZ{i,2} = calculateCumulativeSum(tmpZ);
+        datZ{i,2} = calculateCumulativeSum(tmpZ(:,2));
         tmpXY = datXY{i,2};
-        datXY{i,2} = calculateCumulativeSum(tmpXY);
+        datXY{i,2} = calculateCumulativeSum(tmpXY(:,2));
         tmpXYZ = datXYZ{i,2};
-        datXYZ{i,2} = calculateCumulativeSum(tmpXYZ);
+        datXYZ{i,2} = calculateCumulativeSum(tmpXYZ(:,2));
     end
     %% put the data back into the output structure
     OutputStructure.CumJumpDist.X = datX;
     OutputStructure.CumJumpDist.Y = datY;
     OutputStructure.CumJumpDist.Z = datZ;
     OutputStructure.CumJumpDist.XY = datXY;
-    OutputStructure.CumJumpDist.XZ = datXYZ;
+    OutputStructure.CumJumpDist.XYZ = datXYZ;
 end

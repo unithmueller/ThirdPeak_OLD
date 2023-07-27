@@ -10,5 +10,5 @@ function Outputstructure = calculateCumulativeTrackLength(Inputstructure, Output
     cmtl = calculateCumulativeSum(cell2mat(data));
     
     %% save the new data to the structured array
-    Outputstructure.TrackLength.CumLen = {cmtl};
+    Outputstructure.TrackLength.CumLen = {cmtl(:,1)};
 end

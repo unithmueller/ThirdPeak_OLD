@@ -1,4 +1,4 @@
- function determineSegmentNumbers(SingleTrackData, destinationStruc)
+ function destinationStruc = determineSegmentNumbers(SingleTrackData, destinationStruc)
  %determines the number of segments in a given track and saves is in the structured
  %array of choice.
  %Input: SingleTrackData: x by 23 array of a single track

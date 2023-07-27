@@ -44,6 +44,7 @@ function destinationStruc = calculateMSDClassic(TrackData, dimension, fitValue, 
     lyzer = fitLogLogMSD(lyzer, fitValue);
     
     %% Save the generated data
+    destinationStruc.InternMSD.TrackIDs = calculatedMSDIDs;
     if dimension == 2
         dimf = 2;
         destinationStruc.InternMSD.XY.MSDclass = lyzer;
