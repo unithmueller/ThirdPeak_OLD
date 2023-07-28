@@ -24,6 +24,6 @@ function destinationStruc = calculateTotalDistanceTraveled(destinationStruc)
     end
     
     %% save to destination
-    destinationStruc.TrackLength.AbsLength.XY(end+1,:) = {totalDistanceXY(1,1), totalDistanceXY(1,2)} ;
-    destinationStruc.TrackLength.AbsLength.XYZ(end+1,:) = {totalDistanceXYZ(1,1), totalDistanceXYZ(1,2)};
+    destinationStruc.TrackLength.AbsLength.XY(end+1,1) = {totalDistanceXY};
+    destinationStruc.TrackLength.AbsLength.XYZ(end+1,1) = {totalDistanceXYZ};
 end

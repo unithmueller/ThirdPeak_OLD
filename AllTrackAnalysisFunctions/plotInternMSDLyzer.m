@@ -22,7 +22,11 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
            data = SaveStructure.InternMSD.(dimension).(property);
        end
        %% Unpack the cell array
-       data = cell2mat(data(:,2));
+       if size(data,2) == 1
+           
+       else
+           data = cell2mat(data(:,2));
+       end
        
        %% Adjust the values if Unit/Unit
        if ~isPixel & property ~= "Alpha"
@@ -33,10 +37,11 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
            end
        end
        %% Plot the data
-       minv = min(data(:,2));
-       maxv = max(data(:,2));
+       minv = min(data);
+       maxv = max(data);
        edges = linspace(minv, maxv, binNumbers);
-       histogram(Axes, data, edges)
+       his = histogram(Axes, data, edges);
+       hixMaxValue = max(his.Values);
        xlim(Axes, [minv maxv]);
        
        %% adjust the title and xlabel depending on the property
@@ -71,12 +76,22 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
            xFitData = minv:1:maxv;
            yGauss = pdf(pdGauss, xFitData);
            yKernel = pdf(pdKernel, xFitData);
+           maxyGauss = max(yGauss);
+           maxyKernel = max(yKernel);
+           %scaling factor
+           scalingFactorGauss = hixMaxValue/maxyGauss;
+           scalingFactorKernel = hixMaxValue/maxyKernel;
+           
+           %scale the data
+           yGauss = yGauss*scalingFactorGauss;
+           yKernel = yKernel*scalingFactorKernel;
+
 
            %% plot
            hold(Axes,"on")
-           plot(xFitData, yGauss, "--r");
-           plot(xFitData, yKernel, "k");
-           legend("GaussFit", "KernelFit");
+           gp = plot(Axes, xFitData, yGauss, "--r");
+           kp = plot(Axes, xFitData, yKernel, "k");
+           legend(Axes, "Histogram", "GaussFit", "KernelFit");
            hold(Axes,"off")
            
            %% get the data from fit

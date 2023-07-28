@@ -32,7 +32,7 @@ function [minv, maxv] = plotDiffusionTypeSwitch(Axes, SaveStructure, filterIDs)
        xlim(Axes, [minv maxv]);
        
        title(Axes, "Number of Segments in given Tracks");
-       xticks(Axes, [1:1:sz]);
+       xticks(Axes, [1:1:maxv]);
        xlabel(Axes, "Number of Segments");
 
 end

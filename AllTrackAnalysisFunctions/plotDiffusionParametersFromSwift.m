@@ -27,16 +27,17 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
        data = cell2mat(data(:,2));
        
        %% Plot the data
-       minv = min(data(:,2));
-       maxv = max(data(:,2));
+       minv = min(data);
+       maxv = max(data);
        edges = linspace(minv, maxv, binNumbers);
-       histogram(Axes, data, edges)
+       his = histogram(Axes, data, edges);
+       hixMaxValue = max(his.Values);
        xlim(Axes, [minv maxv]);
        title(Axes, join(["Distribution of " property " from Swift"],""));
        if property == "MSD"
-           xlabel(Axes, sprintf("MSD in [%s²]", lengthUnit));
+           xlabel(Axes, sprintf("MSD in [%s²/s²]", "µm"));
        else
-           xlabel(Axes, sprintf("D in [%s²/s]", lengthUnit));
+           xlabel(Axes, sprintf("D in [%s²/s]", "µm"));
        end
  
        %% Decide if we fit or not
@@ -49,12 +50,22 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
            xFitData = minv:1:maxv;
            yGauss = pdf(pdGauss, xFitData);
            yKernel = pdf(pdKernel, xFitData);
+           maxyGauss = max(yGauss);
+           maxyKernel = max(yKernel);
+           %scaling factor
+           scalingFactorGauss = hixMaxValue/maxyGauss;
+           scalingFactorKernel = hixMaxValue/maxyKernel;
+           
+           %scale the data
+           yGauss = yGauss*scalingFactorGauss;
+           yKernel = yKernel*scalingFactorKernel;
 
            %% plot
+           axes(Axes);
            hold(Axes,"on")
-           plot(xFitData, yGauss, "--r");
-           plot(xFitData, yKernel, "k");
-           legend("GaussFit", "KernelFit");
+           gp = plot(Axes, xFitData, yGauss, "--r");
+           kp = plot(Axes, xFitData, yKernel, "k");
+           legend(Axes, "Histogram", "GaussFit", "KernelFit");
            hold(Axes,"off")
            
            %% get the data from fit

@@ -30,7 +30,8 @@ function [minv, maxv, gaussDat, kernelDat] = plotJumpDistance(Axes, binNumbers, 
        minv = min(data(:,2));
        maxv = max(data(:,2));
        edges = linspace(minv, maxv, binNumbers);
-       histogram(Axes, data, edges)
+       his = histogram(Axes, data(:,2), edges);
+       hixMaxValue = max(his.Values);
        xlim(Axes, [minv maxv]);
        title(Axes, join(["Jump Distance Distribution for " dimension],""));
        if isPixel
@@ -42,19 +43,29 @@ function [minv, maxv, gaussDat, kernelDat] = plotJumpDistance(Axes, binNumbers, 
        %% Decide if we fit or not
        if performFit
            %% perform fit
-           pdGauss = fitdist(data, "Normal");
-           pdKernel = fitdist(data, "Kernel", "Width", []);
+           pdGauss = fitdist(data(:,2), "Normal");
+           pdKernel = fitdist(data(:,2), "Kernel", "Width", []);
 
            %% generate matching data
            xFitData = minv:1:maxv;
            yGauss = pdf(pdGauss, xFitData);
            yKernel = pdf(pdKernel, xFitData);
+           maxyGauss = max(yGauss);
+           maxyKernel = max(yKernel);
+           %scaling factor
+           scalingFactorGauss = hixMaxValue/maxyGauss;
+           scalingFactorKernel = hixMaxValue/maxyKernel;
+           
+           %scale the data
+           yGauss = yGauss*scalingFactorGauss;
+           yKernel = yKernel*scalingFactorKernel;
 
            %% plot
+           axes(Axes);
            hold(Axes,"on")
-           plot(xFitData, yGauss, "--r");
-           plot(xFitData, yKernel, "k");
-           legend("GaussFit", "KernelFit");
+           gp = plot(Axes, xFitData, yGauss, "--r");
+           kp = plot(Axes, xFitData, yKernel, "k");
+           legend(Axes, "Histogram", "GaussFit", "KernelFit");
            hold(Axes,"off")
            
            %% get the data from fit

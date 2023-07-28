@@ -30,11 +30,14 @@ function plotJumpAngle(Axes, SaveStructure, dimension, filterIDs, performFit)
       
        %% Give a plot around the highest value so it might be easier to compare
        if performFit
+           hold(Axes,"on");
+           axes(Axes);
            val = p.Values;
            maxv = max(val);
            binCenters = (p.BinEdges(1:end-1) + p.BinEdges(2:end))/2;
-           val = zeros(size(binCenters),1);
+           val = zeros(size(binCenters,2),1);
            val(:) = maxv;
-           polarplot(binCenters, val);
+           polarplot(Axes, binCenters, val);
+           hold(Axes,"on");
        end
 end
