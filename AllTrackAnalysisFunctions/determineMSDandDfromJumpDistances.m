@@ -1,4 +1,4 @@
-function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep)
+function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers)
 %Function to determine the MSD and D from 1D and 2D displacements of the
 %tracks. Will only lead to an overall estimation and will not be able to
 %determine different diffusion types/groups.
@@ -58,12 +58,19 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
        xyData = cell2mat(xyData(:,2));
        xyzData = cell2mat(xyzData(:,2));
        
+       xData = xData(:,2);
+       yData = yData(:,2);
+       zData = zData(:,2);
+       xyData = xyData(:,2);
+       xyzData = xyzData(:,2);
+       
        %% Plot the data
        tl = tiledlayout(FigurePanel, 5, 1);
-       nexttile
+       ax1 = nexttile(tl,1);
        %% X
-       minv = min(xData(:,2));
-       maxv = max(xData(:,2));
+       Axes = ax1;
+       minv = min(xData);
+       maxv = max(xData);
        edges = linspace(minv, maxv, binNumbers);
        %histogram
        histogram(Axes, xData, edges)
@@ -83,8 +90,8 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
        pdGauss = fitdist(xData, "Normal");
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
-       hold on
-       plot(xFitData, yGauss, "--r");
+       hold(Axes,"on");
+       plot(Axes, xFitData, yGauss, "--r");
        %fit data
        meanData = mean(xData);
        sst = sum((xData-meanData).^2); %total sum of squares
@@ -98,12 +105,13 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
            xD = xMSD/(2*timestep);
        end
        %show results in graph
-       text(0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
-       text(0.1,0.8, ["MSD: " string(xMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
-       text(0.1,0.7, ["D: " string(xD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
+       text(Axes, 0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
+       text(Axes, 0.1,0.8, ["MSD: " string(xMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
+       text(Axes, 0.1,0.7, ["D: " string(xD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
        
        %% Y
-       nexttile
+       ax2 = nexttile(tl,2);
+       Axes = ax2;
        minv = min(yData(:,2));
        maxv = max(yData(:,2));
        edges = linspace(minv, maxv, binNumbers);
@@ -126,7 +134,7 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
        hold on
-       plot(xFitData, yGauss, "--r");
+       plot(Axes, xFitData, yGauss, "--r");
        %fit data
        meanData = mean(yData);
        sst = sum((yData-meanData).^2); %total sum of squares
@@ -140,12 +148,13 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
            yD = yMSD/(2*timestep);
        end
        %show results in graph
-       text(0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
-       text(0.1,0.8, ["MSD: " string(yMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
-       text(0.1,0.7, ["D: " string(yD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
+       text(Axes, 0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
+       text(Axes, 0.1,0.8, ["MSD: " string(yMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
+       text(Axes, 0.1,0.7, ["D: " string(yD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
        
        %% Z
-       nexttile
+       ax3 = nexttile(tl,3);
+       Axes = ax3;
        minv = min(zData(:,2));
        maxv = max(zData(:,2));
        edges = linspace(minv, maxv, binNumbers);
@@ -168,7 +177,7 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
        hold on
-       plot(xFitData, yGauss, "--r");
+       plot(Axes, xFitData, yGauss, "--r");
        %fit data
        meanData = mean(zData);
        sst = sum((zData-meanData).^2); %total sum of squares
@@ -182,12 +191,13 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
            zD = zMSD/(2*timestep);
        end
        %show results in graph
-       text(0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
-       text(0.1,0.8, ["MSD: " string(zMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
-       text(0.1,0.7, ["D: " string(zD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
+       text(Axes, 0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
+       text(Axes, 0.1,0.8, ["MSD: " string(zMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
+       text(Axes, 0.1,0.7, ["D: " string(zD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
        
        %% XY
-       nexttile
+       ax4 = nexttile(tl,4);
+       Axes = ax4;
        minv = min(xyData(:,2));
        maxv = max(xyData(:,2));
        edges = linspace(minv, maxv, binNumbers);
@@ -210,7 +220,7 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
        hold on
-       plot(xFitData, yGauss, "--r");
+       plot(Axes, xFitData, yGauss, "--r");
        %fit data
        meanData = mean(xyData);
        sst = sum((xyData-meanData).^2); %total sum of squares
@@ -224,12 +234,13 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
            xyD = xyMSD/(2*2*timestep);
        end
        %show results in graph
-       text(0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
-       text(0.1,0.8, ["MSD: " string(xyMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
-       text(0.1,0.7, ["D: " string(xyD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
+       text(Axes, 0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
+       text(Axes, 0.1,0.8, ["MSD: " string(xyMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
+       text(Axes, 0.1,0.7, ["D: " string(xyD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
        
        %% XYZ
-       nexttile
+       ax5 = nexttile(tl,5);
+       Axes = ax5;
        minv = min(xyzData(:,2));
        maxv = max(xyzData(:,2));
        edges = linspace(minv, maxv, binNumbers);
@@ -252,7 +263,7 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
        hold on
-       plot(xFitData, yGauss, "--r");
+       plot(Axes, xFitData, yGauss, "--r");
        %fit data
        meanData = mean(xyzData);
        sst = sum((xyzData-meanData).^2); %total sum of squares
@@ -266,8 +277,8 @@ function determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, 
            xyzD = xyzMSD/(2*3*timestep);
        end
        %show results in graph
-       text(0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
-       text(0.1,0.8, ["MSD: " string(xyzMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
-       text(0.1,0.7, ["D: " string(xyzD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
+       text(Axes, 0.1,0.9, ["R² of Fit: " string(gof.rsquare)], "Units", "normalized");
+       text(Axes, 0.1,0.8, ["MSD: " string(xyzMSD) " [" lengthunittxt "²/" timeunittxt "²"], "Units", "normalized");
+       text(Axes, 0.1,0.7, ["D: " string(xyzD) " [" lengthunittxt "²/" timeunittxt], "Units", "normalized");
 
 end

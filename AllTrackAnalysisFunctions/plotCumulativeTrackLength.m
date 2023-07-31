@@ -26,13 +26,12 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeTrackLength(Axes, bin
            data = SaveStructure.TrackLength.CumLen;
        end
        %% Unpack the cell array
-       data = cell2mat(data(:,2));
+       data = cell2mat(data);
        
        %% Plot the data
-       minv = min(data(:,2));
-       maxv = max(data(:,2));
-       edges = linspace(minv, maxv, binNumbers);
-       histogram(Axes, data, edges)
+       minv = 1;
+       maxv = size(data,1);
+       plt = plot(Axes, data);
        xlim(Axes, [minv maxv]);
        title(Axes, "Cumulative Track Length");
        xlabel(Axes, "Number of Tracks");
@@ -41,24 +40,23 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeTrackLength(Axes, bin
        %% Decide if we fit or not
        if performFit
            %% perform fit
-           pdGauss = fitdist(data, "Normal");
-           pdKernel = fitdist(data, "Kernel", "Width", []);
+           xFitData = 1:1:size(data,1);
+           [pd, S] = polyfit(xFitData, data, 1);
 
            %% generate matching data
-           xFitData = minv:1:maxv;
-           yGauss = pdf(pdGauss, xFitData);
-           yKernel = pdf(pdKernel, xFitData);
-
+           [yLinFitdata, delta] = polyval(pd, xFitData, S);
+           
            %% plot
+           axes(Axes);
            hold(Axes,"on")
-           plot(xFitData, yGauss, "--r");
-           plot(xFitData, yKernel, "k");
-           legend("GaussFit", "KernelFit");
+           pdp = plot(Axes, xFitData, yLinFitdata, "-r");
+           conf = plot(Axes, xFitData,yLinFitdata+2*delta,'m--',xFitData,yLinFitdata-2*delta,'m--');
+           legend(Axes, "Cumulative Track Length", "LinearFit", "95% CI");
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussDat = [pd];
+           %kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
        else
            gaussDat = [];
            kernelDat = [];

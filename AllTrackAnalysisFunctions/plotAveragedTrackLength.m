@@ -38,36 +38,37 @@ function plotAveragedTrackLength(FigurePanel, SaveStructure, filterIDs, isPixel,
        end
        %% Unpack the cell array
        StepNumberdata = cell2mat(StepNumberdata(:,2));
-       Totaldistancedata = cell2mat(Totaldistancedata(:,2));
+       Totaldistancedata = cell2mat(Totaldistancedata);
+       Totaldistancedata = Totaldistancedata(:,2);
        Nettodistancedata = cell2mat(Nettodistancedata(:,2));
        
        %% prepare a tiled layout
        tl = tiledlayout(FigurePanel, 1,3);
        
        %% Plot the data
-       nexttile
-       boxplot(StepNumberdata);
-       title("Average Track Length in Steps")
-       xlabel("Tracks")
-       ylabel("Track Length [steps]")
+       ax1 = nexttile(tl,1);
+       avg = boxplot(ax1, StepNumberdata);
+       title(ax1, "Average Track Length in Steps")
+       xlabel(ax1, "Tracks")
+       ylabel(ax1, "Track Length [steps]")
        
-       nexttile
-       boxplot(Totaldistancedata);
-       title("Average Total Track Length")
-       xlabel("Tracks")
+       ax2 = nexttile(tl,2);
+       tot = boxplot(ax2, Totaldistancedata);
+       title(ax2, "Average Total Track Length")
+       xlabel(ax2, "Tracks")
        if isPixel
-           ylabel("Total Track Length [px]")
+           ylabel(ax2, "Total Track Length [px]")
        else
-           ylabel(sprintf("Total Track Length [%s]", lengthUnit))
+           ylabel(ax2, sprintf("Total Track Length [%s]", lengthUnit))
        end
        
-       nexttile
-       boxplot(Nettodistancedata);
-       title("Average Netto Track Length")
-       xlabel("Tracks")
+       ax3 = nexttile(tl,3);
+       net = boxplot(ax3, Nettodistancedata);
+       title(ax3, "Average Netto Track Length")
+       xlabel(ax3, "Tracks")
        if isPixel
-           ylabel("Netto Track Length [px]")
+           ylabel(ax3, "Netto Track Length [px]")
        else
-           ylabel(sprintf("Netto Track Length [%s]", lengthUnit))
+           ylabel(ax3, sprintf("Netto Track Length [%s]", lengthUnit))
        end
 end
