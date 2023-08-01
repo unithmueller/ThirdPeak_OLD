@@ -1,4 +1,4 @@
-function calculateDbyCumulativeJumpDistances(FigurePanel, SaveStructure, trackingRadius, estimateD, nRates)
+function [xyout, xyzout] = calculateDbyCumulativeJumpDistances(FigurePanel, SaveStructure, trackingRadius, estimateD, nRates, filterIDs, binNumbers, lengthUnit, isPixel)
 %Function to determine different diffusion states from the data of the jump
 %distances. Uses the function from TrackIt to estimate the different
 %states.
@@ -9,8 +9,8 @@ function calculateDbyCumulativeJumpDistances(FigurePanel, SaveStructure, trackin
        %nRates - number of different diffusion states, either 2 or 3
        
       %% get the data
-      xyData = SaveStructure.JumpDist.XY;
-      xyzData = SaveStructure.JumpDist.XYZ;
+      xyData = SaveStructure.CumJumpDist.XY;
+      xyzData = SaveStructure.CumJumpDist.XYZ;
       
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
@@ -35,50 +35,64 @@ function calculateDbyCumulativeJumpDistances(FigurePanel, SaveStructure, trackin
        %% Plot the data
        tl = tiledlayout(FigurePanel, 2, 1);
        %% XY
-       nexttile
-       minv = min(xyData(:,2));
-       maxv = max(xyData(:,2));
+       ax1 = nexttile(tl,1);
+       Axes = ax1;
+       minv = min(xyData);
+       maxv = max(xyData);
        edges = linspace(minv, maxv, binNumbers);
        %histogram
        h1 = histogram(Axes, xyData, edges,'Normalization','cdf');
+       hold(Axes, "on");
+       hisMaxValue = max(h1.Values);
        xlim(Axes, [minv maxv]);
        dimension = "XY";
-       title(Axes, join(["Jump Distance Distribution for " dimension],""));
-       xlabel(Axes, sprintf("Jump Distance in [%s]", lengthUnit));
-       lengthunittxt = lengthUnit;
-       timeunittxt = timeunit;
+       title(Axes, join(["Cumulative Jump Distance Distribution for " dimension],""));
+       if isPixel
+           xlabel(Axes, "Cumulative Jump Distance in [px]");
+       else
+           xlabel(Axes, sprintf("Cumulative Jump Distance in [%s]", lengthUnit));
+       end
        %TrackIt analysis
        Dvals = split(estimateD, ", ");
-       Dvals = double(Dvals.');
+       oldDvals = Dvals;
+       Dvals = zeros(size(oldDvals,1),1).';
+       for i = 1:size(Dvals, 2)
+           Dvals(i) = str2double(oldDvals{i,1});
+       end
        binCenters = h1.BinEdges + h1.BinWidth/2;
        hisValues = h1.Values;
-       [xyout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, trackingRadius, Dvals, nRates);
+       hisValues = [hisValues, 1];
+       [xyout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates));
        %show results in graph
-       text(0.1,0.9, ["Ds of Fit: " string(xyout.D)], "Units", "normalized");
-       text(0.1,0.8, ["D err: " string(xyout.Derr)], "Units", "normalized");
-       text(0.1,0.7, ["R²: " string(xyout.AdjR-squared)], "Units", "normalized");
-       
+       fitDatax = xyout.xy(1,1:binNumbers);
+       fitDatay = xyout.xy(1,binNumbers+1:end);
+       plxy = plot(Axes, fitDatax, fitDatay, "-r");
+       legend(Axes, "Histogram", "Fit");
+
        %% XYZ
-       nexttile
-       minv = min(xyzData(:,2));
-       maxv = max(xyzData(:,2));
+       ax2 = nexttile(tl,2);
+       Axes = ax2;
+       minv = min(xyzData);
+       maxv = max(xyzData);
        edges = linspace(minv, maxv, binNumbers);
        %histogram
        h2 = histogram(Axes, xyzData, edges,'Normalization','cdf');
+       hold(Axes, "on");
        xlim(Axes, [minv maxv]);
        dimension = "XYZ";
-       title(Axes, join(["Jump Distance Distribution for " dimension],""));
-       xlabel(Axes, sprintf("Jump Distance in [%s]", lengthUnit));
-       lengthunittxt = lengthUnit;
-       timeunittxt = timeunit;
+       title(Axes, join(["Cumulative Jump Distance Distribution for " dimension],""));
+       if isPixel
+           xlabel(Axes, "Cumulative Jump Distance in [px]");
+       else
+           xlabel(Axes, sprintf("Cumulative Jump Distance in [%s]", lengthUnit));
+       end
        %TrackIt analysis
-       Dvals = split(estimateD, ", ");
-       Dvals = double(Dvals.');
        binCenters = h2.BinEdges + h2.BinWidth/2;
        hisValues = h2.Values;
-       [xyzout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, trackingRadius, Dvals, nRates);
-       text(0.1,0.9, ["Ds of Fit: " string(xyzout.D)], "Units", "normalized");
-       text(0.1,0.8, ["D err: " string(xyzout.Derr)], "Units", "normalized");
-       text(0.1,0.7, ["R²: " string(xyzout.AdjR-squared)], "Units", "normalized");
-
+       hisValues = [hisValues, 1];
+       [xyzout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates));
+       fitDataxz = xyzout.xy(1,1:binNumbers);
+       fitDatayz = xyzout.xy(1,binNumbers+1:end);
+       plxyz = plot(Axes, fitDataxz, fitDatayz, "-r");
+       legend(Axes, "Histogram", "Fit");
 end

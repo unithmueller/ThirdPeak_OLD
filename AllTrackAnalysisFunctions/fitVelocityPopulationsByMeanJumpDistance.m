@@ -29,10 +29,24 @@ function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveSt
        [N,edges] = histcounts(data,nBins);
        binwidth = abs((edges(2)-edges(1)))/2;
        binCenters = edges+binwidth;
+       binCenters = binCenters(1:end-1);
        %% Find estimates
-       [f,xi] = ksdensity([binCenters; N],'Bandwidth',0.05); 
-       [pks,locs,w,p] = findpeaks(f);
-       initalGuessesMean = xi(locs);
+       [f,xi, bw] = ksdensity([binCenters; N].');
+       TF = islocalmax(f);
+       NmbrMax = size(TF(TF == 1),1);
+       bwarray = [0.05:0.05:0.95];
+       Count = 1;
+       while (NmbrMax > 5) && (Count < 20)
+           bw = bwarray(Count);
+           [f,xi, bw] = ksdensity([binCenters; N].', "Bandwidth", bw);
+           TF = islocalmax(f);
+           NmbrMax = size(TF(TF == 1),1);
+           Count = Count+1;
+       end
+       
+       if Count < 20
+       initalGuessesMean = xi(TF);
+       
        initalGuessesWidth = w;
        %% Fit the gaussians
        gaussParameters =  fitMultipleGaussians(Axes, Inputdata, initalGuessesMean, initalGuessesWidth);
