@@ -1,4 +1,4 @@
-function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveStructure, dimension, nBins, filterIDs)
+function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveStructure, dimension, nBins, filterIDs, populationNumber, lengthUnit, isPixel)
 %Function to determine the number of velocity populations by fitting
 %multiple gaussians onto the curve.
 %Input: Axes - axes object to plot into
@@ -30,25 +30,29 @@ function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveSt
        binwidth = abs((edges(2)-edges(1)))/2;
        binCenters = edges+binwidth;
        binCenters = binCenters(1:end-1);
-       %% Find estimates
-       [f,xi, bw] = ksdensity([binCenters; N].');
-       TF = islocalmax(f);
-       NmbrMax = size(TF(TF == 1),1);
-       bwarray = [0.05:0.05:0.95];
+       %% Find estimates for the number of peaks
+       NumberOfPeaks = str2double(populationNumber);
+       % smooth the histogram
+       dist = fitdist(data, 'kernel', "Kernel", "box");
+       bw = dist.BandWidth;
+       xvals = binCenters;
+       yvals = pdf(dist, xvals);
+       P = allpeaks(binCenters, yvals);
+       NmbrMax = size(P,1);
        Count = 1;
-       while (NmbrMax > 5) && (Count < 20)
-           bw = bwarray(Count);
-           [f,xi, bw] = ksdensity([binCenters; N].', "Bandwidth", bw);
-           TF = islocalmax(f);
-           NmbrMax = size(TF(TF == 1),1);
+       
+       while ((NmbrMax > NumberOfPeaks*2) || (NmbrMax <= NumberOfPeaks-1)) && (Count < 20)
+           bw = bw*0.9;
+           dist = fitdist(data, 'kernel', "Kernel", "box", "Width", bw);
+           yvals = pdf(dist, xvals);
+           P = allpeaks(binCenters, yvals);
+           NmbrMax = size(P,1);
            Count = Count+1;
        end
-       
+       %% get estimates
        if Count < 20
-       initalGuessesMean = xi(TF);
-       
-       initalGuessesWidth = w;
-       %% Fit the gaussians
-       gaussParameters =  fitMultipleGaussians(Axes, Inputdata, initalGuessesMean, initalGuessesWidth);
+           %% Fit the gaussians
+           gaussParameters =  fitMultipleGaussians(Axes, [binCenters.', yvals.'], P(:,1), P(:,2), lengthUnit, isPixel);
+       end
        
 end

@@ -1,4 +1,4 @@
-function gaussParameters =  fitMultipleGaussians(Axes, Inputdata, initalGuessesMean, initalGuessesWidth)
+function gaussParameters =  fitMultipleGaussians(Axes, Inputdata, initalGuessesMean, initalGuessesWidth, lengthUnit, isPixel)
 %Function to fit multiple gaussians to the provided histogram data.
 %Input: Axes - axes object to plot to and where the histogram is lcoated
        %Inputdata - bincenters and values of the histogram
@@ -9,6 +9,25 @@ function gaussParameters =  fitMultipleGaussians(Axes, Inputdata, initalGuessesM
 format long g;
 format compact;
 
+numGaussians = size(initalGuessesMean,1);
+% Plot initial starting signal (the sum of the Gaussians).
+legendStrings = {};
+x = Inputdata(:,1);
+y = Inputdata(:,2);
+plot(Axes, x, y, 'k-', 'LineWidth', 2);
+xlim(Axes, sort([x(1) x(end)]));
+hold(Axes, "on");
+if isPixel
+    xlabel(Axes, 'Mean Jump Distance in [px]');
+else
+    xlabel(Axes, sprintf('Mean Jump Distance in [%s]', lengthUnit));
+end
+
+ylabel(Axes, 'Normalized Quantity')
+
+legendStrings{end+1} = "Smoothed Mean Jump Distance Distribution";
+legend(Axes, legendStrings);
+
 global c NumTrials TrialError
 % 	warning off
 
@@ -16,8 +35,9 @@ global c NumTrials TrialError
 NumTrials = 0;  % Track trials
 TrialError = 0; % Track errors
 % t and y must be row vectors.
-tFit = reshape(Inputdata(1,:), 1, []);
-y = reshape(Inputdata(2,:), 1, []);
+tFit = reshape(x, 1, []);
+y = reshape(y, 1, []);
+
 
 startingGuesses = [initalGuessesMean; initalGuessesWidth];
 %-------------------------------------------------------------------------------------------------------------------------------------------
@@ -41,10 +61,9 @@ options.MaxIter = 100000;
 yhat = PlotComponentCurves(x, y, tFit, c, parameter, Axes);
 % Compute the residuals between the actual y and the estimated y and put that into the graph's title.
 meanResidual = mean(abs(y - yhat));
-fprintf('The mean of the absolute value of the residuals is %f.\n', meanResidual);
+%fprintf('The mean of the absolute value of the residuals is %f.\n', meanResidual);
 caption = sprintf('Estimation of %d Gaussian Curves that will fit data.  Mean Residual = %f.', numGaussians, meanResidual);
-title(caption, 'FontSize', fontSize, 'Interpreter', 'none');
-drawnow;
+title(Axes, caption, 'Interpreter', 'none');
 
 % Make table for the fitted, estimated results.
 % First make numGaussians row by 3 column matrix: Column 1 = amplitude, column 2 = mean, column 3 = width.
@@ -92,7 +111,7 @@ try
 		thisEstimatedCurve = c(k) .* gaussian(t, means(k), widths(k));
 		% Plot component curves.
 		plot(Axes, x, thisEstimatedCurve, '-', 'LineWidth', 2);
-		hold on;
+		hold(Axes, "on");
 		% Overall curve estimate is the sum of the component curves.
 		yhat = yhat + thisEstimatedCurve;
 		legendStrings{k} = sprintf('Estimated Gaussian %d', k);
