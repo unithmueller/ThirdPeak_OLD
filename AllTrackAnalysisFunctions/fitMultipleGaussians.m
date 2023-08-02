@@ -58,7 +58,7 @@ options.MaxIter = 100000;
 
 %----------------------------------------------------------------------------------------------------------------
 % Now plot results.
-yhat = PlotComponentCurves(x, y, tFit, c, parameter, Axes);
+yhat = PlotComponentCurves(x, y, tFit, c, parameter, Axes, legendStrings);
 % Compute the residuals between the actual y and the estimated y and put that into the graph's title.
 meanResidual = mean(abs(y - yhat));
 %fprintf('The mean of the absolute value of the residuals is %f.\n', meanResidual);
@@ -72,32 +72,16 @@ estimatedMuSigma = reshape(parameter, 2, [])';
 gaussianParameters = [c, estimatedMuSigma];
 % Now sort parameters in order of increasing mean
 gaussianParameters = sortrows(gaussianParameters, 2);
-tActual % Display actual table in the command window.
+
 % Create table of the output parameters and display it below the actual, true parameters.
 tEstimate = table((1:numGaussians)', c(:), estimatedMuSigma(:, 1), estimatedMuSigma(:, 2), 'VariableNames', {'Number', 'Amplitude', 'Mean', 'Width'});
 gaussParameters = tEstimate;
 
-% Plot the error as a function of trial number.
-hFigError = figure();
-hFigError.Name = 'Errors';
-plot(TrialError, 'b-');
-% hFigError.WindowState = 'maximized';
-grid on;
-xlabel('Trial Number', 'FontSize', fontSize)
-ylabel('Error', 'FontSize', fontSize)
-
-caption = sprintf('Errors for all %d trials.', length(TrialError));
-title(caption, 'FontSize', fontSize, 'Interpreter', 'none');
-
-message = sprintf('Done!\nHere is the result!\nNote: there could be multiple ways\n(multiple sets of Gaussians)\nthat you could achieve the same sum (same test curve).');
-fprintf('Done running %s.m.\n', mfilename);
-msgboxw(message);
 end
 
 %=======================================================================================================================================================
-function yhat = PlotComponentCurves(x, y, t, c, parameter, Axes)
+function yhat = PlotComponentCurves(x, y, t, c, parameter, Axes, legendStrings)
 try
-	fontSize = 20;
 	% Get the means and widths.
 	means = parameter(1 : 2 : end);
 	widths = parameter(2 : 2 : end);
@@ -105,7 +89,7 @@ try
 	hold(Axes, "on");
 	yhat = zeros(1, length(t));
 	numGaussians = length(c);
-	legendStrings = cell(numGaussians + 2, 1);
+	%legendStrings = cell(1+numGaussians + 2, 1);
 	for k = 1 : numGaussians
 		% Get each component curve.
 		thisEstimatedCurve = c(k) .* gaussian(t, means(k), widths(k));
@@ -114,21 +98,16 @@ try
 		hold(Axes, "on");
 		% Overall curve estimate is the sum of the component curves.
 		yhat = yhat + thisEstimatedCurve;
-		legendStrings{k} = sprintf('Estimated Gaussian %d', k);
+		legendStrings{k+1} = sprintf('Estimated Gaussian %d', k);
     end
 	% Plot estimated summation curve, that is the estimate of the curve.
 	plot(Axes, x, yhat, 'k--', 'LineWidth', 2)
-	grid on;
-	xlabel('X', 'FontSize', fontSize)
-	ylabel('Y', 'FontSize', fontSize)
 	caption = sprintf('Estimation of %d Gaussian Curves that will fit data.', numGaussians);
-	title(caption, 'FontSize', fontSize, 'Interpreter', 'none');
-	grid on
-	legendStrings{numGaussians+1} = sprintf('Actual original signal');
-	legendStrings{numGaussians+2} = sprintf('Sum of all %d Gaussians', numGaussians);
-	legend(legendStrings);
-	xlim(sort([x(1) x(end)]));
-	drawnow;
+	title(Axes, caption, 'Interpreter', 'none');
+	legendStrings{1} = sprintf('Actual original signal');
+	legendStrings{end+1} = sprintf('Sum of all %d Gaussians', numGaussians);
+	legend(Axes, legendStrings);
+	xlim(Axes, sort([x(1) x(end)]));
 	
 catch ME
 	% Some error happened if you get here.

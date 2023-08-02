@@ -38,21 +38,46 @@ function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveSt
        xvals = binCenters;
        yvals = pdf(dist, xvals);
        P = allpeaks(binCenters, yvals);
+       P = P(P(:,2)>0.15,:);
        NmbrMax = size(P,1);
        Count = 1;
        
        while ((NmbrMax > NumberOfPeaks*2) || (NmbrMax <= NumberOfPeaks-1)) && (Count < 20)
-           bw = bw*0.9;
+           bw = bw*0.7;
            dist = fitdist(data, 'kernel', "Kernel", "box", "Width", bw);
            yvals = pdf(dist, xvals);
            P = allpeaks(binCenters, yvals);
+           P = P(P(:,2)>0.15,:);
            NmbrMax = size(P,1);
            Count = Count+1;
        end
        %% get estimates
        if Count < 20
            %% Fit the gaussians
-           gaussParameters =  fitMultipleGaussians(Axes, [binCenters.', yvals.'], P(:,1), P(:,2), lengthUnit, isPixel);
+           widths = estimateWidth(data, P);
+           gaussParameters =  fitMultipleGaussians(Axes, [binCenters.', yvals.'], P(:,1), widths, lengthUnit, isPixel);
        end
        
+end
+
+function widths = estimateWidth(data, Peaks)
+    %Roughly estimates the potential width of the peaks
+    minX = min(data);
+    maxX = max(data);
+    distances = [];
+    if size(Peaks,1) == 1
+        distances(1,1) = Peaks(1,1)-minX;
+        distances(1,2) = maxX-Peaks(1,1);
+    else
+        distances(1,1) = Peaks(1,1)-minX;
+        for i = 2:size(Peaks,1)
+            distances(i,1) = Peaks(i,1) - Peaks(i-1,1);
+            distances(i-1,2) = Peaks(i,1) - Peaks(i-1,1);
+        end
+        distances(end,2) = maxX - Peaks(end,1); 
+    end
+    AmpSum = sum(Peaks(:,2));
+    normAmp = Peaks(:,2)/AmpSum;
+    distances = sqrt(distances)*0.1.*normAmp;
+    widths = mean(distances,2);
 end
