@@ -1,4 +1,4 @@
-function getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filterIDs)
+function Axes = getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filterIDs)
 %Function to determine the Volume or Area occupied by tracks
 %Input: Axes- axes object to plot to
        % TrackData - localisation data of the tracks in 2d or 3d
@@ -13,14 +13,31 @@ function getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filterIDs)
     end
     
     %% decide if 2d or 3d and plot
-    if dimension == 2
+    dimension = convertStringsToChars(dimension);
+    if size(dimension,2) < 2
+        dimension = 'XY';
+    end
+    if size(dimension,2) == 2
+        view(Axes,2);
         [k,av] = convhull(TrackData(:,3), TrackData(:,4));
         plot(Axes, TrackData(k,3), TrackData(k,4));
-        text(0.1,0.1, ["Area: " string(av)], "Units", "normalized");
+        axis(Axes, "auto");
+        text(Axes, 0.1,0.1, ["Area: " string(av)], "Units", "normalized");
+        xlabel(Axes, "X Dimension");
+        ylabel(Axes, "Y Dimension");
     else
         [k,av] = convhull(TrackData(:,3), TrackData(:,4), TrackData(:,5));
-        plot(Axes, TrackData(k,3), TrackData(k,4), TrackData(k,5));
-        text(0.1,0.1, ["Volume: " string(av)], "Units", "normalized");
+        TR = triangulation(k,TrackData(:,3),TrackData(:,4),TrackData(:,5));
+        f1 = figure;
+        set(f1, "Visible", "off");
+        ts = trisurf(TR);
+        newhandle = copyobj(ts, Axes);
+        axis(Axes, "auto");
+        view(Axes,3);
+        text(Axes, 0.1,0.1,0.1, ["Volume: " string(av)], "Units", "normalized");
+        xlabel(Axes, "X Dimension");
+        ylabel(Axes, "Y Dimension");
+        zlabel(Axes, "Z Dimension");
     end
 
 end

@@ -27,14 +27,25 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
                 tmp = fielddata(k,:);
                 tmpid = tmp{1};
                 tmpdat = tmp{2};
-                tmpdat = mean(tmpdat(:,2));
+                if size(tmpdat,2) > 1
+                    tmpdat = tmpdat(:,2);
+                end
+                %check for include exclude
+                %extra thing for swift data type as they are encoded as
+                %numnbers
+                if data{1} == 1 %include
+                    ids = fielddata(fielddata(:,2) >= data{4} & fielddata(:,2) <= data{5},1);
+                else
+                    ids = fielddata(fielddata(:,2) < data{4} & fielddata(:,2) > data{5},1);
+                end
+                involvedIDs{i} = {data{6}, ids};
                 newfielddata(k,:) = [tmpid, tmpdat];
             end
             fielddata = newfielddata;
         else %only one value per id
             %this contains the data we want to filter
             fielddata = cell2mat(fielddata);
-        end
+        
         %check for include exclude
         %extra thing for swift data type as they are encoded as
         %numnbers
@@ -44,6 +55,7 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
             ids = fielddata(fielddata(:,2) < data{4} & fielddata(:,2) > data{5},1);
         end
         involvedIDs{i} = {data{6}, ids};
+        end
     end
     %%  connect the filters by their logicals
     %check that there are more then 1 connection to do

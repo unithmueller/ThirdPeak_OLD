@@ -8,76 +8,103 @@ function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filte
 %Output:
 
     %% get the data
-    MSD_IDs = SaveStructure.InternMSD.TrackIDs;
-    MSDs = SaveStructure.InternMSD.(dimension).MSDclass.msd;
-    alphas = SaveStructure.InternMSD.(dimension).MSDclass.alpha;
-    meanJumpDist = SaveStructure.JMeanJumpDist.(dimension);
-    calculatedData = [];
+    MSD_IDs = cell2mat(SaveStructure.InternMSD.TrackIDs);
+    Ds = SaveStructure.InternMSD.(dimension).d;
+    MSDs = (2*size(dimension,2)).*Ds;
+    alphas = SaveStructure.InternMSD.(dimension).Alpha;
+    meanJumpDist = SaveStructure.MeanJumpDist.(dimension);
+    meanJumpDist = [cell2mat(meanJumpDist{1,1}), meanJumpDist{1,2}];
+    % repack the data
+    InternalMSD = {};
+    InternalD = {};
+    InternalAlpha = {};
+    for i = 1:size(MSD_IDs,2)
+        InternalMSD(i,1:2) = {MSD_IDs(i), MSDs(i)};
+        InternalD(i,1:2) = {MSD_IDs(i), Ds(i)};
+        InternalAlpha(i,1:2) = {MSD_IDs(i), alphas(i)};
+    end
+    useExternal = 0;
+    %get external data if present
+    try
+        ExternalD = SaveStructure.SwiftParams.D;
+        ExternalMSD = SaveStructure.SwiftParams.MSD;
+        ExternalAlpha = SaveStructure.SwiftParams.type;
+        if size(ExternalD,1) > size(MSD_IDs,2)*10
+            useExternal = 1;
+        end
+    catch
+    end
+    
+    %% decide for the data
+    if useExternal
+        MSDs = ExternalMSD;
+        Alpha = cell2mat(ExternalAlpha);
+        Alpha(Alpha(:,2) == 2,2) = 0.6;
+    else
+        MSDs = InternalMSD;
+        Alpha = InternalAlpha;
+    end
     
     %% filter the data if necessary
     if size(filterIDs,1)>0
-           ids = MSD_IDs(:,1);
-           ids = cell2mat(ids);
+           ids = cell2mat(Alpha(:,1));
            idx = find(ids == filterIDs);
-           filteredData = {};
+           filteredMSDData = {};
+           filteredAlphaData = {};
            for i = 1:size(idx)
-               filteredData(:,i) = MSDs(idx,:);
+               filteredMSDData(i,:) = MSDs(idx,:);
+               filteredAlphaData(i,:) = Alpha(idx,:);
            end
-           MSDs = filteredData;
-           % filter the data alphas
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = alphas(idx,:);
-           end
-           alphas = filteredData;
-           MSD_IDs = MSD_IDs(idx);
+           MSDs = filteredMSDData;
+           Alpha = filteredAlphaData;
     end
     
     %% filter the remaining tracks on their alpha
-    idx = find(alphas < 0.7);
-    MSD_IDs = MSD_IDs(idx);
-    MSDs = MSDs(idx);
-    
+    idx = find(Alpha(:,2) < 0.7);
+    MSDs = MSDs(idx,:);
+
     calculatedData = zeros(size(idx,1),4);
   
     %% Determine the confinement radius fit function
     % provide the fit model
     g = fittype('R*R*(1-exp(-4*D*(t/R*R)))+offset', 'coefficient', {'R','D','offset'}, 'independent', {'t'});
     %set the fit options
-    fo = fitoptions(g, "Method", "NonlinearLeastSqaures", "Lower", [0,0,-Inf], "StartPoint", [0.5, 0.5, 1], "Algorithm", 'Levenberg-Marquardt');
-    
+    fo = fitoptions(g);
+    fo = fitoptions(fo, "Lower", [0,0,-Inf], "StartPoint", [0.5, 0.5, 1], "Algorithm", 'Levenberg-Marquardt');
     %% fit the msd of tracks to the model and save it
     for i = 1:size(MSDs)
-        datay = MSDs{i,1};
-        datax = [1:1:size(datay,1)];
+        datax = [0:1:10];
+        datay = MSDs{i,2}*datax;
         
-        [fitobject,gof] = fit(datax,datay,g,fo);
+        [fitobject,gof] = fit(datax.',datay.',g,fo);
         rsq = gof.rsquare;
-        [R,D,~] = coeffvalues(fitobject);
-        id = MSD_IDs(i);
+        res = coeffvalues(fitobject);
+        R = res(1);
+        D = res(2);
+        id = MSDs{i,1};
         output = [id, rsq, R, D];
         calculatedData(i,:) = output;
     end
-    
+    clear fitobject fo go
     %% Filter the mean jump distance by the remaining tracks
     remainingIDs = calculatedData(:,1);
-    ids = meanJumpDist(:,1);
-    idx = find(ids == remainingIDs);
-    filteredData = {};
-    for i = 1:size(idx)
-        filteredData(:,i) = meanJumpDist(idx,:);
+    newMeanJump = zeros(size(remainingIDs,1),2);
+    for i = 1:size(remainingIDs,1)
+        trackid = remainingIDs(i);
+        newMeanJump(i,:) = meanJumpDist(meanJumpDist(:,1) == trackid,:);
     end
-    meanJumpDist = filteredData;
+    meanJumpDist = newMeanJump;
     
     %% Unpack the data and arrange for plotting
-    meanJumpDist = cell2mat(meanJumpDist(:,2));
-    calculatedData(:,5) = meanJumpDist;
+    calculatedData(:,5) = meanJumpDist(:,2);
     
     %% Plot the data
     hold(Axes, "on");
     for i = 1:size(calculatedData(:,1))
         scatter(Axes,calculatedData(i,5), calculatedData(i,3), "Displayname",num2str(calculatedData(i,1)));
     end
+    xlabel(Axes, "Mean Jump Distance");
+    ylabel(Axes, "Confinement Radius");
     
     %% add track number
     Spothandles = Axes.Children;

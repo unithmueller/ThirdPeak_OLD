@@ -19,7 +19,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotJumpDistance(Axes, binNumbers, 
            idx = find(ids == filterIDs);
            filteredData = {};
            for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
+               filteredData(i,:) = data(idx,:);
            end
            data = filteredData;
        end
