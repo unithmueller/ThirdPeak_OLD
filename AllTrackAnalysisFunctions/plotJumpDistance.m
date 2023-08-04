@@ -16,10 +16,13 @@ function [minv, maxv, gaussDat, kernelDat] = plotJumpDistance(Axes, binNumbers, 
        if size(filterIDs,1)>0
            ids = data(:,1);
            ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
+           idx = ismember(ids, filterIDs);
            filteredData = {};
            for i = 1:size(idx)
-               filteredData(i,:) = data(idx,:);
+               if idx(i)
+                  filteredData{end+1,1} = data{i,1};
+                  filteredData{end,2} = data{i,2};
+               end
            end
            data = filteredData;
        end

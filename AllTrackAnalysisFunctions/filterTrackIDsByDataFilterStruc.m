@@ -21,8 +21,8 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
         multval = (cell2mat(cellfun(@(x) size(x,1),fielddata,'UniformOutput',false)));
         multval = mean(multval(:,2));
         if multval > 1 %multivalues to ids
-            %need to flatten the data
-            newfielddata = zeros(size(fielddata,1),2);
+            %need to look at every data point
+            keptIDs = [];
             for k = 1:size(fielddata,1)
                 tmp = fielddata(k,:);
                 tmpid = tmp{1};
@@ -31,30 +31,29 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
                     tmpdat = tmpdat(:,2);
                 end
                 %check for include exclude
-                %extra thing for swift data type as they are encoded as
-                %numnbers
                 if data{1} == 1 %include
-                    ids = fielddata(fielddata(:,2) >= data{4} & fielddata(:,2) <= data{5},1);
+                    decisionMatrix = tmpdat >= data{4} & tmpdat <= data{5};
                 else
-                    ids = fielddata(fielddata(:,2) < data{4} & fielddata(:,2) > data{5},1);
+                    decisionMatrix = tmpdat < data{4} & tmpdat > data{5};
                 end
-                involvedIDs{i} = {data{6}, ids};
-                newfielddata(k,:) = [tmpid, tmpdat];
+                % if all points are inculeded, take the track, if one is
+                % wrong, leave it
+                if decisionMatrix
+                    keptIDs(end+1) = tmpid;
+                end
             end
-            fielddata = newfielddata;
+            involvedIDs{i} = {data{6}, keptIDs.'};
+            clear fielddata
         else %only one value per id
             %this contains the data we want to filter
             fielddata = cell2mat(fielddata);
-        
-        %check for include exclude
-        %extra thing for swift data type as they are encoded as
-        %numnbers
-        if data{1} == 1 %include
-            ids = fielddata(fielddata(:,2) >= data{4} & fielddata(:,2) <= data{5},1);
-        else
-            ids = fielddata(fielddata(:,2) < data{4} & fielddata(:,2) > data{5},1);
-        end
-        involvedIDs{i} = {data{6}, ids};
+            %check for include exclude
+            if data{1} == 1 %include
+                ids = fielddata(fielddata(:,2) >= data{4} & fielddata(:,2) <= data{5},1);
+            else
+                ids = fielddata(fielddata(:,2) < data{4} & fielddata(:,2) > data{5},1);
+            end
+            involvedIDs{i} = {data{6}, ids};
         end
     end
     %%  connect the filters by their logicals
