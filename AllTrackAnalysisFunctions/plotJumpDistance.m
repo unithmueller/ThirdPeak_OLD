@@ -42,6 +42,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotJumpDistance(Axes, binNumbers, 
        else
            xlabel(Axes, sprintf("Jump Distance in [%s]", lengthUnit));
        end
+       ylabel(Axes, "Counts");
        
        %% Decide if we fit or not
        if performFit
@@ -72,8 +73,12 @@ function [minv, maxv, gaussDat, kernelDat] = plotJumpDistance(Axes, binNumbers, 
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussCi95 = paramci(pdGauss);
+           kernelCi95 = [0,0]; %not possible for kernel
+           gaussNLL = negloglik(pdGauss);
+           kernelNLL = negloglik(pdKernel);
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), gaussNLL];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), kernelNLL];
        else
            gaussDat = [];
            kernelDat = [];

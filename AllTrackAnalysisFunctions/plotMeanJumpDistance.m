@@ -14,18 +14,15 @@ function [minv, maxv, gaussDat, kernelDat] = plotMeanJumpDistance(Axes, binNumbe
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = data(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
+           ids = cell2mat(data{1,1});
+           idx = ismember(ids, filterIDs);
+           data = cell2mat(data(:,2));
+           filteredData = data(idx);
            data = filteredData;
-       end
-       %% Unpack the cell array
-       data = cell2mat(data(:,2));
-       
+       else
+           %% Unpack the cell array
+           data = cell2mat(data(:,2));
+       end    
        %% Plot the data
        minv = min(data);
        maxv = max(data);
@@ -39,6 +36,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotMeanJumpDistance(Axes, binNumbe
        else
            xlabel(Axes, sprintf("Mean Jump Distance in [%s]", lengthUnit));
        end
+       ylabel(Axes, "Counts");
        
        %% Decide if we fit or not
        if performFit
@@ -69,8 +67,10 @@ function [minv, maxv, gaussDat, kernelDat] = plotMeanJumpDistance(Axes, binNumbe
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussNLL = negloglik(pdGauss);
+           kernelNLL = negloglik(pdKernel);
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), gaussNLL];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), kernelNLL];
        else
            gaussDat = [];
            kernelDat = [];

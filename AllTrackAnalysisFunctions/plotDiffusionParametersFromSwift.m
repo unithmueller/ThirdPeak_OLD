@@ -16,13 +16,11 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
        if size(filterIDs,1)>0
            ids = data(:,1);
            ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
+           mask = ismember(ids, filterIDs);
+           filteredData = data(mask,:);
            data = filteredData;
        end
+
        %% Unpack the cell array
        data = cell2mat(data(:,2));
        
@@ -69,8 +67,8 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), negloglik(pdGauss)];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), negloglik(pdKernel)];
        else
            gaussDat = [];
            kernelDat = [];

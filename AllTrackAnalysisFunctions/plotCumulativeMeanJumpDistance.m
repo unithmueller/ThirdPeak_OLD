@@ -1,4 +1,4 @@
-function [minv, maxv, gaussDat, kernelDat] = plotCumulativeMeanJumpDistance(Axes, binNumbers, SaveStructure, dimension, isPixel, lengthUnit, filterIDs, performFit)
+function [minv, maxv, LinFitDat] = plotCumulativeMeanJumpDistance(Axes, binNumbers, SaveStructure, dimension, isPixel, lengthUnit, filterIDs, performFit)
 %Function to plot the respective cumulative mean jump distances as a histogram in the track
 %analysis window. During generation of the track, the track-id is lost,
 %therefore we need to filter the mean jump distance and recalculate the
@@ -12,30 +12,36 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeMeanJumpDistance(Axes
        %distribution
        
        %% Get the data of choice
-       data = SaveStructure.CumMeanJumpDist.(dimension){1,1};
+       data = SaveStructure.CumMeanJumpDist.(dimension);
        
        %% Apply the filter if necessary. Need to filter via the mean track length
        if size(filterIDs,1)>0
            data = SaveStructure.MeanJumpDist.(dimension);
-           ids = data(:,1);
+           ids = data{:,1};
            ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
+           mask = ismember(ids, filterIDs);
+           filteredIDs = ids(mask);
+           mjd = data{1,2};
+           filteredData = mjd(mask);
+           newids = {};
+           for i = 1:size(filterIDs)
+               newids(i,1) = {filteredIDs(i)};
            end
-           SaveStructure.MeanJumpDist.(dimension) = filteredData;
+           filteredIDs = {filteredIDs};
+           newPackedData = {newids, filteredData};
+
+           SaveStructure.MeanJumpDist.(dimension) = newPackedData;
            SaveStructure = calculateCumulativeMeanJumpDistance(SaveStructure, SaveStructure);
            data = SaveStructure.CumMeanJumpDist.(dimension); 
        end
        %% Unpack the cell array
-       %data = cell2mat(data(:,2));
+       data = cell2mat(data(:,2));
        
        %% Plot the data
        minv = min(data);
        maxv = max(data);
        edges = linspace(minv, maxv, binNumbers);
-       his = histogram(Axes, data, edges);
+       his = histogram(Axes, data, edges, "Normalization", "cumcount");
        hixMaxValue = max(his.Values);
        xlim(Axes, [minv maxv]);
        title(Axes, join(["Cumulative Mean Jump Distance Distribution for " dimension],""));
@@ -48,36 +54,30 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeMeanJumpDistance(Axes
        %% Decide if we fit or not
        if performFit
            %% perform fit
-           pdGauss = fitdist(data, "Normal");
-           pdKernel = fitdist(data, "Kernel", "Width", []);
+           binWidth = his.BinWidth/2;
+           xdat = his.BinEdges;
+           xdat = xdat+binWidth;
+           xdat = xdat(1:end-1);
+           ydat = his.Values;
+           
+           [pdLinear, S] = polyfit(xdat,ydat,1);
 
            %% generate matching data
            xFitData = minv:1:maxv;
-           yGauss = pdf(pdGauss, xFitData);
-           yKernel = pdf(pdKernel, xFitData);
-           maxyGauss = max(yGauss);
-           maxyKernel = max(yKernel);
-           %scaling factor
-           scalingFactorGauss = hixMaxValue/maxyGauss;
-           scalingFactorKernel = hixMaxValue/maxyKernel;
-           
-           %scale the data
-           yGauss = yGauss*scalingFactorGauss;
-           yKernel = yKernel*scalingFactorKernel;
+           [yLinear, delta] = polyval(pdLinear, xFitData, S);
+           maxyLinear = max(yLinear);
 
            %% plot
            axes(Axes);
            hold(Axes,"on")
-           gp = plot(Axes, xFitData, yGauss, "--r");
-           kp = plot(Axes, xFitData, yKernel, "k");
-           legend(Axes, "Histogram", "GaussFit", "KernelFit");
+           Lp = plot(Axes, xFitData, yLinear, "--r");
+           conf = plot(Axes, xFitData,yLinear+2*delta,'m--',xFitData,yLinear-2*delta,'m--');
+           legend(Axes, "Histogram", "Linear Fit", "95% CI");
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           LinFitDat = [pdLinear(1), pdLinear(2)];
        else
-           gaussDat = [];
-           kernelDat = [];
+           LinFitDat = [];
        end
 end

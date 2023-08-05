@@ -17,6 +17,18 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
         else
             fielddata = getfield(SaveStructure,propfieldname, extrapropfieldname{1},extrapropfieldname{2});
         end
+        %some extra code to manage wierd data
+        if propfieldname == "MeanJumpDist"
+            tmpid = cell2mat(fielddata{1,1});
+            tmpdat = fielddata{1,2};
+            tmparray = {};
+            for j = 1:size(tmpid)
+                tmparray{j,1} = tmpid(j);
+                tmparray{j,2} = tmpdat(j);
+            end
+            fielddata = tmparray;
+            clear tmpid tmpdat tmparray
+        end
         %need to differ between id-value and id-multiValue pairs
         multval = (cell2mat(cellfun(@(x) size(x,1),fielddata,'UniformOutput',false)));
         multval = mean(multval(:,2));

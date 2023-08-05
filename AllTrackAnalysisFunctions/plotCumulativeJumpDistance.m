@@ -16,10 +16,13 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeJumpDistance(Axes, bi
        if size(filterIDs,1)>0
            ids = data(:,1);
            ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
+           idx = ismember(ids, filterIDs);
            filteredData = {};
            for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
+               if idx(i)
+                  filteredData{end+1,1} = data{i,1};
+                  filteredData{end,2} = data{i,2};
+               end
            end
            data = filteredData;
        end
@@ -39,6 +42,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeJumpDistance(Axes, bi
        else
            xlabel(Axes, sprintf("Cumulative Jump Distance in [%s]", lengthUnit));
        end
+       ylabel(Axes, "Counts");
        
        %% Decide if we fit or not
        if performFit
@@ -69,8 +73,10 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeJumpDistance(Axes, bi
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussNLL = negloglik(pdGauss);
+           kernelNLL = negloglik(pdKernel);
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), gaussNLL];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), kernelNLL];
        else
            gaussDat = [];
            kernelDat = [];

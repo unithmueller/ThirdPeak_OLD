@@ -13,18 +13,14 @@ function [minv, maxv, gaussDat, kernelDat] = plotExternalTrackClassification(Axe
        %% Get the data of choice
        data = SaveStructure.SwiftParams.type;
        
-       
        %% can not fit the data
        performFit = 0;
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
            ids = data(:,1);
            ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
+           mask = ismember(ids, filterIDs);
+           filteredData = data(mask,:);
            data = filteredData;
        end
        %% Unpack the cell array

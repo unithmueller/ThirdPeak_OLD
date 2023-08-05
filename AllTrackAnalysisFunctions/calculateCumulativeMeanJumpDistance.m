@@ -4,6 +4,8 @@ function Outputstructure = calculateCumulativeMeanJumpDistance(Inputstructure, O
        %Outputstructure: The array to save to
 %Output: Outputstructure- returns the now filled structured array
     %% grab the mean jump distances
+    ids = Inputstructure.MeanJumpDist.X(:,1);
+    ids = cell2mat(ids{1,1});
     datX = Inputstructure.MeanJumpDist.X(:,2);
     datY = Inputstructure.MeanJumpDist.Y(:,2);
     datZ = Inputstructure.MeanJumpDist.Z(:,2);
@@ -17,10 +19,27 @@ function Outputstructure = calculateCumulativeMeanJumpDistance(Inputstructure, O
     cmjdXY = calculateCumulativeSum(cell2mat(datXY));
     cmjdXYZ = calculateCumulativeSum(cell2mat(datXYZ));
     
+    %% calculate min array size as during filter it might change
+    minSize = min([size(cmjdX,1), size(cmjdY,1), size(cmjdZ,1), size(cmjdXY,1), size(cmjdXYZ,1)]);
+    
+    %% repack the data
+    for i = 1:minSize
+        opcmjdX{i,1} = ids(i);
+        opcmjdX{i,2} = cmjdX(i);
+        opcmjdY{i,1} = ids(i);
+        opcmjdY{i,2} = cmjdY(i);
+        opcmjdZ{i,1} = ids(i);
+        opcmjdZ{i,2} = cmjdZ(i);
+        opcmjdXY{i,1} = ids(i);
+        opcmjdXY{i,2} = cmjdXY(i);
+        opcmjdXYZ{i,1} = ids(i);
+        opcmjdXYZ{i,2} = cmjdXYZ(i);
+    end
+    
     %% save the new data to the structured array
-    Outputstructure.CumMeanJumpDist.X = {cmjdX(:,1)};
-    Outputstructure.CumMeanJumpDist.Y = {cmjdY(:,1)};
-    Outputstructure.CumMeanJumpDist.Z = {cmjdZ(:,1)};
-    Outputstructure.CumMeanJumpDist.XY = {cmjdXY(:,1)};
-    Outputstructure.CumMeanJumpDist.XYZ = {cmjdXYZ(:,1)};
+    Outputstructure.CumMeanJumpDist.X = opcmjdX;
+    Outputstructure.CumMeanJumpDist.Y = opcmjdY;
+    Outputstructure.CumMeanJumpDist.Z = opcmjdZ;
+    Outputstructure.CumMeanJumpDist.XY = opcmjdXY;
+    Outputstructure.CumMeanJumpDist.XYZ = opcmjdXYZ;
 end
