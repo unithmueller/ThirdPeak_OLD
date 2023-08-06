@@ -1,4 +1,4 @@
-function [minv, maxv, gaussDat, kernelDat] = plotCumulativeTrackLength(Axes, binNumbers, SaveStructure, filterIDs, performFit)
+function [minv, maxv, LinFitDat] = plotCumulativeTrackLength(Axes, binNumbers, SaveStructure, filterIDs, performFit)
 %Function to plot the cumulative track lengths as a histogram in the track
 %analysis window.
 %Input: Axes - axes object to plot into
@@ -14,19 +14,16 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeTrackLength(Axes, bin
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
            data = SaveStructure.TrackLength.Steps;
-           ids = data(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
-           SaveStructure.TrackLength.Steps = filteredData;
+           ids = cell2mat(data(:,1));
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
+
+           SaveStructure.TrackLength.Steps = data;
            SaveStructure = calculateCumulativeTrackLength(SaveStructure, SaveStructure);
            data = SaveStructure.TrackLength.CumLen;
        end
        %% Unpack the cell array
-       data = cell2mat(data);
+       data = cell2mat(data(:,2));
        
        %% Plot the data
        minv = 1;
@@ -55,10 +52,8 @@ function [minv, maxv, gaussDat, kernelDat] = plotCumulativeTrackLength(Axes, bin
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [pd];
-           %kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           LinFitDat = [pd(1), pd(2)];
        else
-           gaussDat = [];
-           kernelDat = [];
+           LinFitDat = [];
        end
 end

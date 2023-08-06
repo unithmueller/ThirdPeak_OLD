@@ -8,8 +8,8 @@ function destinationStruc = calculateTotalDistanceTraveled(destinationStruc)
     datXYZ = destinationStruc.JumpDist.XYZ;
     
     %% set temporary save structures
-    totalDistanceXY = zeros(size(datXY));
-    totalDistanceXYZ = zeros(size(datXYZ));
+    totalDistanceXY = {};
+    totalDistanceXYZ = {};
     
     %% calculate the total distance
     %using for loop, results in cell array with [id, length]
@@ -19,11 +19,13 @@ function destinationStruc = calculateTotalDistanceTraveled(destinationStruc)
         tmpXYZdat = sum(datXYZ{i,2}(:,2));
         tmpXYZid = datXYZ{i,1};
 
-        totalDistanceXY(i,1:2) = [tmpXYid, tmpXYdat];
-        totalDistanceXYZ(i,1:2) = [tmpXYZid, tmpXYZdat];
+        totalDistanceXY{i,1} = tmpXYid;
+        totalDistanceXY{i,2}= tmpXYdat;
+        totalDistanceXYZ{i,1} = tmpXYZid;
+        totalDistanceXYZ{i,2} = tmpXYZdat;
     end
-    
+
     %% save to destination
-    destinationStruc.TrackLength.AbsLength.XY(end+1,1) = {totalDistanceXY};
-    destinationStruc.TrackLength.AbsLength.XYZ(end+1,1) = {totalDistanceXYZ};
+    destinationStruc.TrackLength.AbsLength.XY = totalDistanceXY;
+    destinationStruc.TrackLength.AbsLength.XYZ = totalDistanceXYZ;
 end

@@ -14,18 +14,12 @@ function [xyout, xyzout] = calculateDbyCumulativeJumpDistances(FigurePanel, Save
       
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
+           ids = cell2mat(xyData(:,1));
+           mask = ismember(ids, filterIDs);
            %xy
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = xyData(idx,:);
-           end
-           xyData = filteredData;
+           xyData = xyData(mask,:);
            %xyz
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = xyzData(idx,:);
-           end
-           xyzData = filteredData;
+           xyzData = xyzData(mask,:);
        end
        
        %% Unpack the cell array

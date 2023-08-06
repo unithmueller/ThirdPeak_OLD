@@ -13,14 +13,9 @@ function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveSt
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = data(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
-           data = filteredData;
+           ids = cell2mat(data(:,1));
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
        end
        %% Unpack the cell array
        data = cell2mat(data(:,2));
@@ -42,17 +37,23 @@ function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveSt
        NmbrMax = size(P,1);
        Count = 1;
        
-       while ((NmbrMax > NumberOfPeaks*2) || (NmbrMax <= NumberOfPeaks-1)) && (Count < 20)
-           bw = bw*0.7;
+       while ((NmbrMax > NumberOfPeaks*2) || (NmbrMax <= NumberOfPeaks-1)) && (Count < 50)
+           if (NmbrMax > NumberOfPeaks*2)
+               bw = bw*1.05;
+           elseif (NmbrMax <= NumberOfPeaks-1)
+               bw = bw*0.95;
+           end
+           
            dist = fitdist(data, 'kernel', "Kernel", "box", "Width", bw);
            yvals = pdf(dist, xvals);
            P = allpeaks(binCenters, yvals);
-           P = P(P(:,2)>0.15,:);
+           %meanPeak = mean(P(:,2));
+           %P = P(P(:,2)>meanPeak,:);
            NmbrMax = size(P,1);
            Count = Count+1;
        end
        %% get estimates
-       if Count < 20
+       if Count < 50
            %% Fit the gaussians
            widths = estimateWidth(data, P);
            gaussParameters =  fitMultipleGaussians(Axes, [binCenters.', yvals.'], P(:,1), widths, lengthUnit, isPixel);

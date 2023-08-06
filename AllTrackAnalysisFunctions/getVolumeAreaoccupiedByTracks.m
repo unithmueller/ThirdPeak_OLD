@@ -9,7 +9,8 @@ function Axes = getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filter
 
     %% filter the data if necessary
     if size(filterIDs,1) > 0
-        TrackData = TrackData(TrackData(:,1) == filterIDs, :);
+        mask = ismember(TrackData(:,1), filterIDs);
+        TrackData = TrackData(mask, :);
     end
     
     %% decide if 2d or 3d and plot

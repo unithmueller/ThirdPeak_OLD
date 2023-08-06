@@ -11,14 +11,9 @@ function plotJumpAngle(Axes, SaveStructure, dimension, filterIDs, performFit)
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = data(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
-           data = filteredData;
+           ids = cell2mat(data(:,1));
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
        end
        
        %% Unpack the cell array
@@ -26,7 +21,7 @@ function plotJumpAngle(Axes, SaveStructure, dimension, filterIDs, performFit)
        
        %% Plot the data
        p = polarhistogram(Axes,data,12, "Normalization", "probability");
-       title(Axes, "Jump Angle Distribtuion in °");
+       title(Axes, join(["Jump Angle Distribution of " dimension " in °"], ""));
       
        %% Give a plot around the highest value so it might be easier to compare
        if performFit

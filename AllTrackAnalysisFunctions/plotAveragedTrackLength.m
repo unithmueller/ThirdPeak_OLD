@@ -15,26 +15,13 @@ function plotAveragedTrackLength(FigurePanel, SaveStructure, filterIDs, isPixel,
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = StepNumberdata(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = StepNumberdata(idx,:);
-           end
-           StepNumberdata = filteredData;
+           ids = cell2mat(StepNumberdata(:,1));
+           mask = ismember(ids, filterIDs);
+           StepNumberdata = StepNumberdata(mask,:);
+
+           Totaldistancedata = Totaldistancedata(mask,:);
            
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = Totaldistancedata(idx,:);
-           end
-           Totaldistancedata = filteredData;
-           
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = Nettodistancedata(idx,:);
-           end
-           Nettodistancedata = filteredData;
+           Nettodistancedata = Nettodistancedata(mask,:);
        end
        %% Unpack the cell array
        StepNumberdata = cell2mat(StepNumberdata(:,2));

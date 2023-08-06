@@ -15,14 +15,9 @@ function [minv, maxv, gaussDat, kernelDat] = plotTrackRatios(Axes, binNumbers, S
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = data(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
-           data = filteredData;
+           ids = cell2mat(data(:,1));
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
        end
        %% Unpack the cell array
        if size(data,2) == 1
@@ -57,7 +52,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotTrackRatios(Axes, binNumbers, S
                title(Axes, join(["Confinement Ratio Distribution of Tracks for " dimension],""));
                xlabel(Axes, "Ratio Total Distance/Netto Distance");
        end
-       
+       ylabel(Axes, "Counts");
        %% Decide if we fit or not
        if performFit
            %% perform fit
@@ -87,8 +82,10 @@ function [minv, maxv, gaussDat, kernelDat] = plotTrackRatios(Axes, binNumbers, S
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussNLL = negloglik(pdGauss);
+           kernelNLL = negloglik(pdKernel);
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), gaussNLL];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), kernelNLL];
        else
            gaussDat = [];
            kernelDat = [];

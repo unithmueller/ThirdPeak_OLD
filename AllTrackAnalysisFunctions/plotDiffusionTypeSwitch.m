@@ -13,12 +13,8 @@ function [minv, maxv] = plotDiffusionTypeSwitch(Axes, SaveStructure, filterIDs)
        if size(filterIDs,1)>0
            ids = data(:,1);
            ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
-           data = filteredData;
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
        end
        %% Unpack the cell array
        data = cell2mat(data(:,2));
@@ -34,5 +30,6 @@ function [minv, maxv] = plotDiffusionTypeSwitch(Axes, SaveStructure, filterIDs)
        title(Axes, "Number of Segments in given Tracks");
        xticks(Axes, [1:1:maxv]);
        xlabel(Axes, "Number of Segments");
+       ylabel(Axes, "Counts");
 
 end

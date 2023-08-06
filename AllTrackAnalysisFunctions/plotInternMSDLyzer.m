@@ -16,10 +16,9 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           data = [];
-           data = PixelTrackData(PixelTrackData(:,1) == filterIDs,:);
-           SaveStructure = calculateMSDClassic(data, size(dimension), fitValue, 1, SaveStructure);
-           data = SaveStructure.InternMSD.(dimension).(property);
+           ids = cell2mat(data(:,1));
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
        end
        %% Unpack the cell array
        if size(data,2) == 1
@@ -53,7 +52,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
            if isPixel
                xlabel(Axes, "MSD [px²/frame²]");
            else
-               txt = [lengthUnit "²/" timeunit "²"];
+               txt = join([lengthUnit "²/" timeunit "²"],"");
                xlabel(Axes, sprintf("MSD [%s]",txt));
            end
        elseif property == "d"
@@ -61,9 +60,15 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
            if isPixel
                xlabel(Axes, "D [px²/frame]");
            else
-               txt = [lengthUnit "²/" timeunit];
+               txt = join([lengthUnit "²/" timeunit],"");
                xlabel(Axes, sprintf("D [%s]",txt));
            end
+       elseif property == "linR"
+           title(Axes, join(["R² Linear Fit Value Distribution for " dimension],""));
+           xlabel(Axes, "R²");
+       elseif property == "logR"
+           title(Axes, join(["R² Log Fit Value Distribution for " dimension],""));
+           xlabel(Axes, "R²");
        end
        
        %% Decide if we fit or not
@@ -95,8 +100,10 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussNLL = negloglik(pdGauss);
+           kernelNLL = negloglik(pdKernel);
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), gaussNLL];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), kernelNLL];
        else
            gaussDat = [];
            kernelDat = [];

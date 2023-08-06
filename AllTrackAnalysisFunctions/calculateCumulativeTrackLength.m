@@ -4,11 +4,19 @@ function Outputstructure = calculateCumulativeTrackLength(Inputstructure, Output
        %Outputstructure: The array to save to
 %Output: Outputstructure- returns the now filled structured array
     %% grab the mean jump distances
-    data = Inputstructure.TrackLength.Steps(:,2);
-    
+    data = Inputstructure.TrackLength.Steps;
+    ids = cell2mat(data(:,1));
+    steps = data(:,2);
     %% calculate the cumulative sum
-    cmtl = calculateCumulativeSum(cell2mat(data));
+    cmtl = calculateCumulativeSum(cell2mat(steps));
+    
+    %% repack the data
+    cumlen = {};
+    for i = 1:size(ids,1)
+        cumlen{i,1} = ids(i);
+        cumlen{i,2} = cmtl(i);
+    end
     
     %% save the new data to the structured array
-    Outputstructure.TrackLength.CumLen = {cmtl(:,1)};
+    Outputstructure.TrackLength.CumLen = cumlen;
 end

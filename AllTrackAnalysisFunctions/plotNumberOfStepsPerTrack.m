@@ -13,14 +13,9 @@ function [minv, maxv, gaussDat, kernelDat] = plotNumberOfStepsPerTrack(Axes, bin
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = data(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = data(idx,:);
-           end
-           data = filteredData;
+           ids = cell2mat(data(:,1));
+           mask = ismember(ids, filterIDs);
+           data = data(mask,:);
        end
        %% Unpack the cell array
        data = cell2mat(data(:,2));
@@ -34,6 +29,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotNumberOfStepsPerTrack(Axes, bin
        xlim(Axes, [minv maxv]);
        title(Axes, "Track Length Distribution");
        xlabel(Axes, "Track Length [steps]");
+       ylabel(Axes, "Counts");
  
        %% Decide if we fit or not
        if performFit
@@ -64,8 +60,10 @@ function [minv, maxv, gaussDat, kernelDat] = plotNumberOfStepsPerTrack(Axes, bin
            hold(Axes,"off")
            
            %% get the data from fit
-           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss)];
-           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel)];
+           gaussNLL = negloglik(pdGauss);
+           kernelNLL = negloglik(pdKernel);
+           gaussDat = [median(pdGauss), mean(pdGauss), std(pdGauss), var(pdGauss), gaussNLL];
+           kernelDat = [median(pdKernel), mean(pdKernel), std(pdKernel), var(pdKernel), kernelNLL];
        else
            gaussDat = [];
            kernelDat = [];

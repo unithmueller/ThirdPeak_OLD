@@ -16,39 +16,18 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
       
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = xData(:,1);
-           ids = cell2mat(ids);
-           idx = find(ids == filterIDs);
+           ids = cell2mat(xData(:,1));
+           mask = ismember(ids, filterIDs);
            %x
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = xData(idx,:);
-           end
-           xData = filteredData;
+           xData = xData(mask,:);
            %y
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = yData(idx,:);
-           end
-           yData = filteredData;
+           yData = yData(mask,:);
            %z
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = zData(idx,:);
-           end
-           zData = filteredData;
+           zData = zData(mask,:);
            %xy
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = xyData(idx,:);
-           end
-           xyData = filteredData;
+           xyData = xyData(mask,:);
            %xyz
-           filteredData = {};
-           for i = 1:size(idx)
-               filteredData(:,i) = xyzData(idx,:);
-           end
-           xyzData = filteredData;
+           xyzData = xyzData(mask,:);
        end
       
        %% Unpack the cell array
@@ -197,6 +176,7 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
            
        hold(Axes,"on")
        plot(Axes, xFitData, yGauss, "--r");
+       legend(Axes, "Histogram", "GaussFit");
        %fit data
        meanData = mean(zData);
        sst = sum((zData-meanData).^2); %total sum of squares
@@ -243,6 +223,7 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        
        hold(Axes,"on")
        plot(Axes, xFitData, yGauss, "--r");
+       legend(Axes, "Histogram", "GaussFit");
        %fit data
        meanData = mean(xyData);
        sst = sum((xyData-meanData).^2); %total sum of squares
@@ -288,6 +269,7 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        
        hold(Axes,"on")
        plot(Axes, xFitData, yGauss, "--r");
+       legend(Axes, "Histogram", "GaussFit");
        %fit data
        meanData = mean(xyzData);
        sst = sum((xyzData-meanData).^2); %total sum of squares
