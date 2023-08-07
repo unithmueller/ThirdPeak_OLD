@@ -1,4 +1,4 @@
-function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filterIDs, Dused, lengthUnit)
+function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filterIDs, Dused, isPixel, lengthUnit, timeunit, pxsize, timestepsize)
 %Function to give a 2d plot of the confinement radius vs the mean jump
 %distance. This can give information about different mobility groups within
 %the not-so-diffusive particles. In accordance to the TrackIt funtion
@@ -41,6 +41,14 @@ function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filte
     meanJumpDist = meanJumpDist(idx,:);
 
     calculatedData = zeros(size(idx,1),4);
+    %% convert the data into the same Units
+    %the msd is always in pixel/frame; the meanJumpDistance is in
+    %dependence of the isPixel value in pixel or unit. Need du adjust
+    %accordingly
+    if isPixel
+    else
+        MSDs(:,2) = MSDs(:,2).*(pxsize*pxsize/(timestepsize*timestepsize));
+    end
   
     %% Determine the confinement radius fit function
     % provide the fit model
@@ -72,8 +80,14 @@ function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filte
     for i = 1:size(calculatedData(:,1))
         scatter(Axes,calculatedData(i,5), calculatedData(i,3), "Displayname",num2str(calculatedData(i,1)));
     end
-    xlabel(Axes, sprintf("Mean Jump Distance [%s]", lengthUnit));
-    ylabel(Axes, sprintf("Confinement Radius [%s]", lengthUnit));
+    if isPixel
+        xlabel(Axes, "Mean Jump Distance [px]");
+        ylabel(Axes, "Confinement Radius [px]");
+    else
+        xlabel(Axes, sprintf("Mean Jump Distance [%s]", lengthUnit));
+        ylabel(Axes, sprintf("Confinement Radius [%s]", lengthUnit));
+    end
+
     
     %% add track number
     Spothandles = Axes.Children;

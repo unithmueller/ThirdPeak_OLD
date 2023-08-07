@@ -46,7 +46,7 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
                 if data{1} == 1 %include
                     decisionMatrix = tmpdat >= data{4} & tmpdat <= data{5};
                 else
-                    decisionMatrix = tmpdat < data{4} & tmpdat > data{5};
+                    decisionMatrix = tmpdat < data{4} | tmpdat > data{5};
                 end
                 % if all points are inculeded, take the track, if one is
                 % wrong, leave it
@@ -63,7 +63,7 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
             if data{1} == 1 %include
                 ids = fielddata(fielddata(:,2) >= data{4} & fielddata(:,2) <= data{5},1);
             else
-                ids = fielddata(fielddata(:,2) < data{4} & fielddata(:,2) > data{5},1);
+                ids = fielddata(fielddata(:,2) < data{4} | fielddata(:,2) > data{5},1);
             end
             involvedIDs{i} = {data{6}, ids};
         end

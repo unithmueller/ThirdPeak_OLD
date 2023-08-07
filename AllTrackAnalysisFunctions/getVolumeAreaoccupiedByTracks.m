@@ -1,4 +1,4 @@
-function Axes = getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filterIDs)
+function [Axes, outAlphaRad, outparas] = getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filterIDs, methodChosen, alphaRadius, useManualRad, isPixel, lengthU)
 %Function to determine the Volume or Area occupied by tracks
 %Input: Axes- axes object to plot to
        % TrackData - localisation data of the tracks in 2d or 3d
@@ -13,32 +13,112 @@ function Axes = getVolumeAreaoccupiedByTracks(Axes, TrackData, dimension, filter
         TrackData = TrackData(mask, :);
     end
     
-    %% decide if 2d or 3d and plot
+    %% decide if 2d or 3d and which approach and plot
     dimension = convertStringsToChars(dimension);
+    av = [];
+    alphaParam = [];
     if size(dimension,2) < 2
         dimension = 'XY';
     end
     if size(dimension,2) == 2
         view(Axes,2);
-        [k,av] = convhull(TrackData(:,3), TrackData(:,4));
-        plot(Axes, TrackData(k,3), TrackData(k,4));
-        axis(Axes, "auto");
-        text(Axes, 0.1,0.1, ["Area: " string(av)], "Units", "normalized");
-        xlabel(Axes, "X Dimension");
-        ylabel(Axes, "Y Dimension");
+        if string(methodChosen) == "Convex Hull"
+            [k,av] = convhull(TrackData(:,3), TrackData(:,4));
+            plot(Axes, TrackData(k,3), TrackData(k,4));
+            axis(Axes, "auto");
+            text(Axes, 0.1,0.1, ["Area: " string(av)], "Units", "normalized");
+            a = 1;
+        else
+            if useManualRad
+                a = alphaRadius;
+                shp = alphaShape(TrackData(:,3), TrackData(:,4),a);
+            else
+                shp = alphaShape(TrackData(:,3), TrackData(:,4));
+                a = criticalAlpha(shp,'one-region');
+                shp = alphaShape(TrackData(:,3), TrackData(:,4),a);
+            end
+            fignew = figure('Visible','off'); % Invisible figure
+            h = plot(shp);
+            newh = copyobj(h, Axes);
+            alphaParam = area(shp);
+            text(Axes, 0.1,0.1, ["Area: " string(area(shp))], "Units", "normalized");
+        end
+        if isPixel
+            xlabel(Axes, "X Dimension [px]");
+            ylabel(Axes, "Y Dimension [px]");
+        else
+            xlabel(Axes, sprintf("X Dimension [%s]", lengthU));
+            ylabel(Axes, sprintf("Y Dimension [%s]", lengthU));
+        end
     else
-        [k,av] = convhull(TrackData(:,3), TrackData(:,4), TrackData(:,5));
-        TR = triangulation(k,TrackData(:,3),TrackData(:,4),TrackData(:,5));
-        f1 = figure;
-        set(f1, "Visible", "off");
-        ts = trisurf(TR);
-        newhandle = copyobj(ts, Axes);
-        axis(Axes, "auto");
         view(Axes,3);
-        text(Axes, 0.1,0.1,0.1, ["Volume: " string(av)], "Units", "normalized");
-        xlabel(Axes, "X Dimension");
-        ylabel(Axes, "Y Dimension");
-        zlabel(Axes, "Z Dimension");
+        if string(methodChosen) == "Convex Hull"
+            [k,av] = convhull(TrackData(:,3), TrackData(:,4), TrackData(:,5));
+            TR = triangulation(k,TrackData(:,3),TrackData(:,4),TrackData(:,5));
+            f1 = figure;
+            set(f1, "Visible", "off");
+            ts = trisurf(TR);
+            newhandle = copyobj(ts, Axes);
+            axis(Axes, "auto");
+            text(Axes, 0.1,0.1,0.1, ["Volume: " string(av)], "Units", "normalized");
+            a = 1;
+        else
+            if useManualRad
+                a = alphaRadius;
+                shp = alphaShape(TrackData(:,3), TrackData(:,4), TrackData(:,5), a);
+            else
+                shp = alphaShape(TrackData(:,3), TrackData(:,4), TrackData(:,5));
+                a = criticalAlpha(shp,'one-region');
+                shp = alphaShape(TrackData(:,3), TrackData(:,4), TrackData(:,5),a);
+            end
+            fignew = figure('Visible','off'); % Invisible figure
+            h = plot(shp);
+            newh = copyobj(h, Axes);
+            alphaParam = volume(shp);
+            text(Axes, 0.1,0.1, ["Volume: " string(volume(shp))], "Units", "normalized");
+        end
+        if isPixel
+            xlabel(Axes, "X Dimension [px]");
+            ylabel(Axes, "Y Dimension [px]");
+            zlabel(Axes, "Z Dimension [px]");
+        else
+            xlabel(Axes, sprintf("X Dimension [%s]", lengthU));
+            ylabel(Axes, sprintf("Y Dimension [%s]", lengthU));
+            zlabel(Axes, sprintf("Z Dimension [%s]", lengthU));
+        end
     end
-
+    
+    %% output values
+    outAlphaRad = a;
+    outparas = {};
+    if isempty(av)
+        if size(dimension,2) == 2
+            outparas{1,1} = "Area";
+            outparas{1,2} = alphaParam;
+        else
+            outparas{1,1} = "Volume";
+            outparas{1,2} = alphaParam;
+        end
+    else
+        if size(dimension,2) == 2
+            outparas{1,1} = "Area";
+            outparas{1,2} = av;
+        else
+            outparas{1,1} = "Volume";
+            outparas{1,2} = av;
+        end
+    end
+    if isPixel
+        if size(dimension,2) == 2
+            outparas{1,3} = "px²";
+        else
+            outparas{1,3} = "px³";
+        end
+    else
+        if size(dimension,2) == 2
+            outparas{1,3} = join([lengthU "²"],"");
+        else
+            outparas{1,3} = join([lengthU "³"],"");
+        end
+    end
 end
