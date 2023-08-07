@@ -15,7 +15,10 @@ function SaveStructure = calculateValuesAllAnalysisForSaveStructure(TrackData, S
         %% Calculate the Jump Distances
         SaveStructure = calculateJumpDistances(singleTrackData, SaveStructure);
         %% Get the diffusion parameters from swift
-        SaveStructure = retrieveDiffusionParametersFromSwift(singleTrackData, SaveStructure);
+        try
+            SaveStructure = retrieveDiffusionParametersFromSwift(singleTrackData, SaveStructure);
+        catch
+        end
         %% calculate the jump angles
         SaveStructure = calculateJumpAngles(singleTrackData, SaveStructure);
         %% calculate the netto distance
@@ -23,7 +26,10 @@ function SaveStructure = calculateValuesAllAnalysisForSaveStructure(TrackData, S
         %% calculate the step numbers
         SaveStructure = calculateStepNumbers(singleTrackData, SaveStructure);
         %% determine the number of segments per track
+        try
         SaveStructure = determineSegmentNumbers(singleTrackData, SaveStructure);
+        catch
+        end
     end
     %% Use the data from the structured array to calculate more properties
     SaveStructure = calculateCumulativeJumpDistances(SaveStructure, SaveStructure);

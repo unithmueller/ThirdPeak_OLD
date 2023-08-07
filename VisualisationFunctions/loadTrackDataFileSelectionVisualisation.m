@@ -54,7 +54,7 @@ function TrackData = loadTrackDataFileSelectionVisualisation(ImportSettingsStruc
                 else
                     TrackData = loadfile;
                 end
-            case "Custom Trackdata CSV"
+            case "Custom CSV"
                 %% Custom CSV
                 % Display uigetfile dialog
                 filterspec = {'*.csv'};
@@ -79,7 +79,7 @@ function TrackData = loadTrackDataFileSelectionVisualisation(ImportSettingsStruc
                 else
                     TrackData = loadfile;
                 end
-            case "Custom Trackdata .mat"
+            case "Custom .mat"
                 %% Custom mat
                  % Display uigetfile dialog
                 filterspec = {'*.mat'};
