@@ -1,4 +1,4 @@
-function plotAveragedTrackLength(FigurePanel, SaveStructure, filterIDs, isPixel, lengthUnit)
+function T = plotAveragedTrackLength(FigurePanel, SaveStructure, filterIDs, isPixel, lengthUnit)
 %Function to plot the average track step number, total distance and netto distance as a boxplot in the track
 %analysis window.
 %Input: Axes - axes object to plot into
@@ -58,4 +58,14 @@ function plotAveragedTrackLength(FigurePanel, SaveStructure, filterIDs, isPixel,
        else
            ylabel(ax3, sprintf("Netto Track Length [%s]", lengthUnit))
        end
+       
+       %% Do the same statistics and pack it into a table
+       ValueOrigin = ["Step Numbers", "Total Track Length", "Netto Track Length"];
+       allMins = [min(StepNumberdata), min(Totaldistancedata), min(Nettodistancedata)];
+       allMax = [max(StepNumberdata), max(Totaldistancedata), max(Nettodistancedata)];
+       allMed = [median(StepNumberdata), median(Totaldistancedata), median(Nettodistancedata)];
+       allQuantile = [quantile(StepNumberdata, [0.25 0.75]); quantile(Totaldistancedata, [0.25 0.75]); quantile(Nettodistancedata, [0.25 0.75])];
+       
+       T = table(ValueOrigin.', allMins.', allMax.', allMed.', allQuantile);
+       T.Properties.VariableNames = {'Origin', 'Min', 'Max', 'Median', 'Quantile'};
 end

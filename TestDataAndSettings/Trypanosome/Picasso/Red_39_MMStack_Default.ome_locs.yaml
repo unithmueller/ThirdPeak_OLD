@@ -1,0 +1,241 @@
+Byte Order: <
+Camera: Andor
+Data Type: uint16
+File: E:\Thomas\2023\230627_CytosolHalo\Red_39\Red_39_MMStack_Default.ome.tif
+Frames: 2500
+Height: 120
+Micro-Manager Acquisiton Comments:
+- ''
+Micro-Manager Metadata:
+  'Andor-1. Camera Information : | Type | Model | Serial No. |': '| iXon | DU897_BV
+    | 7489 |'
+  Andor-AD_Converter: 1. 14bit
+  Andor-ActualInterval-ms: '40.00'
+  Andor-Advanced | Snap Image Additional Delay (ms): '0'
+  Andor-Advanced | Snap Image Timing Mode: Delay for Exposure
+  Andor-BaselineClamp: Enabled
+  Andor-Binning: '1'
+  Andor-CCDTemperature: '-68'
+  Andor-CCDTemperature Help: Wait for temperature to stabilize before acquisition.
+  Andor-CCDTemperature continuous update: 'Off'
+  Andor-CCDTemperatureSetPoint: '-70'
+  Andor-Camera: '| iXon | DU897_BV | 7489 |'
+  Andor-CoolerMode: Fan off at shutdown
+  Andor-CountConvert: Counts
+  Andor-CountConvertWavelength: '0.0000'
+  Andor-Description: Andor camera adapter
+  Andor-EMSwitch: 'On'
+  Andor-Exposure: '40.00'
+  Andor-FanMode: Full
+  Andor-Force Run Till Abort: 'Off'
+  Andor-FrameTransfer: 'On'
+  Andor-FrameTransfer Help: Should only turn on FrameTransfer if using Burst or Live
+    mode.
+  Andor-Gain: '150'
+  Andor-Isolated Crop Mode: On (bottom corner)
+  Andor-KeepCleanTime: '0.00'
+  Andor-OptAcquireMode: ''
+  Andor-OptAcquireMode Description: ''
+  Andor-Output_Amplifier: Electron Multiplying
+  Andor-PixelType: 16bit
+  Andor-Pre-Amp-Gain: 5x
+  Andor-ReadMode: Image
+  Andor-ReadoutMode: 3.000 MHz
+  Andor-ReadoutTime: '8.24'
+  Andor-Region of Interest: Custom ROI
+  Andor-Shutter (External): Open
+  Andor-Shutter (Internal): Open
+  Andor-Shutter Closing Time: '20'
+  Andor-Shutter Opening Time: '20'
+  Andor-SpuriousNoiseFilter: None
+  Andor-SpuriousNoiseFilterDescription: Spurious Noise Filter is Off
+  Andor-SpuriousNoiseFilterThreshold: '0.0000'
+  Andor-TimeOut: '10000'
+  Andor-TransposeCorrection: '0'
+  Andor-TransposeMirrorX: '0'
+  Andor-TransposeMirrorY: '0'
+  Andor-TransposeXY: '0'
+  Andor-Trigger: Software
+  Andor-VerticalClockVoltage: Normal
+  Andor-VerticalSpeed (microseconds): '0.90'
+  Binning: 1
+  BitDepth: 14
+  COM7-AnswerTimeout: '500.0000'
+  COM7-BaudRate: '19200'
+  COM7-DTR: Disable
+  COM7-DataBits: '8'
+  COM7-DelayBetweenCharsMs: '0.0000'
+  COM7-Description: Serial port driver (boost:asio)
+  COM7-Fast USB to Serial: Disable
+  COM7-Handshaking: Software
+  COM7-Name: COM7
+  COM7-Parity: None
+  COM7-StopBits: '1'
+  COM7-Verbose: '1'
+  Camera: Andor
+  ChannelIndex: 0
+  Core-AutoFocus: ''
+  Core-AutoShutter: '1'
+  Core-Camera: Andor
+  Core-ChannelGroup: ''
+  Core-Focus: FocusDrive
+  Core-Galvo: ''
+  Core-ImageProcessor: ''
+  Core-Initialize: '1'
+  Core-SLM: ''
+  Core-Shutter: TL-Shutter
+  Core-TimeoutMs: '5000'
+  Core-XYStage: XYStage
+  ElapsedTime-ms: 929.0
+  Exposure-ms: 40.0
+  FileName: Red_39_MMStack_Default.ome.tif
+  FocusDrive-Acceleration: '3612'
+  FocusDrive-Speed: '8820000'
+  Frame: 0
+  FrameIndex: 0
+  Height: 120
+  ImageNumber: 0
+  PixelSizeAffine: 0.0;0.0;0.0;0.0;0.0;0.0
+  PixelSizeUm: 0.0
+  PixelType: GRAY16
+  PositionIndex: 0
+  PositionName: Default
+  ROI: 0-391-120-120
+  ReceivedTime: 2023-06-27 14:13:43.534 +0200
+  Scope-AnswerTimeOut: '5000.0000'
+  Scope-Description: Leica microscope CAN bus adapter
+  Scope-Method: FLUO
+  Scope-Microscope Firmware: DMI.HEX V02.40.6302
+  Scope-Microscope Stand: DMI6000B
+  Scope-Name: Scope
+  Scope-Port: COM7
+  ScopeDataKeys:
+  - TL-Shutter-Name
+  - Andor-SpuriousNoiseFilter
+  - Andor-Force Run Till Abort
+  - COM7-Name
+  - Scope-Description
+  - Andor-FanMode
+  - Andor-BaselineClamp
+  - Andor-CCDTemperature
+  - Scope-Name
+  - Andor-TransposeCorrection
+  - COM7-Parity
+  - Andor-Advanced | Snap Image Additional Delay (ms)
+  - Andor-Trigger
+  - Core-ImageProcessor
+  - Andor-FrameTransfer
+  - COM7-BaudRate
+  - Andor-Pre-Amp-Gain
+  - COM7-Description
+  - Andor-Output_Amplifier
+  - Core-SLM
+  - COM7-DelayBetweenCharsMs
+  - Andor-TransposeXY
+  - COM7-DataBits
+  - TL-Shutter-Description
+  - Andor-ReadoutMode
+  - Andor-Binning
+  - Andor-VerticalSpeed (microseconds)
+  - Andor-Description
+  - Andor-SpuriousNoiseFilterThreshold
+  - Core-Focus
+  - Core-ChannelGroup
+  - Andor-Shutter (Internal)
+  - Scope-AnswerTimeOut
+  - COM7-Verbose
+  - COM7-DTR
+  - COM7-AnswerTimeout
+  - FocusDrive-Speed
+  - Andor-CoolerMode
+  - Andor-ReadMode
+  - Andor-Advanced | Snap Image Timing Mode
+  - Andor-PixelType
+  - Andor-ActualInterval-ms
+  - Andor-TimeOut
+  - Core-XYStage
+  - Andor-EMSwitch
+  - Core-AutoShutter
+  - XYStage-TransposeMirrorX
+  - COM7-Fast USB to Serial
+  - XYStage-Acceleration
+  - XYStage-TransposeMirrorY
+  - Andor-CCDTemperatureSetPoint
+  - Scope-Microscope Firmware
+  - Andor-ReadoutTime
+  - Andor-Gain
+  - Core-Camera
+  - Andor-TransposeMirrorX
+  - Andor-TransposeMirrorY
+  - Andor-OptAcquireMode Description
+  - Andor-CountConvertWavelength
+  - Andor-AD_Converter
+  - XYStage-Speed
+  - Andor-CountConvert
+  - Andor-Camera
+  - Andor-VerticalClockVoltage
+  - Core-TimeoutMs
+  - 'Andor-1. Camera Information : | Type | Model | Serial No. |'
+  - Andor-OptAcquireMode
+  - Scope-Port
+  - Scope-Method
+  - Andor-Region of Interest
+  - Andor-Exposure
+  - Andor-Shutter Opening Time
+  - Andor-SpuriousNoiseFilterDescription
+  - FocusDrive-Acceleration
+  - Core-AutoFocus
+  - Andor-FrameTransfer Help
+  - Andor-Shutter (External)
+  - TL-Shutter-State
+  - Core-Galvo
+  - COM7-Handshaking
+  - Andor-CCDTemperature continuous update
+  - Andor-CCDTemperature Help
+  - Core-Initialize
+  - Andor-Shutter Closing Time
+  - Andor-KeepCleanTime
+  - Scope-Microscope Stand
+  - COM7-StopBits
+  - Andor-Isolated Crop Mode
+  - Core-Shutter
+  Slice: 0
+  SliceIndex: 0
+  TL-Shutter-Description: ''
+  TL-Shutter-Name: ''
+  TL-Shutter-State: '0'
+  UUID: 02f8405e-dbb4-4a82-82c3-13d62b1a627d
+  UserData: null
+  Width: 120
+  XPositionUm: 65495.33267731
+  XYStage-Acceleration: '800'
+  XYStage-Speed: '27467476'
+  XYStage-TransposeMirrorX: '0'
+  XYStage-TransposeMirrorY: '0'
+  YPositionUm: 43948.99116998
+  ZPositionUm: 7192.5374
+Width: 120
+---
+Box Size: 9
+Generated by: Picasso Localize
+Min. Net Gradient: 3933
+Pixelsize: 160
+ROI: null
+Z Calibration:
+  X Coefficients:
+  - -4.404833069527118e-19
+  - -4.458503584526097e-16
+  - 1.3631350042759514e-12
+  - 1.3697930236100655e-09
+  - -1.555804561344895e-06
+  - -0.001786721878694398
+  - 3.6811065056731453
+  Y Coefficients:
+  - -3.8224227715137624e-19
+  - -1.3796147360542249e-16
+  - 6.123971265285999e-13
+  - 1.5841453206770496e-09
+  - -3.160216693019945e-07
+  - -0.002536926896957788
+  - 4.141397586399095
+Z Calibration Path: E:/Thomas/2023/230627_CytosolHalo/BeadstackRed_2/BeadstackRed_2_MMStack_Default.ome_3d_calib.yaml

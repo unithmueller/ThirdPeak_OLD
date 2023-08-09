@@ -1,6 +1,5 @@
-function makeVelocityMap(app, flag3d, superpxsize, NmbrTimeWins, minAcqDT, nump, filter, filtersize, superZsize, unit)
+function makeVelocityMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT, nump, filter, filtersize, superZsize, unit)
 %generates a supermap of velocity data in 2d or 3d using the given pxsize
-  data = getCurrentData(app);
     data = cell2mat(data(1,1));
     %need to convert data always into unit/frame
     type = split(convertCharsToStrings(app.ImportSettingsStruct.customUnits.DataType),"/");

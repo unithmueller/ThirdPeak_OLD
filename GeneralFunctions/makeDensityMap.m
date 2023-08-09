@@ -1,5 +1,4 @@
-function makeDensityMap(app, flag3d, superpxsize, NmbrTimeWins, minAcqDT, dopt, filter, filtersize, superZsize)
-    data = getCurrentData(app);
+function makeDensityMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT, dopt, filter, filtersize, superZsize)
     data = cell2mat(data(1,1));
     %need to convert data always into unit/frame
     type = split(convertCharsToStrings(app.ImportSettingsStruct.customUnits.DataType),"/");

@@ -1,11 +1,10 @@
-function makeDriftMap(app, flag3d, superpxsize, NmbrTimeWins, minAcqDT, nump, filter, filtersize, superZsize)
+function makeDriftMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT, nump, filter, filtersize, superZsize)
  %app: calling app; flag3d if 3d is used (1) or not (0); superpxsize is the
  %size for the grid/bins; NmbrTimeWins defines the number of temporal bins
  %that are generated; minAcqDT is the exposure time/frame rate; nump is the
  %minimal number of points in a bin that will lead to processing, filter i
  %dont know yet, filtersize is the distance to be considered for processing
     %Make the grid to put the data in
-    data = getCurrentData(app);
     data = cell2mat(data(1,1));
         %need to convert data always into unit/frame
     type = split(convertCharsToStrings(app.ImportSettingsStruct.customUnits.DataType),"/");
