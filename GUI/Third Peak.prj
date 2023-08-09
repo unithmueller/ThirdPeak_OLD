@@ -1,0 +1,198 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="2156168552" file="C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GUI\Third Peak.prj" location="C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GUI" name="Third Peak" target="target.mlapps" target-name="Package App">
+    <param.appname>Third Peak</param.appname>
+    <param.authnamewatermark>Thomas Müller</param.authnamewatermark>
+    <param.email>thomas.mueller2@uni-wuerzburg.de</param.email>
+    <param.company>Universität Würzburg</param.company>
+    <param.icon />
+    <param.icons />
+    <param.summary>Used to visualize and analyze single molecule tracks in a biological context.</param.summary>
+    <param.description />
+    <param.screenshot>C:\Users\auxin\AppData\Local\Temp\tpbd850f1e_de0a_4985_8b7d_79c57efacd27.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>C:\Users\auxin\OneDrive\Desktop\MatlabApp</param.output>
+    <param.guid>0ab41a82-bca0-4de3-9ca9-f6a5c92077e2</param.guid>
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.description />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\SelectionWindow.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateCumulativeJumpDistances.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateCumulativeMeanJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateCumulativeTrackLength.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateDbyCumulativeJumpDistances.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateValuesAllAnalysisForSaveStructure.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\determineMSDandDfromJumpDistances.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\determineSegmentNumbers.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\filterTrackIDsByDataFilterStruc.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\fitMultipleGaussians.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\fitVelocityPopulationsByMeanJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\getVolumeAreaoccupiedByTracks.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\groupRestoreTrackIDsForVisualisation.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotAveragedTrackLength.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotConfinementVsMeanJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotCumulativeJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotCumulativeMeanJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotCumulativeTrackLength.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotDiffusionParametersFromSwift.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotDiffusionTypeSwitch.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotExternalTrackClassification.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotInternMSDLyzer.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotJumpAngle.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotMeanJumpDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotNumberOfStepsPerTrack.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\plotTrackRatios.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\retrieveDiffusionParametersFromSwift.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\addAll.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\computeDrift.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\computeMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\computeVCorr.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\errorShade.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\fitLogLogMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\fitMeanMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\fitMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\getAllDelays.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\getCommonTimes.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\getMeanMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\getMeanVCorr.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\getVelocities.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\labelPlotMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\labelPlotTracks.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\labelPlotVCorr.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\msdanalyzer.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\plotDrift.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\plotMeanMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\plotMeanVCorr.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\plotMSD.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\@msdanalyzer\plotTracks.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\DensityParameters.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\DiffusionParameters.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\DriftParameters.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\ScalarMap.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\ScalarMapWindows.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\SquareGrid.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\TimeWindows.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\TrajectoryEnsemble.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\TrajectoryEnsembleWindows.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\VectorMap.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Classes\structs\VectorMapWindows.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Mean-Shift-Drift-Correction-main\compute_drift_3D.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Mean-Shift-Drift-Correction-main\crosspairs_3D.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Mean-Shift-Drift-Correction-main\drift_default_meanshift.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Mean-Shift-Drift-Correction-main\Fcrosspairs_3D.mexw64</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Mean-Shift-Drift-Correction-main\meanshift_3D.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\Mean-Shift-Drift-Correction-main\meanshift_3D_error.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\PeakFindingandMeasurement Tom O Haver\allpeaks.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\ExternalFunctions\TrackIt\fitDbyCumulativeJumpDistancesbyTrackIt.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateConfinementRatio.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateCumulativeSum.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateFRC.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateFSC.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateJumpAngles.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateJumpDistances.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateMeanJumpDistances.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateMSDClassic.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateNettoDistanceTravelled.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateNumberOfStepsinTrack.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateStepNumbers.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\calculateTotalDistanceTraveled.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\catTrackDataRename.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\filterTracksinArrayByLength.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\filterTracksinCellbyLength.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\Function\appUtilsDistance.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\gatherIntensityData.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\getLocFilelocationfromSingleFolder.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\importPicassohdf5.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\ImportSwiftAsTrc.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\iterateFileName.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\iterateSaveFoldername.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\Karyogramm3DwithType.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\loadCustomCSV.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\loadCustomMat.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\loadLocswithFileList.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\loadSMAPLocalisations.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\loadtiff.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\makeDensityMap.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\makeDriftMap.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\makeMaxIntensityProjection.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\makeVelocityMap.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\plotupdateTracesOverlay.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\processBeadsAndCellImage.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GeneralFunctions\saveastiff.m</file>
+      <file>${PROJECT_ROOT}\3rdPeak1.png</file>
+      <file>${PROJECT_ROOT}\AllTrackAnalysisWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\DataFilter.mlapp</file>
+      <file>${PROJECT_ROOT}\ImportSettingsPreprocessingWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\ImportSettingsTracksPreprocessingWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\ImportSettingsValidationWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\ImportSettingsVisualisationWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\PreprocessingWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\SingleTrackAnalysisWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\SpotStatisticsWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\ValidationWindow.mlapp</file>
+      <file>${PROJECT_ROOT}\VisualisationWindow.mlapp</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\calculateDiffractionLimit.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\calculateExpDisplacement.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\calculateExpNoiseRate.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\calculatePBleach.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\calculatePrecision.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\CellMaskV2.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\loadTrackDataFileSelectionPreprocessing.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\nestedFolderFileSearch.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\performLocalisationPreprocessing.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\performPreprocessingDriftCorrectionWithBead.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\performPreprocessingDriftCorrectionwoBead.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\PreprocessingFunctions\SavePeaksAsSwift.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\SingleTrackAnalysisFunctions\calculateDataSingleTrackAnalysis.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\SingleTrackAnalysisFunctions\plotAllFiguresSingleTrackAnalysis.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\SingleTrackAnalysisFunctions\plotIntensityofTrackoverTime.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\SingleTrackAnalysisFunctions\plotJumpDistancesSingleTrackAnalysis.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\SingleTrackAnalysisFunctions\plotMSDClassic.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\VisualisationFunctions\generateAverageIntensityProjection.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\VisualisationFunctions\loadDataFileSelectionVisualisation.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\VisualisationFunctions\loadTrackDataFileSelectionVisualisation.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\VisualisationFunctions\manageTrackOverlayVisualisation.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\VisualisationFunctions\plotBackgroundImageVisualisation.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\VisualisationFunctions\plotTracksOrSpotsOverlay.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\auxin\OneDrive\Desktop" name="MatlabApp" optional="false">C:\Users\auxin\OneDrive\Desktop\MatlabApp</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2021a</root>
+      <toolboxes />
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
