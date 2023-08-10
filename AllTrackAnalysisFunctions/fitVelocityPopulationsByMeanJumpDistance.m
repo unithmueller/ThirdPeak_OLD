@@ -13,9 +13,12 @@ function gaussParameters = fitVelocityPopulationsByMeanJumpDistance(Axes, SaveSt
        
        %% Apply the filter if necessary
        if size(filterIDs,1)>0
-           ids = cell2mat(data(:,1));
+           ids = data{1,1};
+           ids = cell2mat(ids);
            mask = ismember(ids, filterIDs);
-           data = data(mask,:);
+           tmpdata = data{1,2};
+           tmpdata = tmpdata(mask,:);
+           data{1,2} = tmpdata;
        end
        %% Unpack the cell array
        data = cell2mat(data(:,2));

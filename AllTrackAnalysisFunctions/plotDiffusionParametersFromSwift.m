@@ -1,4 +1,4 @@
-function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Axes, binNumbers, SaveStructure, property, lengthUnit, filterIDs, performFit)
+function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Axes, binNumbers, SaveStructure, property, lengthUnit, filterIDs, performFit, timeunit)
 %Function to plot the respective jump distances as a histogram in the track
 %analysis window.
 %Input: Axes - axes object to plot into
@@ -33,9 +33,9 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
        xlim(Axes, [minv maxv]);
        title(Axes, join(["Distribution of " property " from Swift"],""));
        if property == "MSD"
-           xlabel(Axes, sprintf("MSD in [%s²/s²]", "µm"));
+           xlabel(Axes, sprintf("MSD in [µm²/%s²]", [timeunit]));
        else
-           xlabel(Axes, sprintf("D in [%s²/s]", "µm"));
+           xlabel(Axes, sprintf("D in [µm²/%s]", [timeunit]));
        end
  
        %% Decide if we fit or not

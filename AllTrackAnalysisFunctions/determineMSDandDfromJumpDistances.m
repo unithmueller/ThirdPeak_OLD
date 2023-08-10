@@ -1,4 +1,4 @@
-function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers)
+function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers)
 %Function to determine the MSD and D from 1D and 2D displacements of the
 %tracks. Will only lead to an overall estimation and will not be able to
 %determine different diffusion types/groups.
@@ -89,11 +89,20 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        if isPixel
            xD = xMSD/(2);
        else
-           xD = xMSD/(2*timestep);
+           xMSD = xMSD/timestep;
+           xD = (xMSD)/(2*timestep);
+       end
+       %do the standart MSD = 2DT on the data
+       dataXMSD = mean(xData.^2);
+       if isPixel
+           dataxD = dataXMSD/(2);
+       else
+           dataXMSD = dataXMSD/timestep;
+           dataxD = (dataXMSD)/(2*timestep);
        end
        %pack the properties
        xxFitData = [gof.rsquare, xMSD, xD];
-       
+       xxDataData = [gof.rsquare, dataXMSD, dataxD];
        %% Y
        ax2 = nexttile(tl,2);
        Axes = ax2;
@@ -138,12 +147,23 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        if isPixel
            yD = yMSD/(2);
        else
-           yD = yMSD/(2*timestep);
+           yMSD = xMSD/timestep;
+           yD = (yMSD)/(2*timestep);
+       end
+       %do the standart MSD = 2DT on the data
+       dataYMSD = mean(yData.^2);
+       if isPixel
+           datayD = dataYMSD/(2);
+       else
+           dataYMSD = dataYMSD/timestep;
+           datayD = (dataYMSD)/(2*timestep);
        end
        %show results in graph
        yFitData = [gof.rsquare, yMSD, yD];
+       yDataData = [gof.rsquare, dataYMSD, datayD];
        
        %% Z
+       try
        ax3 = nexttile(tl,3);
        Axes = ax3;
        minv = min(zData);
@@ -187,10 +207,23 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        if isPixel
            zD = zMSD/(2);
        else
-           zD = zMSD/(2*timestep);
+           zMSD = zMSD/timestep;
+           zD = (zMSD)/(2*timestep);
        end
        %show results in graph
+       dataZMSD = mean(zData.^2);
+       if isPixel
+           datazD = dataZMSD/(2);
+       else
+           dataZMSD = dataZMSD/timestep;
+           datazD = (dataZMSD)/(2*timestep);
+       end
        zFitData = [gof.rsquare, zMSD, zD];
+       zDataData = [gof.rsquare, dataZMSD, datazD];
+       catch
+           zFitData = [0, 0, 0];
+           zDataData = [0, 0, 0];
+       end
        
        %% XY
        ax4 = nexttile(tl,4);
@@ -234,11 +267,21 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        if isPixel
            xyD = xyMSD/(2*2);
        else
-           xyD = xyMSD/(2*2*timestep);
+           xyMSD = xyMSD/timestep;
+           xyD = (xyMSD)/(2*2*timestep);
+       end
+       dataXYMSD = mean(xyData.^2);
+       if isPixel
+           dataxyD = dataXYMSD/(2*2);
+       else
+           dataXYMSD = dataXYMSD/timestep;
+           dataxyD = (dataXYMSD)/(2*2*timestep);
        end
 
        xyFitData = [gof.rsquare, xyMSD, xyD];
+       xyDataData = [gof.rsquare, dataXYMSD, dataxyD];
        %% XYZ
+       try
        ax5 = nexttile(tl,5);
        Axes = ax5;
        minv = min(xyzData);
@@ -280,12 +323,27 @@ function fitResults = determineMSDandDfromJumpDistances(FigurePanel, SaveStructu
        if isPixel
            xyzD = xyzMSD/(2*3);
        else
-           xyzD = xyzMSD/(2*3*timestep);
+           xyzMSD = xyzMSD/timestep;
+           xyzD = (xyzMSD)/(2*3*timestep);
        end
        %show results in graph
+       dataXYZMSD = mean(xyData.^2);
+       if isPixel
+           dataxyzD = dataXYZMSD/(2*3);
+       else
+           dataXYZMSD = dataXYZMSD/timestep;
+           dataxyzD = (dataXYZMSD)/(2*3*timestep);
+       end
+
+
        xyzFitData = [gof.rsquare, xyzMSD, xyzD];
+       xyzDataData = [gof.rsquare, dataXYZMSD, dataxyzD];
+       catch
+       end
        
        %% pack the fit results
+       
        fitResults = [xxFitData; yFitData; zFitData; xyFitData; xyzFitData];
+       dataResults = [xxDataData; yDataData; zDataData; xyDataData; xyzDataData];
 
 end

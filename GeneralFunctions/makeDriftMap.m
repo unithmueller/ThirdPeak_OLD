@@ -5,7 +5,6 @@ function makeDriftMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT, nu
  %minimal number of points in a bin that will lead to processing, filter i
  %dont know yet, filtersize is the distance to be considered for processing
     %Make the grid to put the data in
-    data = cell2mat(data(1,1));
         %need to convert data always into unit/frame
     type = split(convertCharsToStrings(app.ImportSettingsStruct.customUnits.DataType),"/");
     comparison = strcmp(type, ["Pixel"; "Frame"]);

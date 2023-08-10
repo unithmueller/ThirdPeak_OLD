@@ -15,7 +15,10 @@ function localisations = loadSMAPLocalisations(file)
         newfile(:,5) = 0;
     end
     newfile(:,6) = locs.locprecnm; %xyerr
-    newfile(:,7) = locs.locprecznm; %zerr
+    try
+        newfile(:,7) = locs.locprecznm; %zerr
+    catch
+    end
     newfile(:,8) = locs.phot; %photons
     newfile(:,9) = locs.photerr; %photon error
     newfile(:,10) = locs.bg; %bg
