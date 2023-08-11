@@ -5,7 +5,7 @@ function expdisplacementvaluestring = calculateExpDisplacement(tracks)
     %       tracklengths: structured array, only necessary if structured
     %       array has been used for tracks
     %10=MJD, 14=motiontype 2 19 = n
-    if size(tracks,2) == 22 %data from swift analysis
+    if size(tracks,2) >= 22 %data from swift analysis
         tmpdat = tracks(tracks(:,14) == 2,:);%all diffusing things
         if size(tmpdat,1) < 1
             tmpdat = tracks; %nothing diffusive, take all

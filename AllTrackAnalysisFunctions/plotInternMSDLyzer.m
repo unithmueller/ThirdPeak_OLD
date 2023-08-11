@@ -50,9 +50,9 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
        elseif property == "a"
            title(Axes, join(["MSD Distribution for " dimension],""));
            if isPixel
-               xlabel(Axes, "MSD [px²/frame²]");
+               xlabel(Axes, "MSD [px²]");
            else
-               txt = join([lengthUnit "²/" timeunit "²"],"");
+               txt = join([lengthUnit "²"],"");
                xlabel(Axes, sprintf("MSD [%s]",txt));
            end
        elseif property == "d"

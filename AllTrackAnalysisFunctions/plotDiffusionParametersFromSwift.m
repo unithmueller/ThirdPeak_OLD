@@ -33,7 +33,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
        xlim(Axes, [minv maxv]);
        title(Axes, join(["Distribution of " property " from Swift"],""));
        if property == "MSD"
-           xlabel(Axes, sprintf("MSD in [µm²/%s²]", [timeunit]));
+           xlabel(Axes, "MSD in [µm²]");
        else
            xlabel(Axes, sprintf("D in [µm²/%s]", [timeunit]));
        end

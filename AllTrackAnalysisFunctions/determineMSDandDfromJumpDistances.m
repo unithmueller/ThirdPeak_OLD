@@ -1,4 +1,4 @@
-function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers)
+function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers)
 %Function to determine the MSD and D from 1D and 2D displacements of the
 %tracks. Will only lead to an overall estimation and will not be able to
 %determine different diffusion types/groups.
@@ -89,7 +89,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            xD = xMSD/(2);
        else
-           xMSD = xMSD/timestep;
            xD = (xMSD)/(2*timestep);
        end
        %do the standart MSD = 2DT on the data
@@ -97,7 +96,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            dataxD = dataXMSD/(2);
        else
-           dataXMSD = dataXMSD/timestep;
            dataxD = (dataXMSD)/(2*timestep);
        end
        %pack the properties
@@ -147,7 +145,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            yD = yMSD/(2);
        else
-           yMSD = xMSD/timestep;
            yD = (yMSD)/(2*timestep);
        end
        %do the standart MSD = 2DT on the data
@@ -155,7 +152,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            datayD = dataYMSD/(2);
        else
-           dataYMSD = dataYMSD/timestep;
            datayD = (dataYMSD)/(2*timestep);
        end
        %show results in graph
@@ -207,7 +203,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            zD = zMSD/(2);
        else
-           zMSD = zMSD/timestep;
            zD = (zMSD)/(2*timestep);
        end
        %show results in graph
@@ -215,7 +210,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            datazD = dataZMSD/(2);
        else
-           dataZMSD = dataZMSD/timestep;
            datazD = (dataZMSD)/(2*timestep);
        end
        zFitData = [gof.rsquare, zMSD, zD];
@@ -267,14 +261,12 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            xyD = xyMSD/(2*2);
        else
-           xyMSD = xyMSD/timestep;
            xyD = (xyMSD)/(2*2*timestep);
        end
        dataXYMSD = mean(xyData.^2);
        if isPixel
            dataxyD = dataXYMSD/(2*2);
        else
-           dataXYMSD = dataXYMSD/timestep;
            dataxyD = (dataXYMSD)/(2*2*timestep);
        end
 
@@ -323,7 +315,6 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            xyzD = xyzMSD/(2*3);
        else
-           xyzMSD = xyzMSD/timestep;
            xyzD = (xyzMSD)/(2*3*timestep);
        end
        %show results in graph
@@ -331,10 +322,8 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        if isPixel
            dataxyzD = dataXYZMSD/(2*3);
        else
-           dataXYZMSD = dataXYZMSD/timestep;
            dataxyzD = (dataXYZMSD)/(2*3*timestep);
        end
-
 
        xyzFitData = [gof.rsquare, xyzMSD, xyzD];
        xyzDataData = [gof.rsquare, dataXYZMSD, dataxyzD];
@@ -345,5 +334,13 @@ function [fitResults, dataResults] = determineMSDandDfromJumpDistances(FigurePan
        
        fitResults = [xxFitData; yFitData; zFitData; xyFitData; xyzFitData];
        dataResults = [xxDataData; yDataData; zDataData; xyDataData; xyzDataData];
+       
+       if isPixel
+           unitResults = ["","px²","px²/frame"];
+       else
+           sqUnit = join([lengthUnit, "²"], "");
+           diffUnit = join([sqUnit "/" timeunit], "");
+           unitResults = ["",sqUnit,diffUnit];
+       end
 
 end
