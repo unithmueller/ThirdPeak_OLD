@@ -45,13 +45,24 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
             maxX = max(tmpdata(:,2));
             maxY = max(tmpdata(:,3));
             maxXY = max([maxX, maxY]);
-            tmpmaskdat = CellMaskV2(tmpdata, [round(maxXY*1.1) round(maxXY*1.1)], pwd, i);
+            try
+                tmpmaskdat = CellMaskV2(tmpdata, [round(maxXY*1.1) round(maxXY*1.1)], pwd, i);
+            catch
+                tmpmaskdat = {[1,1,1,1,1,1,1,1], [1,1,1,1,1,1,1,1]};
+            end
             for j = 1:size(tmpmaskdat,2)
                 maskedLocs{end+1,1} = tmpmaskdat{1,j};
                 maskedLocs{end,2} = LocalisationData{i,2};
             end
         end
         cd ..;
+        %if something went wrong, remove the file
+        for i = 1:size(maskedLocs,1)
+            tmp = maskedLocs{i,1};
+            if size(tmp,1)<5
+                maskedLocs(i,:) = [];
+            end
+        end
         %absoltue values
     elseif options.XYZ.XY.X.Used || options.XYZ.XY.Y.Used
         %use the filter in XY
@@ -102,6 +113,13 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     else
         precisionLocs = maskedLocs;
     end
+    %if something went wrong, remove the file
+        for i = 1:size(precisionLocs,1)
+            tmp = precisionLocs{i,1};
+            if size(tmp,1)<5
+                precisionLocs(i,:) = [];
+            end
+        end
     %Z precision
     if options.precision.Z.Used
         for i = 1:size(precisionLocs,1)
@@ -115,6 +133,13 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
             end
         end
     end
+    %if something went wrong, remove the file
+        for i = 1:size(precisionLocs,1)
+            tmp = precisionLocs{i,1};
+            if size(tmp,1)<5
+                precisionLocs(i,:) = [];
+            end
+        end
     if ~options.precision.XY.Used && ~options.precision.Z.Used
         precisionLocs = maskedLocs;
     end
@@ -129,6 +154,12 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
             intensityLocs{i,1} = tmpdata;
             intensityLocs{i,2} = precisionLocs{i,2};
             catch
+            end
+        end
+        for i = 1:size(intensityLocs,1)
+            tmp = intensityLocs{i,1};
+            if size(tmp,1)<5
+                intensityLocs(i,:) = [];
             end
         end
     else

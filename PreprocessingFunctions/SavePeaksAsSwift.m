@@ -24,6 +24,7 @@ if mode == 1
     resultpath = join([path '\csv'],"");
     mkdir(resultpath);
     for i = 1: NOC
+        try
         data = Filename{i,1};
         newfile = [];
         newfile(:,1:5) = data(:,[2:5,8]);
@@ -38,6 +39,8 @@ if mode == 1
         name = name(1:end-4);
         savepath = join([resultpath '\' name '.csv'],'');
         writetable(table,savepath);
+        catch
+        end
     end
 end
 end
