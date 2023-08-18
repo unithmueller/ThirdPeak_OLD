@@ -6,7 +6,7 @@ function expdisplacementvaluestring = calculateExpDisplacement(tracks)
     %       array has been used for tracks
     %10=MJD, 14=motiontype 2 19 = n
     if size(tracks,2) >= 22 %data from swift analysis
-        tmpdat = tracks(tracks(:,14) == 2,:);%all diffusing things
+        tmpdat = tracks(tracks(:,14) == 3,:);%all diffusing things
         if size(tmpdat,1) < 1
             tmpdat = tracks; %nothing diffusive, take all
         end

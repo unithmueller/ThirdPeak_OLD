@@ -339,7 +339,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            unitResults = ["","px²","px²/frame"];
        else
            sqUnit = join([lengthUnit, "²"], "");
-           diffUnit = join([sqUnit "/" timeunit], "");
+           diffUnit = join([sqUnit "/" string(timestep) " " timeunit], "");
            unitResults = ["",sqUnit,diffUnit];
        end
 

@@ -28,13 +28,13 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
        end
        
        %% Adjust the values if Unit/Unit
-       if ~isPixel & property ~= "Alpha"
-           if property == "a"
-               data = data*(pxsize*pxsize/(timestep*timestep));
-           elseif property == "d"
-               data = data*(pxsize*pxsize/(timestep));
-           end
-       end
+%        if ~isPixel & property ~= "Alpha"
+%            if property == "a"
+%                data = data*(pxsize*pxsize/(timestep*timestep));
+%            elseif property == "d"
+%                data = data*(pxsize*pxsize/(timestep));
+%            end
+%        end
        %% Plot the data
        minv = min(data);
        maxv = max(data);
@@ -56,7 +56,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotInternMSDLyzer(Axes, binNumbers
                xlabel(Axes, sprintf("MSD [%s]",txt));
            end
        elseif property == "d"
-           title(Axes, join(["Jump Distance Distribution for " dimension],""));
+           title(Axes, join(["Diffusion Coefficient Distribution for " dimension],""));
            if isPixel
                xlabel(Axes, "D [px²/frame]");
            else

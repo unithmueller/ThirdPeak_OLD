@@ -1,4 +1,4 @@
-function destinationStruc = calculateMSDClassic(TrackData, dimension, fitValue, lengthCheck, destinationStruc)
+function [PixeldestinationStruc, UnitdestinationStruc] = calculateMSDClassic(TrackData, dimension, fitValue, lengthCheck, PixeldestinationStruc, UnitdestinationStruc, timestep, pxsize)
 %Function to call the MSDAnalyzer to re-calculate the MSD. Works best on
 %longer tracks
 %Input: TrackData as an array
@@ -52,7 +52,9 @@ function destinationStruc = calculateMSDClassic(TrackData, dimension, fitValue, 
     end
     alphas = {};
     As = {};
+    UnitAs = {};
     Ds = {};
+    UnitDs = {};
     linR = {};
     logR = {};
     for i = 1:size(ids,1)
@@ -60,29 +62,53 @@ function destinationStruc = calculateMSDClassic(TrackData, dimension, fitValue, 
         alphas{i,2} = lyzer.loglogfit.alpha(i);
         As{i,1} = ids(i);
         As{i,2} = lyzer.lfit.a(i);
+        UnitAs{i,1} = ids(i);
+        UnitAs{i,2} = lyzer.lfit.a(i)*(pxsize*pxsize/(timestep*timestep));
         Ds{i,1} = ids(i);
         Ds{i,2} = lyzer.lfit.a(i)*1/(2*dimf);
+        UnitDs{i,1} = ids(i);
+        UnitDs{i,2} = lyzer.lfit.a(i)*1/(2*dimf)*(pxsize*pxsize/(timestep));
         linR{i,1} = ids(i);
         linR{i,2} = lyzer.lfit.r2fit(i);
         logR{i,1} = ids(i);
         logR{i,2} = lyzer.loglogfit.r2fit(i);
     end
     %% Save the generated data
-    destinationStruc.InternMSD.TrackIDs = calculatedMSDIDs;
+    %For the pixel unit
+    PixeldestinationStruc.InternMSD.TrackIDs = calculatedMSDIDs;
     
     if dimension == 2
-        destinationStruc.InternMSD.XY.MSDclass = lyzer;
-        destinationStruc.InternMSD.XY.Alpha = alphas;
-        destinationStruc.InternMSD.XY.a = As;
-        destinationStruc.InternMSD.XY.d = Ds;
-        destinationStruc.InternMSD.XY.logR = logR; 
-        destinationStruc.InternMSD.XY.linR = linR; 
+        PixeldestinationStruc.InternMSD.XY.MSDclass = lyzer;
+        PixeldestinationStruc.InternMSD.XY.Alpha = alphas;
+        PixeldestinationStruc.InternMSD.XY.a = As;
+        PixeldestinationStruc.InternMSD.XY.d = Ds;
+        PixeldestinationStruc.InternMSD.XY.logR = logR; 
+        PixeldestinationStruc.InternMSD.XY.linR = linR; 
     elseif dimension == 3
-        destinationStruc.InternMSD.XYZ.MSDclass = lyzer;
-        destinationStruc.InternMSD.XYZ.Alpha = alphas;
-        destinationStruc.InternMSD.XYZ.a = As;
-        destinationStruc.InternMSD.XYZ.d = Ds; 
-        destinationStruc.InternMSD.XYZ.logR = logR; 
-        destinationStruc.InternMSD.XYZ.linR = linR; 
+        PixeldestinationStruc.InternMSD.XYZ.MSDclass = lyzer;
+        PixeldestinationStruc.InternMSD.XYZ.Alpha = alphas;
+        PixeldestinationStruc.InternMSD.XYZ.a = As;
+        PixeldestinationStruc.InternMSD.XYZ.d = Ds; 
+        PixeldestinationStruc.InternMSD.XYZ.logR = logR; 
+        PixeldestinationStruc.InternMSD.XYZ.linR = linR; 
+    end
+
+    %for the unit unit
+    UnitdestinationStruc.InternMSD.TrackIDs = calculatedMSDIDs;
+    
+    if dimension == 2
+        UnitdestinationStruc.InternMSD.XY.MSDclass = lyzer;
+        UnitdestinationStruc.InternMSD.XY.Alpha = alphas;
+        UnitdestinationStruc.InternMSD.XY.a = UnitAs;
+        UnitdestinationStruc.InternMSD.XY.d = UnitDs;
+        UnitdestinationStruc.InternMSD.XY.logR = logR; 
+        UnitdestinationStruc.InternMSD.XY.linR = linR; 
+    elseif dimension == 3
+        UnitdestinationStruc.InternMSD.XYZ.MSDclass = lyzer;
+        UnitdestinationStruc.InternMSD.XYZ.Alpha = alphas;
+        UnitdestinationStruc.InternMSD.XYZ.a = UnitAs;
+        UnitdestinationStruc.InternMSD.XYZ.d = UnitDs; 
+        UnitdestinationStruc.InternMSD.XYZ.logR = logR; 
+        UnitdestinationStruc.InternMSD.XYZ.linR = linR; 
     end
 end

@@ -45,10 +45,10 @@ function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filte
     %the msd is always in pixel/frame; the meanJumpDistance is in
     %dependence of the isPixel value in pixel or unit. Need du adjust
     %accordingly
-    if isPixel
-    else
-        MSDs(:,2) = MSDs(:,2).*(pxsize*pxsize/(timestepsize*timestepsize));
-    end
+   % if isPixel
+   % else
+    %    MSDs(:,2) = MSDs(:,2).*(pxsize*pxsize/(timestepsize*timestepsize));
+   % end
   
     %% Determine the confinement radius fit function
     % provide the fit model
@@ -80,6 +80,7 @@ function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filte
     for i = 1:size(calculatedData(:,1))
         scatter(Axes,calculatedData(i,5), calculatedData(i,3), "Displayname",num2str(calculatedData(i,1)));
     end
+    title(Axes, "Confinement Radius vs. Mean Jump Distance")
     if isPixel
         xlabel(Axes, "Mean Jump Distance [px]");
         ylabel(Axes, "Confinement Radius [px]");
