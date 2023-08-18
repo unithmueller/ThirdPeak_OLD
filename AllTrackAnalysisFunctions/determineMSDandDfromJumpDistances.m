@@ -86,21 +86,26 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        gof.rsquare = abs(median(1-gof.sse/sst));
        %calculate MSD and D
        xMSD = std(pdGauss)^2;
+       fitxMSDStd = std(pdGauss);
        if isPixel
            xD = xMSD/(2);
+           fitxDStd = fitxMSDStd/2;
        else
            xD = (xMSD)/(2*timestep);
+           fitxDStd = fitxMSDStd/(2*timestep);
        end
        %do the standart MSD = 2DT on the data
-       dataXMSD = mean(xData.^2);
+       [dataXMSDSTD, dataXMSD] = std(xData.^2);
        if isPixel
            dataxD = dataXMSD/(2);
+           dataXDSTD = dataXMSDSTD/2;
        else
            dataxD = (dataXMSD)/(2*timestep);
+           dataXDSTD = dataXMSDSTD/(2*timestep);
        end
        %pack the properties
-       xxFitData = [gof.rsquare, xMSD, xD];
-       xxDataData = [gof.rsquare, dataXMSD, dataxD];
+       xxFitData = [gof.rsquare, xMSD, fitxMSDStd, xD, fitxDStd];
+       xxDataData = [gof.rsquare, dataXMSD, dataxD, dataXDSTD];
        %% Y
        ax2 = nexttile(tl,2);
        Axes = ax2;
@@ -142,21 +147,27 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        gof.rsquare = abs(median(1-gof.sse/sst));
        %calculate MSD and D
        yMSD = std(pdGauss)^2;
+       yMSDstd = std(pdGauss);
        if isPixel
            yD = yMSD/(2);
+           yDstd = yMSDstd/2;
        else
            yD = (yMSD)/(2*timestep);
+           yDstd = yMSDstd/(2*timestep);
        end
        %do the standart MSD = 2DT on the data
-       dataYMSD = mean(yData.^2);
+       [dataYSTD, dataYMSD] = std(yData.^2);
+
        if isPixel
            datayD = dataYMSD/(2);
+           datayDstd = dataYSTD/2;
        else
            datayD = (dataYMSD)/(2*timestep);
+           datayDstd = dataYSTD/(2*timestep);
        end
        %show results in graph
-       yFitData = [gof.rsquare, yMSD, yD];
-       yDataData = [gof.rsquare, dataYMSD, datayD];
+       yFitData = [gof.rsquare, yMSD, yMSDstd, yD, yDstd];
+       yDataData = [gof.rsquare, dataYMSD, dataYSTD, datayD, datayDstd];
        
        %% Z
        try
@@ -200,23 +211,28 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        gof.rsquare = abs(median(1-gof.sse/sst));
        %calculate MSD and D
        zMSD = std(pdGauss)^2;
+       zMSDstd = std(pdGauss);
        if isPixel
            zD = zMSD/(2);
+           zDstd = zMSDstd/2;
        else
            zD = (zMSD)/(2*timestep);
+           zDstd = zMSDstd/(2*timestep);
        end
        %show results in graph
-       dataZMSD = mean(zData.^2);
+       [dataZMSDstd, dataZMSD] = std(zData.^2);
        if isPixel
            datazD = dataZMSD/(2);
+           datazDstd = dataZMSDstd/2;
        else
            datazD = (dataZMSD)/(2*timestep);
+           datazDstd = dataZMSDstd/(2*timestep);
        end
-       zFitData = [gof.rsquare, zMSD, zD];
-       zDataData = [gof.rsquare, dataZMSD, datazD];
+       zFitData = [gof.rsquare, zMSD, zMSDstd, zD, zDstd];
+       zDataData = [gof.rsquare, dataZMSD, dataZMSDstd, datazD, datazDstd];
        catch
-           zFitData = [0, 0, 0];
-           zDataData = [0, 0, 0];
+           zFitData = [0, 0, 0, 0, 0];
+           zDataData = [0, 0, 0, 0, 0];
        end
        
        %% XY
@@ -258,20 +274,25 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        gof.rsquare = abs(median(1-gof.sse/sst));
        %calculate MSD and D
        xyMSD = std(pdGauss)^2;
+       xyMSDstd = std(pdGauss);
        if isPixel
            xyD = xyMSD/(2*2);
+           xyDstd = xyMSDstd/2;
        else
            xyD = (xyMSD)/(2*2*timestep);
+           xyDstd = xyMSDstd/(2*2*timestep);
        end
-       dataXYMSD = mean(xyData.^2);
+      [dataXYMSDstd, dataXYMSD] = std(xyData.^2);
        if isPixel
            dataxyD = dataXYMSD/(2*2);
+           dataXYDstd = dataXYMSDstd/(2*2);
        else
            dataxyD = (dataXYMSD)/(2*2*timestep);
+           dataXYDstd = dataXYMSDstd/(2*2*timestep);
        end
 
-       xyFitData = [gof.rsquare, xyMSD, xyD];
-       xyDataData = [gof.rsquare, dataXYMSD, dataxyD];
+       xyFitData = [gof.rsquare, xyMSD, xyMSDstd, xyD, xyDstd];
+       xyDataData = [gof.rsquare, dataXYMSD, dataXYMSDstd, dataxyD, dataXYDstd];
        %% XYZ
        try
        ax5 = nexttile(tl,5);
@@ -312,21 +333,26 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        gof.rsquare = abs(median(1-gof.sse/sst));
        %calculate MSD and D
        xyzMSD = std(pdGauss)^2;
+       xyzMSDstd = std(pdGauss);
        if isPixel
            xyzD = xyzMSD/(2*3);
+           xyzDstd = xyzMSDstd/(2*3);
        else
            xyzD = (xyzMSD)/(2*3*timestep);
+           xyzDstd = xyzMSDstd/(2*3*timestep);
        end
        %show results in graph
-       dataXYZMSD = mean(xyData.^2);
+       [dataXYZMSDstd, dataXYZMSD] = std(xyzData.^2);
        if isPixel
            dataxyzD = dataXYZMSD/(2*3);
+           dataXYZDstd = dataXYZMSDstd/(2*3);
        else
            dataxyzD = (dataXYZMSD)/(2*3*timestep);
+           dataXYZDstd = dataXYZMSDstd/(2*3*timestep);
        end
 
-       xyzFitData = [gof.rsquare, xyzMSD, xyzD];
-       xyzDataData = [gof.rsquare, dataXYZMSD, dataxyzD];
+       xyzFitData = [gof.rsquare, xyzMSD, xyzMSDstd, xyzD, xyzDstd];
+       xyzDataData = [gof.rsquare, dataXYZMSD, dataXYZMSDstd, dataxyzD, dataXYZDstd];
        catch
        end
        
