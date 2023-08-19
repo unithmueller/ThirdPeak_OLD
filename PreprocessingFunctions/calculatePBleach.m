@@ -1,4 +1,4 @@
- function bleachvaluestring = calculatePBleach(tracks, timestepsize, timeunit)
+ function bleachvaluestring = calculatePBleach(tracks, timestepsize, timeunit, plotFlag)
     %the probability of a particle to vanish in the next frame via
     %bleaching. it is calculated via exponential decay
     %a*exp(-dt*k).
@@ -37,16 +37,18 @@
     bleachvaluestring = sprintf('%.6f',pbleach);
     
     %% plot
-    h1 = figure;
-    plot(edges,normdec);
-    hold on
-    plot(f);
-    ylabel("Normalized Tracklength");
-    labeltext = sprintf("Time [%s]", timeunit);
-    xlabel(labeltext);
-    text(gca, 1, 0.2, sprintf("pBleachValue: %.6f",pbleach));
+    if plotFlag
+        h1 = figure;
+        plot(edges,normdec);
+        hold on
+        plot(f);
+        ylabel("Normalized Tracklength");
+        labeltext = sprintf("Time [%s]", timeunit);
+        xlabel(labeltext);
+        text(gca, 1, 0.2, sprintf("pBleachValue: %.6f",pbleach));
 
-    savefig(gcf, "Bleachdecay");
-    saveas(gcf, "Bleachdecay.svg");
-    close(gcf);
+        savefig(gcf, "Bleachdecay");
+        saveas(gcf, "Bleachdecay.svg");
+        close(gcf);
+    end
 end
