@@ -105,7 +105,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        end
        %pack the properties
        xxFitData = [gof.rsquare, xMSD, fitxMSDStd, xD, fitxDStd];
-       xxDataData = [gof.rsquare, dataXMSD, dataxD, dataXDSTD];
+       xxDataData = [gof.rsquare, dataXMSD, dataXMSDSTD, dataxD, dataXDSTD];
        %% Y
        ax2 = nexttile(tl,2);
        Axes = ax2;
@@ -362,11 +362,11 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        dataResults = [xxDataData; yDataData; zDataData; xyDataData; xyzDataData];
        
        if isPixel
-           unitResults = ["","px²","px²/frame"];
+           unitResults = ["","px²", "px²", "px²/frame", "px²/frame"];
        else
            sqUnit = join([lengthUnit, "²"], "");
            diffUnit = join([sqUnit "/" string(timestep) " " timeunit], "");
-           unitResults = ["",sqUnit,diffUnit];
+           unitResults = ["", sqUnit, sqUnit, diffUnit, diffUnit];
        end
 
 end
