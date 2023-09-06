@@ -12,6 +12,10 @@ function SaveStructure = calculateValuesAllAnalysisForSaveStructure(TrackData, S
     trackIDs = unique(TrackData(:,1));
     for i = 1:numel(trackIDs)
         singleTrackData = TrackData(TrackData(:,1) == trackIDs(i),:);
+        %% Make sure the track is long enough
+        if size(singleTrackData,1) < 3
+            continue
+        end
         %% Calculate the Jump Distances
         SaveStructure = calculateJumpDistances(singleTrackData, SaveStructure);
         %% Get the diffusion parameters from swift
@@ -31,6 +35,7 @@ function SaveStructure = calculateValuesAllAnalysisForSaveStructure(TrackData, S
         catch
         end
     end
+
     %% Use the data from the structured array to calculate more properties
     SaveStructure = calculateCumulativeJumpDistances(SaveStructure, SaveStructure);
     SaveStructure = calculateMeanJumpDistances(SaveStructure, SaveStructure);

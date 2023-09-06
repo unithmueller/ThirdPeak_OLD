@@ -10,7 +10,7 @@ function destinationStruct = calculateDataSingleTrackAnalysis(SingleTrackData, d
     %Get the intensity data
     destinationStruct = gatherIntensityData(SingleTrackData, destinationStruct);
     %Calculate the MSD
-    destinationStruct = calculateMSDClassic(SingleTrackData, dimension, fitValue, lengthCheck, destinationStruct);
+    [destinationStruct, ~] = calculateMSDClassic(SingleTrackData, dimension, fitValue, lengthCheck, destinationStruct, destinationStruct, 1, 1);
     %Try to get an alread calculated MSD
     try
         destinationStruct.SwiftParams.D = {SingleTrackData(1,7)};
