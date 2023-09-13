@@ -85,9 +85,9 @@ function diffractionLimitValueString = calculateDiffractionLimit(intensityFilter
     close(gcf);
     
     %% get the smallest value of them all
-    nnmean = cellfun(@min, nn_mindist(:,1), 'UniformOutput', false);
+    nnmean = cellfun(@(x) min(x(:,2)), nn_mindist(:,1), 'UniformOutput', false);
+    nnmean = nnmean(~cellfun(@isempty, nnmean));
     nnmean = cell2mat(nnmean);
-    nnmean = nnmean(:,2);
     nnmean = min(nnmean);
     diffractionLimitValueString = int2str(nnmean);
     
