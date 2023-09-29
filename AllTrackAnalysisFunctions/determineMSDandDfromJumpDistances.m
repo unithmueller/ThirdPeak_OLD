@@ -95,12 +95,13 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            fitxDStd = fitxMSDStd/(2*timestep);
        end
        %do the standart MSD = 2DT on the data
-       [dataXMSDSTD, dataXMSD] = std(xData.^2);
+       dataXMSDSTD = std(xData.^2);
+       dataXMSD = mean(xData.^2);
        if isPixel
            dataxD = dataXMSD/(2);
            dataXDSTD = dataXMSDSTD/2;
        else
-           dataxD = (dataXMSD)/(2*timestep);
+           dataxD = dataXMSD/(2*timestep);
            dataXDSTD = dataXMSDSTD/(2*timestep);
        end
        %pack the properties
@@ -156,8 +157,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            yDstd = yMSDstd/(2*timestep);
        end
        %do the standart MSD = 2DT on the data
-       [dataYSTD, dataYMSD] = std(yData.^2);
-
+       dataYSTD = std(yData.^2);
+       dataYMSD = mean(yData.^2);
        if isPixel
            datayD = dataYMSD/(2);
            datayDstd = dataYSTD/2;
@@ -220,7 +221,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            zDstd = zMSDstd/(2*timestep);
        end
        %show results in graph
-       [dataZMSDstd, dataZMSD] = std(zData.^2);
+       dataZMSDstd = std(zData.^2);
+       dataZMSD = mean(zData.^2);
        if isPixel
            datazD = dataZMSD/(2);
            datazDstd = dataZMSDstd/2;
@@ -282,9 +284,10 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            xyD = (xyMSD)/(2*2*timestep);
            xyDstd = xyMSDstd/(2*2*timestep);
        end
-      [dataXYMSDstd, dataXYMSD] = std(xyData.^2);
+      dataXYMSDstd = std(xyData.^2);
+      dataXYMSD = mean(xyData.^2);
        if isPixel
-           dataxyD = dataXYMSD/(2*2);
+           dataxyD = (dataXYMSD)/(2*2);
            dataXYDstd = dataXYMSDstd/(2*2);
        else
            dataxyD = (dataXYMSD)/(2*2*timestep);
@@ -342,9 +345,10 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            xyzDstd = xyzMSDstd/(2*3*timestep);
        end
        %show results in graph
-       [dataXYZMSDstd, dataXYZMSD] = std(xyzData.^2);
+       dataXYZMSDstd  = std(xyzData.^2);
+       dataXYZMSD = mean(xyzData.^2);
        if isPixel
-           dataxyzD = dataXYZMSD/(2*3);
+           dataxyzD = (dataXYZMSD)/(2*3);
            dataXYZDstd = dataXYZMSDstd/(2*3);
        else
            dataxyzD = (dataXYZMSD)/(2*3*timestep);
