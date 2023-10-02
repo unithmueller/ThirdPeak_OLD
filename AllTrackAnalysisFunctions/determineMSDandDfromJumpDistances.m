@@ -84,6 +84,9 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((xData-meanData).^2); %total sum of squares
        gof.sse = sum((xData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
+       [h,p] = kstest(xData);
+       gof.kstsh = h;
+       gof.kstsp = p;
        %calculate MSD and D
        xMSD = std(pdGauss)^2;
        fitxMSDStd = std(pdGauss);
@@ -105,8 +108,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            dataXDSTD = dataXMSDSTD/(2*timestep);
        end
        %pack the properties
-       xxFitData = [gof.rsquare, xMSD, fitxMSDStd, xD, fitxDStd];
-       xxDataData = [gof.rsquare, dataXMSD, dataXMSDSTD, dataxD, dataXDSTD];
+       xxFitData = [h, p, xMSD, fitxMSDStd, xD, fitxDStd];
+       xxDataData = [h, p, dataXMSD, dataXMSDSTD, dataxD, dataXDSTD];
        %% Y
        ax2 = nexttile(tl,2);
        Axes = ax2;
@@ -146,6 +149,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((yData-meanData).^2); %total sum of squares
        gof.sse = sum((yData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
+       [h,p] = kstest(yData);
        %calculate MSD and D
        yMSD = std(pdGauss)^2;
        yMSDstd = std(pdGauss);
@@ -167,8 +171,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            datayDstd = dataYSTD/(2*timestep);
        end
        %show results in graph
-       yFitData = [gof.rsquare, yMSD, yMSDstd, yD, yDstd];
-       yDataData = [gof.rsquare, dataYMSD, dataYSTD, datayD, datayDstd];
+       yFitData = [h,p, yMSD, yMSDstd, yD, yDstd];
+       yDataData = [h,p, dataYMSD, dataYSTD, datayD, datayDstd];
        
        %% Z
        try
@@ -210,6 +214,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((zData-meanData).^2); %total sum of squares
        gof.sse = sum((zData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
+       [h,p] = kstest(zData);
        %calculate MSD and D
        zMSD = std(pdGauss)^2;
        zMSDstd = std(pdGauss);
@@ -230,8 +235,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            datazD = (dataZMSD)/(2*timestep);
            datazDstd = dataZMSDstd/(2*timestep);
        end
-       zFitData = [gof.rsquare, zMSD, zMSDstd, zD, zDstd];
-       zDataData = [gof.rsquare, dataZMSD, dataZMSDstd, datazD, datazDstd];
+       zFitData = [h,p, zMSD, zMSDstd, zD, zDstd];
+       zDataData = [h,p, dataZMSD, dataZMSDstd, datazD, datazDstd];
        catch
            zFitData = [0, 0, 0, 0, 0];
            zDataData = [0, 0, 0, 0, 0];
@@ -274,6 +279,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((xyData-meanData).^2); %total sum of squares
        gof.sse = sum((xyData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
+       [h,p] = kstest(xyData);
        %calculate MSD and D
        xyMSD = std(pdGauss)^2;
        xyMSDstd = std(pdGauss);
@@ -294,8 +300,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            dataXYDstd = dataXYMSDstd/(2*2*timestep);
        end
 
-       xyFitData = [gof.rsquare, xyMSD, xyMSDstd, xyD, xyDstd];
-       xyDataData = [gof.rsquare, dataXYMSD, dataXYMSDstd, dataxyD, dataXYDstd];
+       xyFitData = [h,p, xyMSD, xyMSDstd, xyD, xyDstd];
+       xyDataData = [h,p, dataXYMSD, dataXYMSDstd, dataxyD, dataXYDstd];
        %% XYZ
        try
        ax5 = nexttile(tl,5);
@@ -334,6 +340,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((xyzData-meanData).^2); %total sum of squares
        gof.sse = sum((xyzData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
+       [h,p] = kstest(xyzData);
        %calculate MSD and D
        xyzMSD = std(pdGauss)^2;
        xyzMSDstd = std(pdGauss);
@@ -355,8 +362,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            dataXYZDstd = dataXYZMSDstd/(2*3*timestep);
        end
 
-       xyzFitData = [gof.rsquare, xyzMSD, xyzMSDstd, xyzD, xyzDstd];
-       xyzDataData = [gof.rsquare, dataXYZMSD, dataXYZMSDstd, dataxyzD, dataXYZDstd];
+       xyzFitData = [h,p, xyzMSD, xyzMSDstd, xyzD, xyzDstd];
+       xyzDataData = [h,p, dataXYZMSD, dataXYZMSDstd, dataxyzD, dataXYZDstd];
        catch
        end
        
@@ -366,11 +373,11 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        dataResults = [xxDataData; yDataData; zDataData; xyDataData; xyzDataData];
        
        if isPixel
-           unitResults = ["","px²", "px²", "px²/frame", "px²/frame"];
+           unitResults = ["0=norm dist, 1=not","P-Value","px²", "px²", "px²/frame", "px²/frame"];
        else
            sqUnit = join([lengthUnit, "²"], "");
            diffUnit = join([sqUnit "/" string(timestep) " " timeunit], "");
-           unitResults = ["", sqUnit, sqUnit, diffUnit, diffUnit];
+           unitResults = ["0=norm dist, 1=not","P-Value", sqUnit, sqUnit, diffUnit, diffUnit];
        end
 
 end

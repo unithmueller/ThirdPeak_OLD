@@ -66,6 +66,6 @@ function T = plotAveragedTrackLength(FigurePanel, SaveStructure, filterIDs, isPi
        allMed = [median(StepNumberdata), median(Totaldistancedata), median(Nettodistancedata)];
        allQuantile = [quantile(StepNumberdata, [0.25 0.75]); quantile(Totaldistancedata, [0.25 0.75]); quantile(Nettodistancedata, [0.25 0.75])];
        
-       T = table(ValueOrigin.', allMins.', allMax.', allMed.', allQuantile);
+       T = table(ValueOrigin.', round(allMins.',2), round(allMax.',2), round(allMed.',2), round(allQuantile,2));
        T.Properties.VariableNames = {'Origin', 'Min', 'Max', 'Median', 'Quantile'};
 end

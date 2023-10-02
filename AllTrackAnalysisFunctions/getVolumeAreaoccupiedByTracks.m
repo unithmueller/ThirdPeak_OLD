@@ -77,6 +77,7 @@ function [Axes, outAlphaRad, outparas] = getVolumeAreaoccupiedByTracks(Axes, Tra
             alphaParam = volume(shp);
             text(Axes, 0.1,0.1, ["Volume: " string(volume(shp))], "Units", "normalized");
         end
+        alphaParam = round(alphaParam,2);
         if isPixel
             xlabel(Axes, "X Dimension [px]");
             ylabel(Axes, "Y Dimension [px]");

@@ -1,4 +1,4 @@
-function [xyout, xyzout] = calculateDbyCumulativeJumpDistances(FigurePanel, SaveStructure, trackingRadius, estimateD, nRates, filterIDs, binNumbers, lengthUnit, isPixel)
+function [xyout, xyzout] = calculateDbyCumulativeJumpDistances(FigurePanel, SaveStructure, trackingRadius, estimateD, nRates, filterIDs, binNumbers, lengthUnit, isPixel, timestep)
 %Function to determine different diffusion states from the data of the jump
 %distances. Uses the function from TrackIt to estimate the different
 %states.
@@ -56,7 +56,8 @@ function [xyout, xyzout] = calculateDbyCumulativeJumpDistances(FigurePanel, Save
        binCenters = h1.BinEdges + h1.BinWidth/2;
        hisValues = h1.Values;
        hisValues = [hisValues, 1];
-       [xyout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates));
+       %[xyout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates));
+       [xyout] = fitDbyCumulativeJumpDistancesbyTrackItModified(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates), 0, timestep);
        %show results in graph
        fitDatax = xyout.xy(1,1:binNumbers);
        fitDatay = xyout.xy(1,binNumbers+1:end);
@@ -84,7 +85,8 @@ function [xyout, xyzout] = calculateDbyCumulativeJumpDistances(FigurePanel, Save
        binCenters = h2.BinEdges + h2.BinWidth/2;
        hisValues = h2.Values;
        hisValues = [hisValues, 1];
-       [xyzout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates));
+       %[xyzout] = fitDbyCumulativeJumpDistancesbyTrackIt(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates));
+       [xyzout] = fitDbyCumulativeJumpDistancesbyTrackItModified(binCenters, hisValues, str2double(trackingRadius), Dvals, str2double(nRates), 1, timestep);
        fitDataxz = xyzout.xy(1,1:binNumbers);
        fitDatayz = xyzout.xy(1,binNumbers+1:end);
        plxyz = plot(Axes, fitDataxz, fitDatayz, "-r");

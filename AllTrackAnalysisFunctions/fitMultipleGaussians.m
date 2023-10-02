@@ -74,7 +74,7 @@ gaussianParameters = [c, estimatedMuSigma];
 gaussianParameters = sortrows(gaussianParameters, 2);
 
 % Create table of the output parameters and display it below the actual, true parameters.
-tEstimate = table((1:numGaussians)', c(:), estimatedMuSigma(:, 1), estimatedMuSigma(:, 2), 'VariableNames', {'Number', 'Amplitude', 'Mean', 'Width'});
+tEstimate = table((1:numGaussians)', c(:), round(estimatedMuSigma(:, 1),2), round(estimatedMuSigma(:, 2),2), 'VariableNames', {'Number', 'Amplitude', 'Mean', 'Width'});
 gaussParameters = tEstimate;
 
 end
