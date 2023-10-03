@@ -1,4 +1,4 @@
-function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers)
+function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistances(FigurePanel, SaveStructure, isPixel, filterIDs, lengthUnit, timeunit, timestep, binNumbers, is2D)
 %Function to determine the MSD and D from 1D and 2D displacements of the
 %tracks. Will only lead to an overall estimation and will not be able to
 %determine different diffusion types/groups.
@@ -84,7 +84,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((xData-meanData).^2); %total sum of squares
        gof.sse = sum((xData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
-       [h,p] = kstest(xData);
+       [h,p] = kstest((xData-meanData)/std(xData));
        gof.kstsh = h;
        gof.kstsp = p;
        %calculate MSD and D
@@ -149,7 +149,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((yData-meanData).^2); %total sum of squares
        gof.sse = sum((yData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
-       [h,p] = kstest(yData);
+       [h,p] = kstest((yData-meanData)/std(yData));
        %calculate MSD and D
        yMSD = std(pdGauss)^2;
        yMSDstd = std(pdGauss);
@@ -182,6 +182,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        maxv = max(zData);
        edges = linspace(minv, maxv, binNumbers);
        %histogram
+       if is2D
+       else
        hisz = histogram(Axes, zData, edges);
        hixMaxValue = max(hisz.Values);
        xlim(Axes, [minv maxv]);
@@ -196,11 +198,14 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            lengthunittxt = lengthUnit;
            timeunittxt = timeunit;
        end
+       end
        %fit
        pdGauss = fitdist(zData, "Normal");
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
        maxyGauss = max(yGauss);
+       if is2D
+       else
        %scaling factor
        scalingFactorGauss = hixMaxValue/maxyGauss;
        %scale the data
@@ -209,12 +214,13 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        hold(Axes,"on")
        plot(Axes, xFitData, yGauss, "--r");
        legend(Axes, "Histogram", "GaussFit");
+       end
        %fit data
        meanData = mean(zData);
        sst = sum((zData-meanData).^2); %total sum of squares
        gof.sse = sum((zData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
-       [h,p] = kstest(zData);
+       [h,p] = kstest((zData-meanData)/std(zData));
        %calculate MSD and D
        zMSD = std(pdGauss)^2;
        zMSDstd = std(pdGauss);
@@ -238,8 +244,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        zFitData = [h,p, zMSD, zMSDstd, zD, zDstd];
        zDataData = [h,p, dataZMSD, dataZMSDstd, datazD, datazDstd];
        catch
-           zFitData = [0, 0, 0, 0, 0];
-           zDataData = [0, 0, 0, 0, 0];
+           zFitData = [0, 0, 0, 0, 0, 0];
+           zDataData = [0, 0, 0, 0, 0, 0];
        end
        
        %% XY
@@ -279,7 +285,7 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        sst = sum((xyData-meanData).^2); %total sum of squares
        gof.sse = sum((xyData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
-       [h,p] = kstest(xyData);
+       [h,p] = kstest((xyData-meanData)/std(xyData));
        %calculate MSD and D
        xyMSD = std(pdGauss)^2;
        xyMSDstd = std(pdGauss);
@@ -310,6 +316,8 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
        maxv = max(xyzData);
        edges = linspace(minv, maxv, binNumbers);
        %histogram
+       if is2D
+       else
        hisxyz = histogram(Axes, xyzData, edges);
        hixMaxValue = max(hisxyz.Values);
        xlim(Axes, [minv maxv]);
@@ -324,23 +332,27 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            lengthunittxt = lengthUnit;
            timeunittxt = timeunit;
        end
+       end
        %fit
        pdGauss = fitdist(xyzData, "Normal");
        xFitData = minv:1:maxv;
        yGauss = pdf(pdGauss, xFitData);
        maxyGauss = max(yGauss);
+       if is2D
+       else
        scalingFactorGauss = hixMaxValue/maxyGauss;
        yGauss = yGauss*scalingFactorGauss;
        
        hold(Axes,"on")
        plot(Axes, xFitData, yGauss, "--r");
        legend(Axes, "Histogram", "GaussFit");
+       end
        %fit data
        meanData = mean(xyzData);
        sst = sum((xyzData-meanData).^2); %total sum of squares
        gof.sse = sum((xyzData-yGauss).^2); %residual sum of squares
        gof.rsquare = abs(median(1-gof.sse/sst));
-       [h,p] = kstest(xyzData);
+       [h,p] = kstest((xyzData-meanData)/std(xyzData));
        %calculate MSD and D
        xyzMSD = std(pdGauss)^2;
        xyzMSDstd = std(pdGauss);
@@ -361,9 +373,13 @@ function [fitResults, dataResults, unitResults] = determineMSDandDfromJumpDistan
            dataxyzD = (dataXYZMSD)/(2*3*timestep);
            dataXYZDstd = dataXYZMSDstd/(2*3*timestep);
        end
-
+       if is2D
+           xyzFitData = [0, 0, 0, 0, 0, 0];
+           xyzDataData = [0, 0, 0, 0, 0, 0];
+       else
        xyzFitData = [h,p, xyzMSD, xyzMSDstd, xyzD, xyzDstd];
        xyzDataData = [h,p, dataXYZMSD, dataXYZMSDstd, dataxyzD, dataXYZDstd];
+       end
        catch
        end
        

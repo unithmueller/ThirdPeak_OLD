@@ -25,6 +25,7 @@ function [Axes, outAlphaRad, outparas] = getVolumeAreaoccupiedByTracks(Axes, Tra
         if string(methodChosen) == "Convex Hull"
             [k,av] = convhull(TrackData(:,3), TrackData(:,4));
             plot(Axes, TrackData(k,3), TrackData(k,4));
+            title(Axes, "Area calculated using Convex Hull");
             axis(Axes, "auto");
             text(Axes, 0.1,0.1, ["Area: " string(av)], "Units", "normalized");
             a = 1;
@@ -40,6 +41,7 @@ function [Axes, outAlphaRad, outparas] = getVolumeAreaoccupiedByTracks(Axes, Tra
             fignew = figure('Visible','off'); % Invisible figure
             h = plot(shp);
             newh = copyobj(h, Axes);
+            title(Axes, "Area calculated using AlphaShape");
             alphaParam = area(shp);
             text(Axes, 0.1,0.1, ["Area: " string(area(shp))], "Units", "normalized");
         end
@@ -60,6 +62,7 @@ function [Axes, outAlphaRad, outparas] = getVolumeAreaoccupiedByTracks(Axes, Tra
             ts = trisurf(TR);
             newhandle = copyobj(ts, Axes);
             axis(Axes, "auto");
+            title(Axes, "Volume calculated using Convex Hull");
             text(Axes, 0.1,0.1,0.1, ["Volume: " string(av)], "Units", "normalized");
             a = 1;
         else
@@ -75,6 +78,7 @@ function [Axes, outAlphaRad, outparas] = getVolumeAreaoccupiedByTracks(Axes, Tra
             h = plot(shp);
             newh = copyobj(h, Axes);
             alphaParam = volume(shp);
+            title(Axes, "Volume calculated using AlphaShape");
             text(Axes, 0.1,0.1, ["Volume: " string(volume(shp))], "Units", "normalized");
         end
         alphaParam = round(alphaParam,2);

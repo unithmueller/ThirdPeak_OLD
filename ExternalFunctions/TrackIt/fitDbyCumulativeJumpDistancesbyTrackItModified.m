@@ -37,10 +37,10 @@ options=optimoptions('lsqnonlin','Display','none');
 
 if nRates == 1
     [para,SSE,~,~,fit_out,~,J] =...
-        lsqnonlin(@(D)oneRate(D,x,y,trackingRadius),startD(1),[],[],options);
+        lsqnonlin(@(D)oneRate(D,x,y,trackingRadius, flag3d),startD(1),[],[],options);
     
     %Calculate fitted function values
-    f=oneRate(para,x,0,trackingRadius);
+    f=oneRate(para,x,0,trackingRadius, flag3d);
     
     %Calculate Error
     [confint,R] = lsqnonlinerror(para,SSE,J,x,y);
@@ -52,10 +52,10 @@ if nRates == 1
     Aerr = [];
 elseif nRates == 2
     [para,SSE,~,~,fit_out,~,J] =...
-        lsqnonlin(@(D)twoRates(D,x,y,trackingRadius),[startD(1),startD(2),0.3],[0, 0, 0],[inf, inf, 1],options);
+        lsqnonlin(@(D)twoRates(D,x,y,trackingRadius, flag3d),[startD(1),startD(2),0.3],[0, 0, 0],[inf, inf, 1],options);
     
     %Calculate fitted function values
-    f=twoRates(para,x,0,trackingRadius);
+    f=twoRates(para,x,0,trackingRadius, flag3d);
     
     %Calculate Error
     [confint,R] = lsqnonlinerror(para,SSE,J,x,y);
@@ -66,11 +66,11 @@ elseif nRates == 2
     Derr = confint(1:2)';
     Aerr = [confint(3)' confint(3)'];
 elseif nRates == 3    
-    [para,SSE,~,~,fit_out,~,J] = lsqnonlin(@(D)threeRates(D,x,y,trackingRadius),[startD(1),startD(2),startD(3),0.3,0.3],[0, 0, 0, 0, 0],[inf, inf, inf, 1, 1],options);
+    [para,SSE,~,~,fit_out,~,J] = lsqnonlin(@(D)threeRates(D,x,y,trackingRadius, flag3d),[startD(1),startD(2),startD(3),0.3,0.3],[0, 0, 0, 0, 0],[inf, inf, inf, 1, 1],options);
 %     [para,SSE,~,~,fit_out,~,J] = lsqnonlin(@(D)threeRates(D,x,y,trackingRadius),[startD(1),startD(2),startD(3),0.3,0.3],[0, 0, 7, 0, 0],[inf, inf, 7, 1, 1],options);
         
     %Calculate fitted function values
-    f=threeRates(para,x,0,trackingRadius);
+    f=threeRates(para,x,0,trackingRadius, flag3d);
     
     %Calculate Error
     [confint,R] = lsqnonlinerror(para,SSE,J,x,y);
@@ -83,41 +83,49 @@ elseif nRates == 3
 end
 
 if flag3d == 1
-    %D = D./(6*timestep);
-    %Derr = Derr./(6*timestep);
+    D = D./(6*timestep);
+    Derr = Derr./(6*timestep);
     effectiveD = sum(D.*A);
     out=struct('D',D,'Derr',Derr, 'A', A, 'Aerr',Aerr,'EffectiveD',effectiveD,'Ajd_R_square',R,'Message',fit_out,'SSE',SSE,'xy',[x,f]);
 else
-    %D = D./(4*timestep);
-    %Derr = Derr./(4*timestep);
+    D = D./(4*timestep);
+    Derr = Derr./(4*timestep);
     effectiveD = sum(D.*A);
     out=struct('D',D,'Derr',Derr, 'A', A, 'Aerr',Aerr,'EffectiveD',effectiveD,'Ajd_R_square',R,'Message',fit_out,'SSE',SSE,'xy',[x,f]);
 end
 
 end
 
-function d=oneRate(para,x,y,trackingRadius)
+function d=oneRate(para,x,y,trackingRadius, flag3d)
 
     D1=para(1);
-    
-    f=(1-exp(-x/D1))/(1-exp(-trackingRadius/D1));
+    if flag3d
+        f=(1-exp(-x.^3/D1))/(1-exp(-trackingRadius^3/D1));
+    else
+        f=(1-exp(-x.^2/D1))/(1-exp(-trackingRadius^2/D1));
+    end
   
     d=f-y;
 end
 
-function d=twoRates(para,x,y,trackingRadius)
+function d=twoRates(para,x,y,trackingRadius, flag3d)
 
     D1=para(1);
     D2=para(2);
     
     A=para(3);
+    if flag3d
+        f=A*(1-exp(-x.^3/D1))+(1-A)*(1-exp(-x.^3/D2))/(1-exp(-trackingRadius^3/D2));
+    else
+        f=A*(1-exp(-x.^2/D1))+(1-A)*(1-exp(-x.^2/D2))/(1-exp(-trackingRadius^2/D2));
+        %f=A*(1-exp(-x/D1))+(1-A)*(1-exp(-x/D2))/(1-exp(-trackingRadius/D2));
+    end
     
-    f=A*(1-exp(-x/D1))+(1-A)*(1-exp(-x/D2))/(1-exp(-trackingRadius/D2));
   
     d=f-y;
 end
 
-function d=threeRates(para,x,y,trackingRadius)
+function d=threeRates(para,x,y,trackingRadius, flag3d)
 
     D1=para(1);
     D2=para(2);
@@ -125,8 +133,13 @@ function d=threeRates(para,x,y,trackingRadius)
   
     A=para(4);
     B=para(5);
+    if flag3d
+        f=A*(1-exp(-x.^3/D1))+B*(1-exp(-x.^3/D2))+(1-A-B)/(1-exp(-trackingRadius^3/D3))*(1-exp(-x.^3/D3));
+    else
+        f=A*(1-exp(-x.^2/D1))+B*(1-exp(-x.^2/D2))+(1-A-B)/(1-exp(-trackingRadius^2/D3))*(1-exp(-x.^2/D3));
+        %f=A*(1-exp(-x/D1))+B*(1-exp(-x/D2))+(1-A-B)/(1-exp(-trackingRadius/D3))*(1-exp(-x/D3));
+    end
     
-    f=A*(1-exp(-x/D1))+B*(1-exp(-x/D2))+(1-A-B)/(1-exp(-trackingRadius/D3))*(1-exp(-x/D3));
   
     d=f-y;
 
