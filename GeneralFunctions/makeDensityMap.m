@@ -94,6 +94,7 @@ function makeDensityMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT, 
             s = surface(X,Y,Z,C);
             s.EdgeColor = 'none';
             alpha(s,"color");
+            alpha(s,"none");
         end
         c = colorbar;
         if dopt == "DENS"

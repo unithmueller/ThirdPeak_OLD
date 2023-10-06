@@ -69,6 +69,7 @@ function makeVelocityMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT,
                 s = surface(X,Y,zpos,C);
                 s.EdgeColor = 'none';
                 alpha(s,"color");
+                alpha(s,"none");
                 %hold on
             end
             c = colorbar;
@@ -87,7 +88,8 @@ function makeVelocityMap(app, data, flag3d, superpxsize, NmbrTimeWins, minAcqDT,
             Z = zeros(size(data));
             s = surface(X,Y,Z,data(:,:));
             s.EdgeColor = 'none';
-            alpha(s,"color");
+            %alpha(s,"color");
+            %alpha(s,"scaled");
             c = colorbar;
             c.Label.String = sprintf('Velocity [%s]',unit);
             xlabel("X Position [px]");

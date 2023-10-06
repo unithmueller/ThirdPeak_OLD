@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2156168552" file="C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GUI\Third Peak.prj" location="C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GUI" name="Third Peak" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2525036952" file="C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GUI\Third Peak.prj" location="C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\GUI" name="Third Peak" target="target.mlapps" target-name="Package App">
     <param.appname>Third Peak</param.appname>
     <param.authnamewatermark>Thomas Müller</param.authnamewatermark>
     <param.email>thomas.mueller2@uni-wuerzburg.de</param.email>
@@ -8,12 +8,14 @@
     <param.icons />
     <param.summary>Used to visualize and analyze single molecule tracks in a biological context.</param.summary>
     <param.description />
-    <param.screenshot>C:\Users\auxin\AppData\Local\Temp\tpbd850f1e_de0a_4985_8b7d_79c57efacd27.png</param.screenshot>
+    <param.screenshot>C:\Users\auxin\AppData\Local\Temp\tpbc7c8f41_f91b_4ac5_9577_8326963fe026.png</param.screenshot>
     <param.version>1.0</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
-    <param.platforms />
+    <param.platforms>
+      <item>win64</item>
+    </param.platforms>
     <param.output>C:\Users\auxin\OneDrive\Desktop\MatlabApp</param.output>
     <param.guid>0ab41a82-bca0-4de3-9ca9-f6a5c92077e2</param.guid>
     <unset>
@@ -24,12 +26,13 @@
       <param.products.name />
       <param.products.id />
       <param.products.version />
-      <param.platforms />
     </unset>
     <fileset.main>
       <file>${PROJECT_ROOT}\SelectionWindow.mlapp</file>
     </fileset.main>
     <fileset.depfun>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AdditionalScripts\automateSwiftTracking.m</file>
+      <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AdditionalScripts\parametersSwift.json</file>
       <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateCumulativeJumpDistances.m</file>
       <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateCumulativeMeanJumpDistance.m</file>
       <file>C:\Users\auxin\OneDrive\Documents\GitHub\ThirdPeak\AllTrackAnalysisFunctions\calculateCumulativeTrackLength.m</file>
