@@ -40,6 +40,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotExternalTrackClassification(Axe
        types = types.';
        xticklabels(Axes, types);
        xlabel(Axes, "Diffusion Type");
+       ylabel(Axes, "Counts");
 
        %% Decide if we fit or not
        if performFit
