@@ -18,6 +18,7 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
         BeadLocations = loadLocswithFileList(ImportSettingsStruct, BeadLocations);
     catch
     end
+
     %make sure there are no negative values for XY
     for i = 1:size(LocalisationData,1)
         tmpdata = LocalisationData{i,1};
@@ -28,6 +29,8 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
         tmpdata(:,2:3) = [xdat,ydat];
         LocalisationData{i,1} = tmpdata;
     end
+
+
     clear xdat ydat tmpdata;
     %% set variables for saving
     maskedLocs = {};
@@ -52,7 +55,8 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
             end
             for j = 1:size(tmpmaskdat,2)
                 maskedLocs{end+1,1} = tmpmaskdat{1,j};
-                maskedLocs{end,2} = LocalisationData{i,2};
+                newFileName = join([LocalisationData{i,2}, "_", int2str(j)]);
+                maskedLocs{end,2} = newFileName;
             end
         end
         cd ..;

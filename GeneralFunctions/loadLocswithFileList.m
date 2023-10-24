@@ -34,7 +34,20 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 if size(locdata{1,1},2) < 5
                     error("Not a loc file!")
                 else
-                    LocalisationData = locdata;
+                    try
+                        %check for decode files
+                        tmpTestdata = locdata{1,1};
+                        minx = min(tmpTestdata(:,3));
+                        maxz = max(tmpTestdata(:,5));
+                        divTestX = minx/ImportSettingsStruct.customUnits.Pixelsize;
+                        divTestZ = maxz/ImportSettingsStruct.customUnits.Pixelsize;
+
+                        if ((divTestX < 1) && (divTestX > 0)) && (divTestZ > 1)
+                            LocalisationData = adjustDecodeFiles(locdata, ImportSettingsStruct.customUnits.Pixelsize);
+                        end
+                    catch
+                        LocalisationData = locdata;
+                    end
                 end
         case "SMAP-Localisations"
                 loadfile = fileList;
