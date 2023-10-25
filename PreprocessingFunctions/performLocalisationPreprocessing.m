@@ -55,7 +55,7 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
             end
             for j = 1:size(tmpmaskdat,2)
                 maskedLocs{end+1,1} = tmpmaskdat{1,j};
-                newFileName = join([LocalisationData{i,2}, "_", int2str(j)]);
+                newFileName = join([LocalisationData{i,2}, "_", int2str(j)],"");
                 maskedLocs{end,2} = newFileName;
             end
         end
@@ -229,5 +229,5 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     setvalues = options;
     save("PropertiesUsed.mat","setvalues");
     %save for swift
-    SavePeaksAsSwift(pwd, intensityLocs, size(intensityLocs,1), 1);
+    SavePeaksAsSwift(pwd, driftCorrLocs, size(intensityLocs,1), 1);
 end

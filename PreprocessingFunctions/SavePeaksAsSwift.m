@@ -36,7 +36,7 @@ if mode == 1
             name = split(name,"\");
         end
         name = name{end};
-        name = name(1:end-4);
+        %name = name(1:end-4);
         savepath = join([resultpath '\' name '.csv'],'');
         writetable(table,savepath);
         catch
