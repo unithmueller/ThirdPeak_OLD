@@ -99,10 +99,11 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
     
     %% Running the tracking until the conditions are met
     count = 2;
-    change = 1;
-    while (count <= IterMax) && (change > ChangeMin)
+    startchange = 1;
+    while (count <= IterMax) && (startchange > ChangeMin)
         [change, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath);
         count = count+1;
+        startchange = change;
     end
     
     %% Return the data
