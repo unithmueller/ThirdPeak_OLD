@@ -14,6 +14,7 @@ function expdisplacementvaluestring = calculateExpDisplacement(tracks)
         tmpdat = tmpdat(tmpdat(:,1)~=0 | tmpdat(:,1)~=0,:);
         if size(tmpdat,2)>1
             avgWghtMJD = sum(tmpdat(:,1).*tmpdat(:,2))/sum(tmpdat(:,2));
+            avgMJD = mean(tmpdat(:,1));
         else
             warning("No tracks present");
         end
@@ -22,6 +23,8 @@ function expdisplacementvaluestring = calculateExpDisplacement(tracks)
         tmpdat = tracks(:,[10 19]);
         tmpdat = tmpdat(tmpdat(:,1)~=0 | tmpdat(:,1)~=0,:);
         avgWghtMJD = sum(tmpdat(:,1).*tmpdat(:,2))/sum(tmpdat(:,2));
+        avgMJD = mean(tmpdat(:,1));
     end
-    expdisplacementvaluestring = sprintf('%.6f',avgWghtMJD);
+    output = avgMJD;
+    expdisplacementvaluestring = sprintf('%.6f',output);
 end

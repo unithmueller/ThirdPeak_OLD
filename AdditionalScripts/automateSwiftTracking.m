@@ -101,8 +101,9 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
     count = 2;
     startchange = 1;
     while (count <= IterMax) && (startchange > ChangeMin)
-        [change, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath);
+        [change, newDisplacement, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath);
         count = count+1;
+        expDispla = str2double(newDisplacement);
         startchange = change;
     end
     
@@ -110,7 +111,7 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
 
 end
 
-function [displacementChange, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, OLDexpDispla, timeStep, timeUnit, lengthUnit, ChangeMin, Count, locFileFolderPath)
+function [displacementChange, newDisplacement, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, OLDexpDispla, timeStep, timeUnit, lengthUnit, ChangeMin, Count, locFileFolderPath)
     %% Estimate the new properties
     if size(TrackData, 1) > 1 %multiple
         TrackData = catTrackDataRename(TrackData);
@@ -120,6 +121,10 @@ function [displacementChange, TrackData] = iterativeTracking(TrackData, Processi
     end          
     newDisplacement = calculateExpDisplacement(TrackData);
     newBleach = calculatePBleach(TrackData, timeStep, timeUnit, 0);
+
+    if str2double(newDisplacement) < precisionxy*1.1
+        return
+    end
     
     %% Calculate the change
     %Displacement
@@ -128,6 +133,7 @@ function [displacementChange, TrackData] = iterativeTracking(TrackData, Processi
     displacementChange = displacementChangePerc;
     
     if displacementChangePerc < ChangeMin
+        displacementChange = displacementChangePerc;
         return
     end
     
