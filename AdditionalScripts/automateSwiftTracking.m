@@ -1,4 +1,4 @@
-function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, pBleach, timeStep, timeUnit, lengthUnit, ChangeMin, IterMax)
+function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, pBleach, timeStep, timeUnit, lengthUnit, ChangeMin, IterMax, maxTrackRad, MeanWeightVal)
 %Recursively call the swift tracking on the system to generate the correct
 %tracked files
 %
@@ -48,6 +48,7 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
     fileContent.exp_noise_rate = ExpNoise;
     fileContent.exp_displacement = expDispla;
     fileContent.p_bleach = pBleach;
+    fileContent.max_displacement = maxTrackRad;
     
     %Encode and save
     newJSON = jsonencode(fileContent);
@@ -101,9 +102,8 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
     count = 2;
     startchange = 1;
     while (count <= IterMax) && (startchange > ChangeMin)
-        [change, newDisplacement, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath);
+        [change, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath, maxTrackRad, MeanWeightVal);
         count = count+1;
-        expDispla = str2double(newDisplacement);
         startchange = change;
     end
     
@@ -111,7 +111,7 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
 
 end
 
-function [displacementChange, newDisplacement, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, OLDexpDispla, timeStep, timeUnit, lengthUnit, ChangeMin, Count, locFileFolderPath)
+function [displacementChange, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, OLDexpDispla, timeStep, timeUnit, lengthUnit, ChangeMin, Count, locFileFolderPath, maxTrackRad, MeanWeightVal)
     %% Estimate the new properties
     if size(TrackData, 1) > 1 %multiple
         TrackData = catTrackDataRename(TrackData);
@@ -119,12 +119,8 @@ function [displacementChange, newDisplacement, TrackData] = iterativeTracking(Tr
         %only one
        TrackData = TrackData{1,1};
     end          
-    newDisplacement = calculateExpDisplacement(TrackData);
+    newDisplacement = calculateExpDisplacement(TrackData, MeanWeightVal);
     newBleach = calculatePBleach(TrackData, timeStep, timeUnit, 0);
-
-    if str2double(newDisplacement) < precisionxy*1.1
-        return
-    end
     
     %% Calculate the change
     %Displacement
@@ -133,7 +129,6 @@ function [displacementChange, newDisplacement, TrackData] = iterativeTracking(Tr
     displacementChange = displacementChangePerc;
     
     if displacementChangePerc < ChangeMin
-        displacementChange = displacementChangePerc;
         return
     end
     
@@ -160,6 +155,7 @@ function [displacementChange, newDisplacement, TrackData] = iterativeTracking(Tr
     fileContent.exp_noise_rate = ExpNoise;
     fileContent.exp_displacement = str2double(newDisplacement);
     fileContent.p_bleach = str2double(newBleach);
+    fileContent.max_displacement = maxTrackRad;
     
     %Encode and save
     cd(ProcessingDataPath);
