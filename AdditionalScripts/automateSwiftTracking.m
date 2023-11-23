@@ -68,6 +68,12 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
     count = 1;
     newFolderName = join(["Iteration_" count "_ExpDisplacement_" expDispla],"");
     cd Tracking;
+    T = table();
+    if MeanWeightVal == 0
+        writetable(T, "mean.txt");
+    else
+        writetable(T, "weightmean.txt");
+    end
     mkdir(newFolderName);
     cd(newFolderName);
     FolderPathToSave = pwd;
@@ -101,8 +107,9 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
     %% Running the tracking until the conditions are met
     count = 2;
     startchange = 1;
+    newExpDispl = expDispla;
     while (count <= IterMax) && (startchange > ChangeMin)
-        [change, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, expDispla, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath, maxTrackRad, MeanWeightVal);
+        [newExpDispl, change, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, newExpDispl, timeStep, timeUnit, lengthUnit, ChangeMin, count, locFileFolderPath, maxTrackRad, MeanWeightVal);
         count = count+1;
         startchange = change;
     end
@@ -111,7 +118,7 @@ function automateSwiftTracking(ProcessingDataPath, precisionxy, precisionZ, diff
 
 end
 
-function [displacementChange, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, OLDexpDispla, timeStep, timeUnit, lengthUnit, ChangeMin, Count, locFileFolderPath, maxTrackRad, MeanWeightVal)
+function [newExpDispl, displacementChange, TrackData] = iterativeTracking(TrackData, ProcessingDataPath, precisionxy, precisionZ, diffractionLimit, ExpNoise, OLDexpDispla, timeStep, timeUnit, lengthUnit, ChangeMin, Count, locFileFolderPath, maxTrackRad, MeanWeightVal)
     %% Estimate the new properties
     if size(TrackData, 1) > 1 %multiple
         TrackData = catTrackDataRename(TrackData);
@@ -127,6 +134,7 @@ function [displacementChange, TrackData] = iterativeTracking(TrackData, Processi
     displacementDifference = abs(str2double(newDisplacement)-OLDexpDispla);
     displacementChangePerc = displacementDifference/OLDexpDispla;
     displacementChange = displacementChangePerc;
+    newExpDispl = str2double(newDisplacement);
     
     if displacementChangePerc < ChangeMin
         return
