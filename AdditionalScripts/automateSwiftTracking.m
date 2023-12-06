@@ -163,6 +163,7 @@ function [newExpDispl, displacementChange, TrackData] = iterativeTracking(TrackD
     fileContent.exp_noise_rate = ExpNoise;
     fileContent.exp_displacement = str2double(newDisplacement);
     fileContent.p_bleach = str2double(newBleach);
+    fileContent.p_blink = (1-str2double(newBleach));
     fileContent.max_displacement = maxTrackRad;
     
     %Encode and save

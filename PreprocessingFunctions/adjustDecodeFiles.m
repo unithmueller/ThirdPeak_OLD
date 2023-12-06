@@ -9,6 +9,7 @@ for i = 1:szLocdata(1)
     tmpdat = data{i};
     tmpdat(:,3) = tmpdat(:,3)*Pixelsize;
     tmpdat(:,4) = tmpdat(:,4)*Pixelsize;
+    tmpdat(:,6) = tmpdat(:,6)*Pixelsize;
     data{i} = tmpdat;
 end
 LocalisationData(:,1) = data;

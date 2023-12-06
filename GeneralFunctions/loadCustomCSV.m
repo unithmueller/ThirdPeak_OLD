@@ -35,6 +35,10 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
         newfile(:,9) = file(:,ImportSettingsStruct.interr); %photon error
     catch
     end
+    try
+        newfile(:,10) = file(:,ImportSettingsStruct.bg); %background
+    catch
+    end
     tracks = newfile;
         return
     else

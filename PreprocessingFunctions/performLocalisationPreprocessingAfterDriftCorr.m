@@ -18,13 +18,11 @@ function driftCorrLocs = performLocalisationPreprocessingAfterDriftCorr(SaveFold
 
     %% save the data to disk
     %save the localisations in mat and for swift
-    datatosave = intensityLocs;
-    save("intensityFilteredLocalisations.mat","datatosave");
     datatosave = driftCorrLocs;
     save("driftCorrectedLocalisations.mat","datatosave");
     %save the filter settings
     setvalues = options;
     save("PropertiesUsed.mat","setvalues");
     %save for swift
-    SavePeaksAsSwift(pwd, driftCorrLocs, size(intensityLocs,1), 1);
+    SavePeaksAsSwift(pwd, driftCorrLocs, size(driftCorrLocs,1), 1);
 end
