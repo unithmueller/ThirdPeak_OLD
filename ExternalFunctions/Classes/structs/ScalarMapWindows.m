@@ -43,6 +43,17 @@ classdef ScalarMapWindows
                 end
             end
         end
+
+        function scalmapwins = gen_realdiffusion_maps(trajsw, params)
+            scalmapwins = ScalarMapWindows();
+            for i = 1:size(trajsw.wins,1)
+                if params.filter
+                    scalmapwins.windows = [scalmapwins.windows, ScalarMap.genRealDiffusionMapFiltered(SquareGrid.SquareGridbyTrajDx(trajsw.wins{i,1}, params.dx, params.flag3d, params.dz), trajsw.wins{i,1}, params)];
+                else
+                    scalmapwins.windows = [scalmapwins.windows, ScalarMap.genRealDiffusionMap(SquareGrid.SquareGridbyTrajDx(trajsw.wins{i,1}, params.dx, params.flag3d, params.dz), trajsw.wins{i,1}, params)];
+                end
+            end
+        end
     end
 end
                     

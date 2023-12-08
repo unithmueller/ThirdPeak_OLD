@@ -454,5 +454,98 @@ classdef ScalarMap
                 filDenmap = ScalarMap(map.squaregrid, resmap, params);
             end
         end
+
+        function diffmap = genRealDiffusionMap(grid, trajs, params)
+            tempmap = ScalarMap.reserveMap(params.flag3d, grid);
+            %trajs = trajs.trajs(:);
+            flag3d = params.flag3d;
+            if flag3d == 0
+                for i = 1:size(trajs.ids,1)
+                    singltraj = trajs.trajs(trajs.trajs(:,1) == trajs.ids(i),:);
+                    for j = 1:size(singltraj,1)-1
+                        p1 = singltraj(j,:);
+                        p2 = singltraj(j+1,:);
+                        
+                        if p1(:,3) < grid.Xmin(1) || p1(:,3) > grid.Xmax(1) || p1(:,4) < grid.Xmin(2) || p1(:,4) > grid.Xmax(2)
+                            continue
+                        end
+                        
+                        gpos = grid.PostoGridpos(p1(:,3:4));
+                        
+                        tmp = tempmap{gpos(1:2)};
+                        if isempty(tmp)
+                            tmp = zeros(1,3);
+                        else
+                            a= 1;
+                        end
+                        x = (p2(3)-p1(3))^2;
+                        y = (p2(4)-p1(4))^2;
+                        tmp(1) = tmp(1)+1;
+                        tmp(2) = tmp(2)+x;
+                        tmp(3) = tmp(3)+y;
+                        
+                        tempmap{gpos(1), gpos(2)} = tmp;
+                        tmp = [];
+                    end
+                end
+                
+                for i = 1:size(tempmap,1)
+                    for j = 1:size(tempmap,2)
+                        if isempty(tempmap{i,j})
+                            tempmap{i,j} = [0,0,0];
+                        end
+                    end
+                end
+                
+                tmp = cellfun(@(x) (x(2)+x(3))/x(1),tempmap);
+                diffmap = ScalarMap(grid, tmp, params, flag3d);
+                
+            elseif params.flag3d == 1
+               for i = 1:size(trajs.ids,1)
+                    singltraj = trajs.trajs(trajs.trajs(:,1) == trajs.ids(i),:);
+                    for j = 1:size(singltraj,1)-1
+                        p1 = singltraj(j,:);
+                        p2 = singltraj(j+1,:);
+                        
+                        if p1(:,3) < grid.Xmin(1) || p1(:,3) > grid.Xmax(1) || p1(:,4) < grid.Xmin(2) || p1(:,4) > grid.Xmax(2) || p1(:,5) < grid.Zmin(1) || p1(:,5) > grid.Zmax(1)
+                            continue
+                        end
+                        
+                        gpos = grid.PostoGridpos(p1(:,3:5));
+                        
+                        tmp = tempmap{gpos(1:3)};
+                        if isempty(tmp)
+                            tmp = zeros(1,4);
+                        end
+                        x = (p2(3)-p1(3))^2;
+                        y = (p2(4)-p1(4))^2;
+                        z = (p2(5)-p1(5))^2;
+                        tmp(1) = tmp(1)+1;
+                        tmp(2) = tmp(2)+x;
+                        tmp(3) = tmp(3)+y;
+                        tmp(4) = tmp(4)+z;
+                        
+                        tempmap{gpos(1), gpos(2), gpos(3)} = tmp;
+                        tmp = [];
+                    end
+               end
+               
+               for i = 1:size(tempmap,1)
+                    for j = 1:size(tempmap,2)
+                        for k = 1:size(tempmap,3)
+                            if isempty(tempmap{i,j,k})
+                                tempmap{i,j,k} = [0,0,0,0];
+                            end
+                        end
+                    end
+                end 
+               
+                tmp = cellfun(@(x) (x(2)+x(3)+x(4))/x(1),tempmap);
+                diffmap = ScalarMap(grid, tmp, params, flag3d);
+            end
+        end
+
+
+
     end
 end
