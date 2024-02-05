@@ -18,19 +18,6 @@ function expdisplacementvaluestring = calculateExpDisplacement(tracks, MeanWeigh
         else
             warning("No tracks present");
         end
-    elseif size(tracks,2) >= 11
-        tmpdat = tracks(tracks(:,11) == 3,:);%all diffusing things
-        if size(tmpdat,1) < 1
-            tmpdat = tracks; %nothing diffusive, take all
-        end
-        tmpdat = tmpdat(:,[9 12]);%MJD N
-        tmpdat = tmpdat(tmpdat(:,1)~=0 | tmpdat(:,1)~=0,:);
-        if size(tmpdat,2)>1
-            avgWghtMJD = sum(tmpdat(:,1).*tmpdat(:,2))/sum(tmpdat(:,2));
-            avgMJD = mean(tmpdat(1));
-        else
-            warning("No tracks present");
-        end
     else
         %can not filter, take all
         tmpdat = tracks(:,[10 19]);
