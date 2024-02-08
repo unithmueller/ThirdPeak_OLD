@@ -10,8 +10,9 @@ function [PixeldestinationStruc, UnitdestinationStruc] = calculateMSDClassic(Tra
     %% Repack the data to be used for the MSD analysis
     %Need to put each track in a exclusive cell
     trackIDs = unique(TrackData(:,1));
-    repackedData = {};
-    calculatedMSDIDs = {};
+    repackedData = cell(size(trackIDs,1),1);
+    calculatedMSDIDs = cell(size(trackIDs,1),1);
+    IdsCounter = 1;
     %Determine the quality with the fitValue. If length check is active, we
     %use 10% of the data and want about 5 points to fit to, so we need
     %tracks with at least 50 steps. If no length check is done, we just
@@ -27,15 +28,20 @@ function [PixeldestinationStruc, UnitdestinationStruc] = calculateMSDClassic(Tra
         %decide if the Track matches our anticipated length
         if size(currentTrack,1) >= tmpfitValue
             %save the Id of the track
-            calculatedMSDIDs{end+1} = trackIDs(i);
+            calculatedMSDIDs{IdsCounter} = trackIDs(i);
+            
             %decide if we do 2d or 3d MSD
             if dimension == 2
-                repackedData{end+1} = currentTrack(:,2:4);
+                repackedData{IdsCounter} = currentTrack(:,2:4);
             elseif dimension == 3
-                repackedData{end+1} = currentTrack(:,2:5);
+                repackedData{IdsCounter} = currentTrack(:,2:5);
             end
+            IdsCounter = IdsCounter+1;
         end
     end
+    %cleanup the cell arrays
+    calculatedMSDIDs = calculatedMSDIDs(~cellfun(@isempty, calculatedMSDIDs),:);
+    repackedData = repackedData(~cellfun(@isempty, repackedData),:);
     %% Generate the msdAnalyzer class and do the calculations
     lyzer = msdanalyzer(dimension, "px", "frame");
     lyzer = addAll(lyzer,repackedData);
@@ -44,19 +50,19 @@ function [PixeldestinationStruc, UnitdestinationStruc] = calculateMSDClassic(Tra
     lyzer = fitLogLogMSD(lyzer, fitValue);
     
     %% repack the data and add the track ids
-    ids = cell2mat(calculatedMSDIDs).';
+    ids = cell2mat(calculatedMSDIDs);
     if dimension == 2
         dimf = 2;
     elseif dimension == 3
         dimf = 3;
     end
-    alphas = {};
-    As = {};
-    UnitAs = {};
-    Ds = {};
-    UnitDs = {};
-    linR = {};
-    logR = {};
+    alphas = cell(size(ids,1),2);
+    As = cell(size(ids,1),2);
+    UnitAs = cell(size(ids,1),2);
+    Ds = cell(size(ids,1),2);
+    UnitDs = cell(size(ids,1),2);
+    linR = cell(size(ids,1),2);
+    logR = cell(size(ids,1),2);
     for i = 1:size(ids,1)
         alphas{i,1} = ids(i);
         alphas{i,2} = lyzer.loglogfit.alpha(i);

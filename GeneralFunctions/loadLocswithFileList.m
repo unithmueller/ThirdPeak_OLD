@@ -11,7 +11,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
         switch imptype
             case "Custom Localisations mat"
                 loadfile = fileList;
-                locdata = {};
+                locdata = cell(size(loadfile,1),2);
                 for i = 1:size(loadfile,1)
                     locdata{i,1} = loadCustomMat(loadfile{i}, ImportSettingsStruct);
                     locdata{i,2} = loadfile{i};
@@ -25,7 +25,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
            case "Custom Localisations csv"
                  % Display uigetfile dialog
                 loadfile = fileList;
-                locdata = {};
+                locdata = cell(size(loadfile,1),2);
                 for i = 1:size(loadfile,1)
                     locdata{i,1} = loadCustomCSV(loadfile{i}, ImportSettingsStruct);
                     locdata{i,2} = loadfile{i};
@@ -51,7 +51,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 end
         case "SMAP-Localisations"
                 loadfile = fileList;
-                locdata = {};
+                locdata = cell(size(loadfile,1),2);
                 for i = 1:size(loadfile,1)
                     locdata{i,1} = loadSMAPLocalisations(loadfile{i});
                     locdata{i,2} = loadfile{i};
@@ -64,7 +64,7 @@ function LocalisationData = loadLocswithFileList(ImportSettingsStruct, fileList)
                 end
         case "Picasso-Localisations"
                 loadfile = fileList;
-                locdata = {};
+                locdata = cell(size(loadfile,1),2);
                 for i = 1:size(loadfile,1)
                     locdata{i,1} = importPicassohdf5(loadfile{i}, ImportSettingsStruct.customUnits.Pixelsize);
                     locdata{i,2} = loadfile{i};

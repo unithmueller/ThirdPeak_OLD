@@ -11,7 +11,7 @@ function Outputstructure = calculateCumulativeTrackLength(Inputstructure, Output
     cmtl = calculateCumulativeSum(cell2mat(steps));
     
     %% repack the data
-    cumlen = {};
+    cumlen = cell(size(ids,1),2);
     for i = 1:size(ids,1)
         cumlen{i,1} = ids(i);
         cumlen{i,2} = cmtl(i);

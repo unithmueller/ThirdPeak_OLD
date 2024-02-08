@@ -60,8 +60,22 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
         hold(axes, "on");
         handles = struct();
         %if isempty(spotC)
-        spotColors = spotC;
-        lineColors = lineC;
+        %allocate some save space for the colors
+        spotColors = cell(size(spotC,1) + size(trackIds,1),2);
+        lineColors = cell(size(lineC,1) + size(trackIds,1),2);
+        %add the old colors
+        if ~isempty(spotC)
+            spotColors(1:size(spotC,1),:) = spotC;
+        end
+        if ~isempty(lineC)
+            lineColors(1:size(lineC,1),:) = lineC;
+        end
+        %carry a counter for new additions
+        colorCounterSpot = size(spotC,1)+1;
+        colorCounterLine = size(lineC,1)+1;
+
+        %spotColors = spotC;
+        %lineColors = lineC;
 
         for i = 1:size(trackIds)
             %for every track in the current frame
@@ -76,13 +90,14 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
                             IDs = [-1; -1];
                         end
                         if any(IDs == curTrackID)
-                            curColor = find(IDs == curTrackID);
+                            curColor = IDs == curTrackID;
                             curColor = spotColors{curColor,2};
                             h = scatter3(axes, spots(spots(:,1) == trackIds(i),3), spots(spots(:,1) == trackIds(i),4), spots(spots(:,1) == trackIds(i),5), spotsize, curColor, 'filled');
                         else
                             h = scatter(axes, spots(spots(:,1) == trackIds(i),3), spots(spots(:,1) == trackIds(i),4), spotsize, 'filled');
-                            spotColors{end+1,1} = trackIds(i);
-                            spotColors{end,2} = h.CData;
+                            spotColors{colorCounterSpot,1} = trackIds(i);
+                            spotColors{colorCounterSpot,2} = h.CData;
+                            colorCounterSpot = colorCounterSpot+1;
                         end
                     elseif flag3d == 1 %3D
                         curTrackID = trackIds(i);
@@ -93,13 +108,14 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
                             IDs = [-1; -1];
                         end
                         if any(IDs == curTrackID)
-                            curColor = find(IDs == curTrackID);
+                            curColor = IDs == curTrackID;
                             curColor = spotColors{curColor,2};
                             h = scatter3(axes, spots(spots(:,1) == trackIds(i),3), spots(spots(:,1) == trackIds(i),4), spots(spots(:,1) == trackIds(i),5), spotsize, curColor, 'filled');
                         else
                             h = scatter3(axes, spots(spots(:,1) == trackIds(i),3), spots(spots(:,1) == trackIds(i),4), spots(spots(:,1) == trackIds(i),5), spotsize, 'filled');
-                            spotColors{end+1,1} = trackIds(i);
-                            spotColors{end,2} = h.CData;
+                            spotColors{colorCounterSpot,1} = trackIds(i);
+                            spotColors{colorCounterSpot,2} = h.CData;
+                            colorCounterSpot = colorCounterSpot+1;
                         end
                     end
 
@@ -115,7 +131,7 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
                                 IDs = [-1; -1];
                             end
                             if any(IDs == curTrackID)
-                                curColor = find(IDs == curTrackID);
+                                curColor = IDs == curTrackID;
                                 curColor = lineColors{curColor,2};
                                 h = plot(axes, curTrack(:,3), curTrack(:,4), 'Color',curColor);
                                 handles.line(i) = h;
@@ -125,8 +141,9 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
                                 h = plot(axes, curTrack(:,3), curTrack(:,4));
                                 handles.line(i) = h;
                                 color = handles.line(i).Color;
-                                lineColors{end+1,1} = trackIds(i);
-                                lineColors{end,2} = color;
+                                lineColors{colorCounterLine,1} = trackIds(i);
+                                lineColors{colorCounterLine,2} = color;
+                                colorCounterLine = colorCounterLine+1;
                                 scatter(axes, spots(spots(:,1) == trackIds(i),3), spots(spots(:,1) == trackIds(i),4), spotsize, color, 'filled');
                             end
                         elseif flag3d == 1
@@ -138,7 +155,7 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
                                 IDs = [-1; -1];
                             end
                             if any(IDs == curTrackID)
-                                curColor = find(IDs == curTrackID);
+                                curColor = IDs == curTrackID;
                                 curColor = lineColors{curColor,2};
                                h = plot3(axes, curTrack(:,3), curTrack(:,4), curTrack(:,5), 'Color', curColor);
                                 handles.line(i) = h;
@@ -148,12 +165,16 @@ function [lineColors, spotColors] = plotupdateTracesOverlay(axes, Traces, flag3d
                                 h = plot3(axes, curTrack(:,3), curTrack(:,4), curTrack(:,5));
                                 handles.line(i) = h;
                                 color = handles.line(i).Color;
-                                lineColors{end+1,1} = trackIds(i);
-                                lineColors{end,2} = color;
+                                lineColors{colorCounterLine,1} = trackIds(i);
+                                lineColors{colorCounterLine,2} = color;
+                                colorCounterLine = colorCounterLine+1;
                                 scatter3(axes, spots(spots(:,1) == trackIds(i),3), spots(spots(:,1) == trackIds(i),4), spots(spots(:,1) == trackIds(i),5), spotsize, color, 'filled');
                             end
                         end
              end
-         end
+        end
+        %remove empty color placeholder
+        spotColors = spotColors(~cellfun(@isempty, spotColors(:,1)),:);
+        lineColors = lineColors(~cellfun(@isempty, lineColors(:,1)),:);
     end
 end

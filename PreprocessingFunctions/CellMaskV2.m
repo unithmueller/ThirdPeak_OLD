@@ -9,7 +9,7 @@ function finaldat = CellMaskV2(data, ImDim, selpath, i)
 % par == 2 to load previously determined coordinates of a cell mask 
     multicell = 1;
     counter = 1;
-    finaldat = {};
+    finaldat = cell(20);
     while multicell
         dat_out = data;
         ind_del_init = [];
@@ -62,4 +62,6 @@ function finaldat = CellMaskV2(data, ImDim, selpath, i)
         finaldat{counter} = dat_out;
         counter = counter + 1;
     end
+    %remove the leftover cells
+    finaldat{counter+1:end} = [];
 end

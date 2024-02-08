@@ -8,9 +8,12 @@ function data = catTrackDataRename(TracksinCell)
     sizes = cellfun(@size, TracksinCell(:,1), 'UniformOutput', 0);
     %% prepare save structure
     allentries = 0;
+    startIdx = zeros(size(TracksinCell,1)+1,1);
+    startIdx(1) = 1;
     for i = 1:size(sizes,1)
         sz = sizes{i,1}(1,1);
         allentries = allentries+sz;
+        startIdx(i+1) = startIdx(i)+sz;
     end
     data = zeros(allentries,sizes{1,1}(1,2)+1);
     
@@ -20,8 +23,9 @@ function data = catTrackDataRename(TracksinCell)
             maxID = max(data(:,1));
             trackentries = sizes{i,1}(1,1)+count-1;
 
-            putdata = TracksinCell{i,1};
-            putdata(:,end+1) = putdata(:,1);
+            putdata = zeros(size(TracksinCell{i,1},1), size(TracksinCell{i,1},2)+1);
+            putdata(:,1:end-1) = TracksinCell{i,1};
+            putdata(:,end) = putdata(:,1);
             putdata(:,1) = maxID+1+putdata(:,1);
 
             data(count:trackentries,:) = putdata;

@@ -23,11 +23,11 @@ function [minv, maxv, LinFitDat] = plotCumulativeMeanJumpDistance(Axes, binNumbe
            filteredIDs = ids(mask);
            mjd = data{1,2};
            filteredData = mjd(mask);
-           newids = {};
+           newids = cell(size(filterIDs),1);
            for i = 1:size(filterIDs)
                newids(i,1) = {filteredIDs(i)};
            end
-           filteredIDs = {filteredIDs};
+           %filteredIDs = {filteredIDs};
            newPackedData = {newids, filteredData};
 
            SaveStructure.MeanJumpDist.(dimension) = newPackedData;

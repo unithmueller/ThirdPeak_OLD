@@ -1,5 +1,5 @@
 function [minv, maxv, gaussDat, kernelDat] = plotExternalTrackClassification(Axes, SaveStructure, typenames, filterIDs, performFit)
-%Function to plot the respective jump distances as a histogram in the track
+%Function to plot the respective diffusion types as a histogram in the track
 %analysis window.
 %Input: Axes - axes object to plot into
        %SaveStructure - structured array that contains the jump distances
@@ -31,12 +31,12 @@ function [minv, maxv, gaussDat, kernelDat] = plotExternalTrackClassification(Axe
        sz = size(types,1);
        minv = 0.5;
        maxv = sz+0.5;
-       edges = [minv:1:maxv];
+       edges = minv:1:maxv;
        histogram(Axes, data, edges)
        xlim(Axes, [minv maxv]);
        
        title(Axes, "Diffusion Type Distribution");
-       xticks(Axes, [1:1:sz]);
+       xticks(Axes, 1:1:sz);
        types = types.';
        xticklabels(Axes, types);
        xlabel(Axes, "Diffusion Type");

@@ -14,13 +14,14 @@ function driftCorrLocs = performLocalisationPreprocessingAfterPrecisionFiltering
     cd(foldername);
   
     %% set variables for saving
-    precisionLocs = {};
-    intensityLocs = {};
+    %precisionLocs = {};
+    %intensityLocs = {};
 
     %% Sideload the precision filtered files
     precisionLocs = loadedPrecisionLocs;
    
     %% filter by intensity
+    intensityLocs = cell(size(precisionLocs));
     if options.intensity.Used
         for i = 1:size(precisionLocs,1)
             try

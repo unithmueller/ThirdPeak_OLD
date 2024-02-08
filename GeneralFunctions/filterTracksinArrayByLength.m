@@ -6,13 +6,13 @@ function filteredTracks = filterTracksinArrayByLength(Trackdata, minLength)
     %Output Filtered tracks
     
     edges = unique(Trackdata(:,1));
-    counts = histc(Trackdata(:,1), edges);
-    interest = find(counts >= minLength);
-    intrestTrackNumber = edges(interest);
-    filteredTracks = [];
-    for i = 1:length(intrestTrackNumber)
-        j = intrestTrackNumber(i);
-        interestTrackIndx = find(Trackdata(:,1) == j);
-        filteredTracks = [filteredTracks; Trackdata(interestTrackIndx,:)];
-    end
+    edges(end+1) = edges(end);
+    %counts = histc(Trackdata(:,1), edges);
+    [N, ~, ~] = histcounts(Trackdata(:,1), edges);
+    %interest = find(counts >= minLength);
+    counts = edges(1:end-1);
+    counts(:,2) = N.';
+    interest = counts(counts(:,2) >= minLength,1);
+    filter = ismember(Trackdata(:,1),interest(:,1));
+    filteredTracks = Trackdata(filter,:);
 end

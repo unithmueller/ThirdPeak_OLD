@@ -33,9 +33,10 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
 
     clear xdat ydat tmpdata;
     %% set variables for saving
-    maskedLocs = {};
-    precisionLocs = {};
-    intensityLocs = {};
+    maskedLocs = cell(size(LocalisationData,1)*20,2); %allocate some space
+    counter = 1;
+    %precisionLocs = {};
+    %intensityLocs = {};
     %% perform filter in XYZ with either polymask or abs values
     %polymask
     if options.XYZ.XY.UseManualPolymask
@@ -54,11 +55,14 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
                 tmpmaskdat = {[1,1,1,1,1,1,1,1], [1,1,1,1,1,1,1,1]};
             end
             for j = 1:size(tmpmaskdat,2)
-                maskedLocs{end+1,1} = tmpmaskdat{1,j};
+                maskedLocs{counter,1} = tmpmaskdat{1,j};
                 newFileName = join([LocalisationData{i,2}, "_", int2str(j)],"");
-                maskedLocs{end,2} = newFileName;
+                maskedLocs{counter,2} = newFileName;
+                counter = counter+1;
             end
         end
+        %remove leftover empty cells
+        maskedLocs{counter+1:end,:} = [];
         cd ..;
         %if something went wrong, remove the file
         try
@@ -90,6 +94,8 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
             maskedLocs{i,1} = tmpdata;
             maskedLocs{i,2} = LocalisationData{i,2};
         end
+        %remove placeholders
+        maskedLocs = maskedLocs(~cellfun(@isempty, maskedLocs));
         try
             for i = 1:size(maskedLocs,1)
                 tmp = maskedLocs{i,1};
@@ -124,6 +130,7 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     end
     %% filter by precisions
     %XY precision
+    precisionLocs = cell(size(maskedLocs));
     if options.precision.XY.Used
         for i = 1:size(maskedLocs,1)
             try
@@ -163,18 +170,19 @@ function driftCorrLocs = performLocalisationPreprocessing(SaveFolderPath, SaveFo
     end
     %if something went wrong, remove the file
         try    
-        for i = 1:size(precisionLocs,1)
+            for i = 1:size(precisionLocs,1)
                 tmp = precisionLocs{i,1};
                 if size(tmp,1)<5
                     precisionLocs(i,:) = [];
                 end
+            end
+        catch
         end
-    catch
-    end
     if ~options.precision.XY.Used && ~options.precision.Z.Used
         precisionLocs = maskedLocs;
     end
     %% filter by intensity
+    intensityLocs = cell(size(precisionLocs));
     if options.intensity.Used
         for i = 1:size(precisionLocs,1)
             try

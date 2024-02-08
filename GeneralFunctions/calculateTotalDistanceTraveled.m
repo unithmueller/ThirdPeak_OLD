@@ -8,8 +8,8 @@ function destinationStruc = calculateTotalDistanceTraveled(destinationStruc)
     datXYZ = destinationStruc.JumpDist.XYZ;
     
     %% set temporary save structures
-    totalDistanceXY = {};
-    totalDistanceXYZ = {};
+    totalDistanceXY = cell(size(datXY,1),2);
+    totalDistanceXYZ = cell(size(datXY,1),2);
     
     %% calculate the total distance
     %using for loop, results in cell array with [id, length]

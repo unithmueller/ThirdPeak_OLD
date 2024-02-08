@@ -21,8 +21,8 @@ function destinationStruc = calculateConfinementRatio(destinationStruc)
     ratioXYZ(:,2) = totaldatXYZ(:,2)./netdatXYZ(:,2);
     
     %% repack the data
-    XY = {};
-    XYZ = {};
+    XY = cell(size(ratioXY,1),2);
+    XYZ = cell(size(ratioXY,1),2);
     for i = 1:size(ratioXY,1)
         XY{i,1} = ratioXY(i,1);
         XY{i,2} = ratioXY(i,2);

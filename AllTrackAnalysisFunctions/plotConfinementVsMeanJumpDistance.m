@@ -58,7 +58,7 @@ function plotConfinementVsMeanJumpDistance(Axes, SaveStructure, dimension, filte
     fo = fitoptions(fo, "Lower", [0,0,-Inf], "StartPoint", [0.5, 0.5, 1], "Algorithm", 'Trust-Region');
     %% fit the msd of tracks to the model and save it
     for i = 1:size(MSDs)
-        datax = [0:1:10];
+        datax = 0:1:10;
         datay = MSDs(i,2)*datax;
         
         [fitobject,gof] = fit(datax.',datay.',g,fo);

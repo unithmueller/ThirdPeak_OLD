@@ -23,6 +23,11 @@ function Outputstructure = calculateCumulativeMeanJumpDistance(Inputstructure, O
     minSize = min([size(cmjdX,1), size(cmjdY,1), size(cmjdZ,1), size(cmjdXY,1), size(cmjdXYZ,1)]);
     
     %% repack the data
+    opcmjdX = cell(minSize,2);
+    opcmjdY = cell(minSize,2);
+    opcmjdZ = cell(minSize,2);
+    opcmjdXY = cell(minSize,2);
+    opcmjdXYZ = cell(minSize,2);
     for i = 1:minSize
         opcmjdX{i,1} = ids(i);
         opcmjdX{i,2} = cmjdX(i);

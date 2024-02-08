@@ -13,14 +13,15 @@ function driftCorrLocs = performLocalisationPreprocessingAfterMasking(SaveFolder
     foldername = iterateSaveFoldername(SaveFolderName, counter);
     cd(foldername);
     %% set variables for saving
-    maskedLocs = {};
-    precisionLocs = {};
-    intensityLocs = {};
+    %maskedLocs = {};
+    %precisionLocs = {};
+    %intensityLocs = {};
     
     %% Load the data after masking
     maskedLocs = loadedMaskedLocs;
     %% filter by precisions
     %XY precision
+    precisionLocs = cell(size(maskedLocs));
     if options.precision.XY.Used
         for i = 1:size(maskedLocs,1)
             try
@@ -60,18 +61,19 @@ function driftCorrLocs = performLocalisationPreprocessingAfterMasking(SaveFolder
     end
     %if something went wrong, remove the file
         try    
-        for i = 1:size(precisionLocs,1)
+            for i = 1:size(precisionLocs,1)
                 tmp = precisionLocs{i,1};
                 if size(tmp,1)<5
                     precisionLocs(i,:) = [];
                 end
+            end
+        catch
         end
-    catch
-    end
     if ~options.precision.XY.Used && ~options.precision.Z.Used
         precisionLocs = maskedLocs;
     end
     %% filter by intensity
+    intensityLocs = cell(size(precisionLocs));
     if options.intensity.Used
         for i = 1:size(precisionLocs,1)
             try

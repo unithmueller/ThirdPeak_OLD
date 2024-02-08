@@ -1,14 +1,25 @@
 function tracks = loadCustomCSV(file, ImportSettingsStruct)
 %Function to load localisations from a custom CSV file. Import settings are
 %given by the import settings struc by the user in the gui
-    del = ImportSettingsStruct.separator;
-    skip = 1 + ImportSettingsStruct.headlerlines;
-    file = dlmread(file, del, skip);
+    delimit = ImportSettingsStruct.separator;
+    try
+        delimit = convertStringsToChars(delimit);
+    catch
+    end
+    skip = ImportSettingsStruct.headlerlines;
+    readOpts = detectImportOptions(file);
+    readOpts.Delimiter = {delimit};
+    readOpts.DataLines = [skip+1, Inf];
+
+    file = readtable(file, readOpts);
+    %file = table2array(file);
+
+    %file = dlmread(file, del, skip);
     
     type = ImportSettingsStruct.islocs;
 
     if type
-    %newfile(:,1) = [];
+    newfile(:,1) = zeros(size(file,1),1); %placeholder
     newfile(:,2) = file(:,ImportSettingsStruct.framenr); %t
     newfile(:,3) = file(:,ImportSettingsStruct.xpos); %x
     newfile(:,4) = file(:,ImportSettingsStruct.ypos); %y
@@ -109,6 +120,6 @@ function tracks = loadCustomCSV(file, ImportSettingsStruct)
     catch
     end
     %return the new tracks
-    tracks = newfile;
+    tracks = table2array(newfile);
     end
 end

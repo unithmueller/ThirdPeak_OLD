@@ -23,12 +23,12 @@ function [minv, maxv] = plotDiffusionTypeSwitch(Axes, SaveStructure, filterIDs)
        maxv = max(data);
        minv = 0.5;
        maxv = maxv+0.5;
-       edges = [minv:1:maxv];
+       edges = minv:1:maxv;
        histogram(Axes, data, edges)
        xlim(Axes, [minv maxv]);
        
        title(Axes, "Number of Segments in given Tracks");
-       xticks(Axes, [1:1:maxv]);
+       xticks(Axes, 1:1:maxv);
        xlabel(Axes, "Number of Segments");
        ylabel(Axes, "Counts");
 

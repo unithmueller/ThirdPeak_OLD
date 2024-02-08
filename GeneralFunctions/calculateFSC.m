@@ -2,7 +2,6 @@ function [finalvoxelsize,error] = calculateFSC(data, parameters)
     %Calculates the Fourier Shell Correlation from the track data.
     %Grabs the image dimensions from the import settings
     %dialogue to set the necessary parameters.
-    data = data;
     param = parameters;
     finalvoxelsize = zeros(1,10);
     

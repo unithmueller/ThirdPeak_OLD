@@ -5,13 +5,13 @@ function [precisionXYString, precisionZString] = calculatePrecision(intensityLoc
 %Sturcture:error in 6 for xy and 7 for z.
     %% get the data
     %grab data from all files
-    allprecXY = [];
-    allprecZ = [];
+    [allprecXY, ~] = allocateSaveMatrixbyCells(intensityLocs, 1);
+    [allprecZ, startIdx] = allocateSaveMatrixbyCells(intensityLocs, 1);
     % for every file
     for i = 1:size(intensityLocs,1)
         tmpdata = intensityLocs{i,1};
-        allprecXY = [allprecXY; tmpdata(:,6)];
-        allprecZ = [allprecZ; tmpdata(:,7)];
+        allprecXY(startIdx(i):startIdx(i+1)-1) = tmpdata(:,6);
+        allprecZ(startIdx(i):startIdx(i+1)-1) = tmpdata(:,7);
     end
     %% calculations
     %logtransform the data

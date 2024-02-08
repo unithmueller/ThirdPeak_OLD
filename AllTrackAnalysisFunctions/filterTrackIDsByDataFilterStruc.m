@@ -4,7 +4,7 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
 
     %% grab the filter
     nodes = DataFilterStruct;
-    involvedIDs = {};
+    involvedIDs = cell(size(nodes,1),1);
     %% for every node build a filter
     for i = 1:size(nodes,1)
         %{filtertype, filterprop, filterextraprop, filterminval, filtermaxval, filterlogical}
@@ -21,7 +21,7 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
         if propfieldname == "MeanJumpDist"
             tmpid = cell2mat(fielddata{1,1});
             tmpdat = fielddata{1,2};
-            tmparray = {};
+            tmparray = cell(size(tmpid),2);
             for j = 1:size(tmpid)
                 tmparray{j,1} = tmpid(j);
                 tmparray{j,2} = tmpdat(j);
@@ -34,7 +34,7 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
         multval = mean(multval(:,2));
         if multval > 1 %multivalues to ids
             %need to look at every data point
-            keptIDs = [];
+            keptIDs = ones(size(fielddata,1),1).*-1;
             for k = 1:size(fielddata,1)
                 tmp = fielddata(k,:);
                 tmpid = tmp{1};
@@ -51,9 +51,10 @@ function finalIDs = filterTrackIDsByDataFilterStruc(DataFilterStruct, SaveStruct
                 % if all points are inculeded, take the track, if one is
                 % wrong, leave it
                 if decisionMatrix
-                    keptIDs(end+1) = tmpid;
+                    keptIDs(k) = tmpid;
                 end
             end
+            keptIDs(keptIDs < 0) = [];
             involvedIDs{i} = {data{6}, keptIDs.'};
             clear fielddata
         else %only one value per id

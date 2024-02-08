@@ -14,7 +14,7 @@ function driftCorrLocs = performLocalisationPreprocessingAfterIntensityFilter(Sa
     cd(foldername);
     
     %% set variables for saving
-    intensityLocs = {};
+    %intensityLocs = {};
 
     %% sideload intensityfilterd Locs
     intensityLocs = loadedIntensityLocs;

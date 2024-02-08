@@ -35,7 +35,7 @@ function [minv, maxv, gaussDat, kernelDat] = plotDiffusionParametersFromSwift(Ax
        if property == "MSD"
            xlabel(Axes, "MSD in [µm²]");
        else
-           xlabel(Axes, sprintf("D in [µm²/%s]", [timeunit]));
+           xlabel(Axes, sprintf("D in [µm²/%s]", timeunit));
        end
  
        %% Decide if we fit or not

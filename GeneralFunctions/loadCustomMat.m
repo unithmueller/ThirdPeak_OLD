@@ -5,7 +5,7 @@ function tracks = loadCustomMat(file, ImportSettingsStruct)
     file = load(file);
     name = fieldnames(file);
     name = name{1,1};
-    file = getfield(file,name);
+    file = file.(name);
     type = ImportSettingsStruct.islocs;
     
     if type

@@ -6,7 +6,7 @@ function diffractionLimitValueString = calculateDiffractionLimit(intensityFilter
 
     %% calculations
     %generate a structure to save to
-    nn_mindist = {};
+    nn_mindist = cell(size(intensityFilteredLocs,1),2);
     %for every file
     for i = 1:size(intensityFilteredLocs,1)
         tmpdat = intensityFilteredLocs{i,1};
@@ -63,7 +63,7 @@ function diffractionLimitValueString = calculateDiffractionLimit(intensityFilter
         dataToPlot = [dataToPlot(:,:); dataPut];
     end
     dataToPlot(1,:) =  [];
-    filenames = {};
+    filenames = cell(size(intensityFilteredLocs,1),1);
     for i = 1:size(intensityFilteredLocs,1)
         filenames{i} = nn_mindist{i,2};
     end

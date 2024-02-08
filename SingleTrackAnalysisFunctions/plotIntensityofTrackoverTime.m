@@ -12,7 +12,7 @@ function plotIntensityofTrackoverTime(Axes, saveStruc, isMean, isUnit, timeunit,
 
     %% get the data
     datY = saveStruc.Intensities{1,2};
-    datX = [1:1:size(datY,1)];
+    datX = 1:1:size(datY,1);
     
     %if we use true units
     if isUnit

@@ -14,14 +14,15 @@ function FileIDs = groupRestoreTrackIDsForVisualisation(TracksinCell, concatTrac
     
     %% associate tracks to file
     %find a downward step in the track numbers indicating a new file
-    idxLastElement = [];
+    idxLastElement = ones(size(concatTracks,1),1).*-1;
     for i = 2:size(concatTracks,1)
         prevId = concatTracks(i-1,end);
         currId = concatTracks(i,end);
         if currId < prevId
-            idxLastElement(end+1) = i-1;
+            idxLastElement(i) = i-1;
         end
     end
+    idxLastElement(idxLastElement < 0) = [];
     idxLastElement(end+1) = size(concatTracks(:,1),1);
     %build the edges of the seperate files
     fileNmbr = size(FileIDs,1);

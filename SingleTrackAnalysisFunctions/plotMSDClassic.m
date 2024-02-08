@@ -29,7 +29,7 @@ function outputLabels = plotMSDClassic(Axes, saveStruc, dimension, fitval, isUni
 
         %% plot the fits
         %genearte xdata
-        xData = [0:1:fitval];
+        xData = 0:1:fitval;
         %retrieve the a and b value
         a = lyzer.lfit.a;
         b = lyzer.lfit.b;

@@ -28,10 +28,8 @@ function plotTracksOrSpotsOverlay(Axes, Tracks, is3d, isTracks, isAlltracks, sca
     end
     %% Get the Spots and Tracks
     %spots are only active in the given frame
-    currentSpots = [];
-    for i = 1:size(trackIDs,1)
-        currentSpots = [currentSpots; Tracks(Tracks(:,1) == trackIDs(i),:)];
-    end
+    filter = ismember(Tracks(:,1), trackIDs);
+    currentSpots = Tracks(filter,:);
     currentSpots = currentSpots(currentSpots(:,2) == timepoint,:);
     %get the tracks
     currentTracks = cell(size(trackIDs,1),1);
@@ -60,7 +58,7 @@ function plotTracksOrSpotsOverlay(Axes, Tracks, is3d, isTracks, isAlltracks, sca
         case 1
             %tracks
             %save the color choice
-            usedColor = {};
+            usedColor = cell(size(trackIDs,1));
             for i = 1:size(trackIDs,1)
             %for every Track
             curTrack = currentTracks{i,1};
